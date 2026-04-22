@@ -2,11 +2,12 @@ const express = require('express');
 const router = express.Router();
 
 const authRoutes = require('./auth.routes');
+const notesRoutes = require('./notes.routes');
 
 router.use('/auth', authRoutes);
+router.use('/notes', notesRoutes);
 
-// Notes and Users routes will be added in future branches
-// router.use('/notes', require('./notes.routes'));
+// Users routes will be added in Branch 3
 // router.use('/users', require('./users.routes'));
 
 module.exports = router;
