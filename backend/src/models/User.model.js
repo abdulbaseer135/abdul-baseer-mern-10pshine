@@ -15,12 +15,12 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    password: {
-      type: String,
-      required: [true, 'Password is required'],
-      minlength: [6, 'Password must be at least 6 characters'],
-      select: false,
-    },
+password: {
+  type: String,
+  required: [true, 'Password is required'],
+  minlength: 6,
+  select: false,   // ← this must be here
+},
   },
   { timestamps: true }
 );
