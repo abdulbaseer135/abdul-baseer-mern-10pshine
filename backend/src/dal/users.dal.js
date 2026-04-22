@@ -1,22 +1,27 @@
 const User = require('../models/User.model');
 
-const findByEmail = async (email) => {
-  return await User.findOne({ email }).select('+password');
-};
-
-const findById = async (id) => {
-  return await User.findById(id);
-};
-
 const createUser = async (userData) => {
   return await User.create(userData);
 };
 
-const updateUser = async (id, updateData) => {
-  return await User.findByIdAndUpdate(id, updateData, {
-    new: true,
-    runValidators: true,
-  });
+const findByEmail = async (email) => {
+  return await User.findOne({ email });
 };
 
-module.exports = { findByEmail, findById, createUser, updateUser };
+const findById = async (id) => {
+  return await User.findById(id).select('-password').lean();
+};
+
+const updateUser = async (id, updateData) => {
+  return await User.findByIdAndUpdate(
+    id,
+    updateData,
+    { returnDocument: 'after', runValidators: true }
+  ).select('-password').lean();
+};
+
+const deleteUser = async (id) => {
+  return await User.findByIdAndDelete(id);
+};
+
+module.exports = { createUser, findByEmail, findById, updateUser, deleteUser };

@@ -16,10 +16,11 @@ const getNoteById = async (id) => {
 };
 
 const updateNote = async (id, updateData) => {
-  return await Note.findByIdAndUpdate(id, updateData, {
-    new: true,
-    runValidators: true,
-  });
+  return await Note.findByIdAndUpdate(
+    id,
+    updateData,
+    { returnDocument: 'after', runValidators: true }
+  );
 };
 
 const deleteNote = async (id) => {
