@@ -6,7 +6,9 @@ import { NotesProvider } from './context/NotesContext';
 import LoginPage from './pages/AuthPage/LoginPage';
 import SignupPage from './pages/AuthPage/SignupPage';
 import DashboardPage from './pages/DashboardPage/DashboardPage';
+import ProfilePage from './pages/ProfilePage/ProfilePage';
 import ProtectedRoute from './components/common/ProtectedRoute';
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
 const App = () => {
   return (
@@ -25,6 +27,15 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <ToastContainer position="top-right" autoClose={3000} />
         </NotesProvider>
