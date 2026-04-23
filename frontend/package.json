@@ -6,27 +6,37 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest --watchAll=false",
-    "test:watch": "jest --watch"
+    "test": "react-scripts test",
+    "test:watch": "react-scripts test --watchAll"
   },
   "keywords": [],
   "author": "Abdul Baseer",
   "license": "ISC",
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.1",
-    "axios": "^1.6.7",
+    "axios": "^1.15.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.73.1",
     "react-redux": "^9.1.0",
-    "react-router-dom": "^6.22.0",
+    "react-router-dom": "^6.30.3",
     "react-scripts": "^5.0.1"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/react": "^14.2.1",
-    "@testing-library/user-event": "^14.5.2",
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
+    "@babel/preset-react": "^7.28.5",
+    "@tailwindcss/postcss": "^4.2.4",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^14.3.1",
+    "@testing-library/user-event": "^14.6.1",
+    "autoprefixer": "^10.5.0",
+    "babel-jest": "^30.3.0",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^29.7.0"
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^30.3.0",
+    "postcss": "^8.5.10",
+    "tailwindcss": "^3.4.19"
   },
   "browserslist": {
     "production": [

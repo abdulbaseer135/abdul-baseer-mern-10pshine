@@ -1,9 +1,16 @@
 const express = require('express');
+const cors = require('cors');
 const requestLogger = require('./middleware/requestLogger.middleware');
 const errorHandler = require('./middleware/errorHandler.middleware');
 const routes = require('./routes/index');
 
 const app = express();
+
+// ✅ CORS — must be before all routes
+app.use(cors({
+  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  credentials: true,
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
