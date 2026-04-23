@@ -21,4 +21,19 @@ const loginSchema = Joi.object({
   password: Joi.string().required(),
 });
 
-module.exports = { validate, signupSchema, loginSchema };
+const updateProfileSchema = Joi.object({
+  name: Joi.string().min(2).max(50).required(),
+});
+
+const changePasswordSchema = Joi.object({
+  oldPassword: Joi.string().min(6).required(),
+  newPassword: Joi.string().min(6).required(),
+});
+
+module.exports = {
+  validate,
+  signupSchema,
+  loginSchema,
+  updateProfileSchema,
+  changePasswordSchema,
+};
