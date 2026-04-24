@@ -56,7 +56,7 @@ const LoginPage = () => {
               }`}
               {...register('email', {
                 required: 'Email is required',
-                pattern: { value: /^\S+@\S+$/i, message: 'Invalid email' },
+                pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i, message: 'Invalid email' },
               })}
             />
             {errors.email && (

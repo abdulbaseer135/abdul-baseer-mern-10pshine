@@ -1,0 +1,13 @@
+{
+  "reporter": ["lcov", "text", "text-summary"],
+  "exclude": [
+    "**/*.test.js",
+    "**/tests/**",
+    "**/node_modules/**",
+    "sonar.js"
+  ],
+  "include": [
+    "src/**/*.js"
+  ],
+  "all": true
+}
