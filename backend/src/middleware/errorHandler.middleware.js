@@ -1,26 +1,27 @@
 const logger = require('../config/logger');
-const ApiError = require('../utils/ApiError');
 
 const errorHandler = (err, req, res, next) => {
-  let error = err;
+  const statusCode = err.statusCode || 500;
 
-  if (!(error instanceof ApiError)) {
-    const statusCode = error.statusCode || 500;
-    const message = error.message || 'Internal Server Error';
-    error = new ApiError(statusCode, message, error.errors || [], err.stack);
-  }
+  logger.error({
+    err: {
+      message: err.message,
+      stack: err.stack,
+    },
+    request: {
+      method: req.method,
+      url: req.url,
+      body: req.body,
+    },
+    statusCode,
+  }, `Error: ${err.message}`);
 
-  logger.error(
-    { err: error, url: req.url, method: req.method },
-    error.message
-  );
-
-  return res.status(error.statusCode).json({
+  res.status(statusCode).json({
     success: false,
-    statusCode: error.statusCode,
-    message: error.message,
-    errors: error.errors,
-    stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+    statusCode,
+    message: err.message || 'Internal Server Error',
+    errors: err.errors || [],
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
   });
 };
 

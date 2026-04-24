@@ -6,40 +6,79 @@ const {
   deleteNote,
 } = require('../dal/notes.dal');
 const ApiError = require('../utils/ApiError');
+const logger = require('../config/logger');
 
 const create = async (userId, { title, content }) => {
-  return await createNote({ title, content, userId });
+  logger.info({ userId, title }, 'Creating new note');
+
+  const note = await createNote({ title, content, userId });
+
+  logger.info({ userId, noteId: note._id }, 'Note created successfully');
+  return note;
 };
 
 const getAll = async (userId, page, limit) => {
-  return await getNotesByUser(userId, page, limit);
+  logger.info({ userId, page, limit }, 'Fetching all notes for user');
+
+  const result = await getNotesByUser(userId, page, limit);
+
+  logger.info({ userId, count: result?.notes?.length ?? result?.length ?? 0 }, 'Notes fetched successfully');
+  return result;
 };
 
 const getOne = async (noteId, userId) => {
+  logger.info({ userId, noteId }, 'Fetching single note');
+
   const note = await getNoteById(noteId);
-  if (!note) throw new ApiError(404, 'Note not found');
+  if (!note) {
+    logger.warn({ userId, noteId }, 'Note not found');
+    throw new ApiError(404, 'Note not found');
+  }
   if (note.userId.toString() !== userId.toString()) {
+    logger.warn({ userId, noteId }, 'Unauthorized access attempt on note');
     throw new ApiError(403, 'Not authorized to access this note');
   }
+
+  logger.info({ userId, noteId }, 'Note fetched successfully');
   return note;
 };
 
 const update = async (noteId, userId, updateData) => {
+  logger.info({ userId, noteId }, 'Updating note');
+
   const note = await getNoteById(noteId);
-  if (!note) throw new ApiError(404, 'Note not found');
+  if (!note) {
+    logger.warn({ userId, noteId }, 'Update failed — note not found');
+    throw new ApiError(404, 'Note not found');
+  }
   if (note.userId.toString() !== userId.toString()) {
+    logger.warn({ userId, noteId }, 'Unauthorized update attempt on note');
     throw new ApiError(403, 'Not authorized to update this note');
   }
-  return await updateNote(noteId, updateData);
+
+  const updated = await updateNote(noteId, updateData);
+
+  logger.info({ userId, noteId }, 'Note updated successfully');
+  return updated;
 };
 
 const remove = async (noteId, userId) => {
+  logger.info({ userId, noteId }, 'Deleting note');
+
   const note = await getNoteById(noteId);
-  if (!note) throw new ApiError(404, 'Note not found');
+  if (!note) {
+    logger.warn({ userId, noteId }, 'Delete failed — note not found');
+    throw new ApiError(404, 'Note not found');
+  }
   if (note.userId.toString() !== userId.toString()) {
+    logger.warn({ userId, noteId }, 'Unauthorized delete attempt on note');
     throw new ApiError(403, 'Not authorized to delete this note');
   }
-  return await deleteNote(noteId);
+
+  const result = await deleteNote(noteId);
+
+  logger.info({ userId, noteId }, 'Note deleted successfully');
+  return result;
 };
 
 module.exports = { create, getAll, getOne, update, remove };

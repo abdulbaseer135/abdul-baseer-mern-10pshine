@@ -17,4 +17,10 @@ const deleteProfile = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, null, 'Account deleted successfully'));
 });
 
-module.exports = { getProfile, updateProfile, deleteProfile };
+const changePassword = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  await usersService.changePassword(req.user._id, oldPassword, newPassword);
+  return res.status(200).json(new ApiResponse(200, null, 'Password changed successfully'));
+});
+
+module.exports = { getProfile, updateProfile, deleteProfile, changePassword };
