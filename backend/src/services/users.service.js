@@ -20,7 +20,6 @@ const getProfile = async (userId) => {
 const updateProfile = async (userId, updateData) => {
   logger.info({ userId, fields: Object.keys(updateData) }, 'Updating user profile');
 
-  // prevent password and email update through this route
   delete updateData.password;
   delete updateData.email;
 
@@ -62,7 +61,7 @@ const changePassword = async (userId, oldPassword, newPassword) => {
     throw new ApiError(401, 'Old password is incorrect');
   }
 
-  user.password = await bcrypt.hash(newPassword, 10);
+  user.password = newPassword; // ✅ assign plain — pre-save hook hashes it once
   await user.save();
 
   logger.info({ userId }, 'Password changed successfully');

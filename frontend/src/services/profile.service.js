@@ -14,3 +14,8 @@ export const deleteProfileService = async () => {
   const res = await api.delete('/users/profile');
   return res.data;
 };
+
+export const changePasswordService = async (data) => {
+  const res = await api.put('/users/change-password', data);
+  return res.data;
+};

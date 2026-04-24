@@ -1,29 +1,17 @@
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import { signupService } from '../../services/auth.service';
-import { useAuth } from '../../context/AuthContext';
+import useAuth from '../../hooks/useAuth';
 import Spinner from '../../components/common/Spinner/Spinner';
 
 const SignupPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const [loading, setLoading] = useState(false);
-  const [serverError, setServerError] = useState('');
-  const { login } = useAuth();
+  const { handleRegister, loading, error, handleClearError } = useAuth();
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    try {
-      setLoading(true);
-      setServerError('');
-      const res = await signupService(data);
-      login(res.data.user, res.data.token);
-      navigate('/dashboard');
-    } catch (err) {
-      setServerError(err.response?.data?.message || 'Signup failed');
-    } finally {
-      setLoading(false);
-    }
+    handleClearError();
+    const success = await handleRegister(data);
+    if (success) navigate('/dashboard');
   };
 
   return (
@@ -37,9 +25,9 @@ const SignupPage = () => {
           Start organizing your notes today
         </p>
 
-        {serverError && (
+        {error && (
           <div className="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-lg mb-4">
-            {serverError}
+            {error}
           </div>
         )}
 
