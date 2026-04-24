@@ -1,29 +1,19 @@
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import { loginService } from '../../services/auth.service';
-import { useAuth } from '../../context/AuthContext';
+import useAuth from '../../hooks/useAuth';
 import Spinner from '../../components/common/Spinner/Spinner';
 
 const LoginPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const [loading, setLoading] = useState(false);
-  const [serverError, setServerError] = useState('');
-  const { login } = useAuth();
+  const { handleLogin, loading, error, handleClearError } = useAuth();
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    try {
-      setLoading(true);
-      setServerError('');
-      const res = await loginService(data);
-      login(res.data.user, res.data.token);
-      navigate('/dashboard');
-    } catch (err) {
-      setServerError(err.response?.data?.message || 'Login failed');
-    } finally {
-      setLoading(false);
-    }
+    console.log('Form submitted:', data);
+    handleClearError();
+    const success = await handleLogin(data);
+    console.log('Login result:', success);
+    if (success) navigate('/dashboard');
   };
 
   return (
@@ -37,9 +27,9 @@ const LoginPage = () => {
           Login to access your notes
         </p>
 
-        {serverError && (
+        {error && (
           <div className="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-lg mb-4">
-            {serverError}
+            {error}
           </div>
         )}
 

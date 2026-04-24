@@ -1,7 +1,7 @@
 import api from './api';
 
-export const getNotesService = async () => {
-  const res = await api.get('/notes');
+export const getNotesService = async (params = {}) => {
+  const res = await api.get('/notes', { params });
   return res.data;
 };
 

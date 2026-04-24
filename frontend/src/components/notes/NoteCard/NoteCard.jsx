@@ -15,9 +15,11 @@ const NoteCard = ({ note, onEdit, onDelete }) => {
         </span>
       </div>
 
-      <p className="text-sm text-gray-600 line-clamp-3">
-        {note.content || 'No content'}
-      </p>
+      {/* ✅ Renders bold, italic, lists correctly */}
+      <div
+        className="text-sm text-gray-600 line-clamp-3 prose prose-sm max-w-none"
+        dangerouslySetInnerHTML={{ __html: note.content || 'No content' }}
+      />
 
       <div className="flex gap-2 mt-auto pt-2 border-t border-gray-100">
         <button
