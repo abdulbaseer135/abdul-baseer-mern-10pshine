@@ -1,0 +1,6 @@
+projectKey=Notes-App---Abdul-Baseer
+serverUrl=http://localhost:9000
+serverVersion=26.4.0.121862
+dashboardUrl=http://localhost:9000/dashboard?id=Notes-App---Abdul-Baseer
+ceTaskId=0f3a1051-cdad-4143-a453-efe299697102
+ceTaskUrl=http://localhost:9000/api/ce/task?id=0f3a1051-cdad-4143-a453-efe299697102

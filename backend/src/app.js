@@ -5,6 +5,7 @@ const errorHandler = require('./middleware/errorHandler.middleware');
 const routes = require('./routes/index');
 
 const app = express();
+app.disable('x-powered-by');
 
 // ✅ CORS — must be before all routes
 app.use(cors({
