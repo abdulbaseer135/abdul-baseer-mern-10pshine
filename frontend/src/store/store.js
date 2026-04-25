@@ -9,4 +9,7 @@ const store = configureStore({
   },
 });
 
+// ✅ Expose store globally so api.js interceptor can read token from Redux
+window.__REDUX_STORE__ = store;
+
 export default store;

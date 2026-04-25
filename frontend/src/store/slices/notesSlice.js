@@ -41,7 +41,9 @@ const notesSlice = createSlice({
   initialState: {
     notes: [],
     pagination: { page: 1, limit: 10, total: 0, totalPages: 0 },
-    loading: false,
+    isInitialLoading: false,  // ✅ first page load → full skeleton
+    isSearching: false,       // ✅ search/refetch → subtle spinner, cards stay
+    loading: false,           // ✅ kept for add/edit/delete operations
     error: null,
     searchQuery: '',
   },
@@ -55,43 +57,55 @@ const notesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch Notes
-      .addCase(fetchNotes.pending, (state) => { state.loading = true; state.error = null; })
+      // ─── Fetch Notes ───────────────────────────────────────────────
+      .addCase(fetchNotes.pending, (state, action) => {
+        state.error = null;
+        if (action.meta.arg?.isInitial) {
+          state.isInitialLoading = true;  // ✅ full skeleton on first load
+        } else {
+          state.isSearching = true;       // ✅ subtle spinner on search/refetch
+        }
+      })
       .addCase(fetchNotes.fulfilled, (state, action) => {
-        state.loading = false;
+        state.isInitialLoading = false;
+        state.isSearching = false;
         state.notes = action.payload.data?.notes ?? action.payload.data ?? action.payload;
         state.pagination = action.payload.data?.pagination ?? state.pagination;
       })
-      .addCase(fetchNotes.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
+      .addCase(fetchNotes.rejected, (state, action) => {
+        state.isInitialLoading = false;
+        state.isSearching = false;
+        state.error = action.payload;
+      })
 
-      // Add Note
-      .addCase(addNote.pending, (state) => { state.loading = true; })
-      .addCase(addNote.fulfilled, (state, action) => {
+      // ─── Add Note ──────────────────────────────────────────────────
+      .addCase(addNote.pending,    (state) => { state.loading = true; })
+      .addCase(addNote.fulfilled,  (state, action) => {
         state.loading = false;
         const note = action.payload.data ?? action.payload;
         state.notes.unshift(note);
         state.pagination.total += 1;
       })
-      .addCase(addNote.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
+      .addCase(addNote.rejected,   (state, action) => { state.loading = false; state.error = action.payload; })
 
-      // Edit Note
-      .addCase(editNote.pending, (state) => { state.loading = true; })
+      // ─── Edit Note ─────────────────────────────────────────────────
+      .addCase(editNote.pending,   (state) => { state.loading = true; })
       .addCase(editNote.fulfilled, (state, action) => {
         state.loading = false;
         const updated = action.payload.data ?? action.payload;
         const index = state.notes.findIndex((n) => n._id === updated._id);
         if (index !== -1) state.notes[index] = updated;
       })
-      .addCase(editNote.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
+      .addCase(editNote.rejected,  (state, action) => { state.loading = false; state.error = action.payload; })
 
-      // Remove Note
-      .addCase(removeNote.pending, (state) => { state.loading = true; })
+      // ─── Remove Note ───────────────────────────────────────────────
+      .addCase(removeNote.pending,   (state) => { state.loading = true; })
       .addCase(removeNote.fulfilled, (state, action) => {
         state.loading = false;
         state.notes = state.notes.filter((n) => n._id !== action.payload);
         state.pagination.total = Math.max(0, state.pagination.total - 1);
       })
-      .addCase(removeNote.rejected, (state, action) => { state.loading = false; state.error = action.payload; });
+      .addCase(removeNote.rejected,  (state, action) => { state.loading = false; state.error = action.payload; });
   },
 });
 

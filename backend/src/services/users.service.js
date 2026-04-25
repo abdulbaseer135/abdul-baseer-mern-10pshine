@@ -4,6 +4,9 @@ const User = require('../models/User.model');
 const ApiError = require('../utils/ApiError');
 const logger = require('../config/logger');
 
+// ✅ Same rule as frontend and auth.service.js
+const PASSWORD_RULES = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
 const getProfile = async (userId) => {
   logger.info({ userId }, 'Fetching user profile');
 
@@ -49,6 +52,12 @@ const deleteProfile = async (userId) => {
 const changePassword = async (userId, oldPassword, newPassword) => {
   logger.info({ userId }, 'Password change attempt');
 
+  // ✅ Validate new password strength
+  if (!PASSWORD_RULES.test(newPassword)) {
+    logger.warn({ userId }, 'Password change failed — weak new password');
+    throw new ApiError(400, 'New password must be at least 8 characters and include uppercase, lowercase, number, and special character (!@#$%^&*)');
+  }
+
   const user = await User.findById(userId).select('+password');
   if (!user) {
     logger.warn({ userId }, 'Password change failed — user not found');
@@ -61,7 +70,7 @@ const changePassword = async (userId, oldPassword, newPassword) => {
     throw new ApiError(401, 'Old password is incorrect');
   }
 
-  user.password = newPassword; // ✅ assign plain — pre-save hook hashes it once
+  user.password = newPassword; // ✅ pre-save hook hashes it once
   await user.save();
 
   logger.info({ userId }, 'Password changed successfully');

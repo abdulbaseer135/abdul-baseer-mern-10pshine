@@ -51,12 +51,21 @@ export const deleteAccount = createAsyncThunk('auth/deleteAccount', async (_, { 
   }
 });
 
+// ✅ Safe localStorage helper
+const getStoredToken = () => {
+  try {
+    return localStorage.getItem('token') || null;
+  } catch {
+    return null;
+  }
+};
+
 // Slice
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: null,
-    token: localStorage.getItem('token') || null,
+    token: getStoredToken(),
     loading: false,
     error: null,
   },
@@ -64,7 +73,7 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
-      localStorage.removeItem('token');
+      try { localStorage.removeItem('token'); } catch {}
     },
     clearError: (state) => {
       state.error = null;
@@ -73,51 +82,51 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Login
-      .addCase(login.pending, (state) => { state.loading = true; state.error = null; })
-      .addCase(login.fulfilled, (state, action) => {
+      .addCase(login.pending,    (state) => { state.loading = true; state.error = null; })
+      .addCase(login.fulfilled,  (state, action) => {
         state.loading = false;
         state.token = action.payload.token;
-        state.user = action.payload.user;
-        localStorage.setItem('token', action.payload.token);
+        state.user  = action.payload.user;
+        try { localStorage.setItem('token', action.payload.token); } catch {}
       })
-      .addCase(login.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
+      .addCase(login.rejected,   (state, action) => { state.loading = false; state.error = action.payload; })
 
       // Register
-      .addCase(register.pending, (state) => { state.loading = true; state.error = null; })
-      .addCase(register.fulfilled, (state, action) => {
+      .addCase(register.pending,    (state) => { state.loading = true; state.error = null; })
+      .addCase(register.fulfilled,  (state, action) => {
         state.loading = false;
         state.token = action.payload.token;
-        state.user = action.payload.user;
-        localStorage.setItem('token', action.payload.token);
+        state.user  = action.payload.user;
+        try { localStorage.setItem('token', action.payload.token); } catch {}
       })
-      .addCase(register.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
+      .addCase(register.rejected,   (state, action) => { state.loading = false; state.error = action.payload; })
 
       // Fetch Profile
-      .addCase(fetchProfile.pending, (state) => { state.loading = true; })
+      .addCase(fetchProfile.pending,   (state) => { state.loading = true; })
       .addCase(fetchProfile.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.data;
+        state.user = action.payload;        // ✅ FIXED — was action.payload.data
       })
-      .addCase(fetchProfile.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
+      .addCase(fetchProfile.rejected,  (state, action) => { state.loading = false; state.error = action.payload; })
 
       // Update Profile
-      .addCase(updateProfile.pending, (state) => { state.loading = true; })
+      .addCase(updateProfile.pending,   (state) => { state.loading = true; })
       .addCase(updateProfile.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.data;
+        state.user = action.payload;        // ✅ FIXED — was action.payload.data
       })
-      .addCase(updateProfile.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
+      .addCase(updateProfile.rejected,  (state, action) => { state.loading = false; state.error = action.payload; })
 
       // Change Password
-      .addCase(changePassword.pending, (state) => { state.loading = true; state.error = null; })
+      .addCase(changePassword.pending,   (state) => { state.loading = true; state.error = null; })
       .addCase(changePassword.fulfilled, (state) => { state.loading = false; })
-      .addCase(changePassword.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
+      .addCase(changePassword.rejected,  (state, action) => { state.loading = false; state.error = action.payload; })
 
       // Delete Account
       .addCase(deleteAccount.fulfilled, (state) => {
-        state.user = null;
+        state.user  = null;
         state.token = null;
-        localStorage.removeItem('token');
+        try { localStorage.removeItem('token'); } catch {}
       });
   },
 });

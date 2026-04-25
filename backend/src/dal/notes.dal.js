@@ -4,10 +4,18 @@ const createNote = async (noteData) => {
   return await Note.create(noteData);
 };
 
-const getNotesByUser = async (userId, page = 1, limit = 10) => {
+const getNotesByUser = async (userId, page = 1, limit = 10, search = '') => {
   const skip = (page - 1) * limit;
-  const notes = await Note.find({ userId }).sort({ createdAt: -1 }).skip(skip).limit(limit);
-  const total = await Note.countDocuments({ userId });
+
+  const query = {
+    userId,
+    ...(search && {
+      title: { $regex: search, $options: 'i' },  // ✅ title only
+    }),
+  };
+
+  const notes = await Note.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit);
+  const total = await Note.countDocuments(query);
   return { notes, total, page, limit };
 };
 

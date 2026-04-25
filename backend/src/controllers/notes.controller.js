@@ -8,9 +8,11 @@ const createNote = asyncHandler(async (req, res) => {
 });
 
 const getAllNotes = asyncHandler(async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
+  const page  = parseInt(req.query.page)  || 1;
   const limit = parseInt(req.query.limit) || 10;
-  const result = await notesService.getAll(req.user._id, page, limit);
+  const search = req.query.search?.trim() || '';   // ✅ read search from query
+
+  const result = await notesService.getAll(req.user._id, page, limit, search); // ✅ pass search
   return res.status(200).json(new ApiResponse(200, result, 'Notes fetched successfully'));
 });
 

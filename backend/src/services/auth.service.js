@@ -6,12 +6,21 @@ const ApiError = require('../utils/ApiError');
 const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/env');
 const logger = require('../config/logger');
 
+// ✅ Password strength rule — same as frontend
+const PASSWORD_RULES = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 };
 
 const register = async ({ name, email, password }) => {
   logger.info({ email }, 'User registration attempt');
+
+  // ✅ Validate password strength
+  if (!PASSWORD_RULES.test(password)) {
+    logger.warn({ email }, 'Registration failed — weak password');
+    throw new ApiError(400, 'Password must be at least 8 characters and include uppercase, lowercase, number, and special character (!@#$%^&*)');
+  }
 
   const existingUser = await findByEmail(email);
   if (existingUser) {
