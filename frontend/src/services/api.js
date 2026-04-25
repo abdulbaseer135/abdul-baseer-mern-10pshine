@@ -5,24 +5,46 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// attach token to every request automatically
+// ✅ Read token from Redux store (falls back to localStorage for page refresh)
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+  try {
+    const state = window.__REDUX_STORE__?.getState();
+    const token = state?.auth?.token || localStorage.getItem('token');
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+  } catch {
+    const token = localStorage.getItem('token');
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 
-// handle 401 globally
+// ✅ These endpoints return 401 for wrong credentials — NOT expired token
+const SKIP_AUTO_LOGOUT = [
+  '/auth/login',
+  '/users/change-password',
+];
+
+// ✅ Handle 401 globally — skip auto-logout for credential-based endpoints
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const status = error.response?.status;
+    const requestUrl = error.config?.url || '';
+
+    const isCredentialEndpoint = SKIP_AUTO_LOGOUT.some((endpoint) =>
+      requestUrl.includes(endpoint)
+    );
+
+    if (status === 401 && !isCredentialEndpoint) {
+      try {
+        window.__REDUX_STORE__?.dispatch({ type: 'auth/logout' });
+      } catch {}
       localStorage.removeItem('token');
-      localStorage.removeItem('user');
       window.location.href = '/login';
     }
+
     return Promise.reject(error);
   }
 );
 
-export default api;
+export default api;  // ✅ default export — THIS is what was missing
