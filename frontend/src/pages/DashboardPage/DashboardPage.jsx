@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { toast } from 'react-toastify';
 import useNotes from '../../hooks/useNotes';
 import NoteCard from '../../components/notes/NoteCard/NoteCard';
 import NoteEditor from '../../components/notes/NoteEditor/NoteEditor';
@@ -6,13 +7,15 @@ import Modal from '../../components/common/Modal/Modal';
 import Navbar from '../../components/common/Navbar/Navbar';
 import { NoteSkeletonGrid } from '../../components/common/Skeleton/NoteSkeleton';
 import { truncateTitle } from '../../utils/helpers';
+import { exportNotesService, importNotesService } from '../../services/notes.service';
+
 
 const DashboardPage = () => {
   const {
     notes,
     pagination,
-    isInitialLoading,   // ✅ full skeleton — first load only
-    isSearching,        // ✅ subtle spinner — search/refetch
+    isInitialLoading,
+    isSearching,
     loading,
     handleFetchNotes,
     handleAddNote,
@@ -25,40 +28,44 @@ const DashboardPage = () => {
   const [showEditor, setShowEditor]   = useState(false);
   const [editingNote, setEditingNote] = useState(null);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, noteId: null, noteTitle: '' });
-  const [page, setPage]   = useState(1);
+  const [page, setPage]     = useState(1);
   const [saving, setSaving] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [importing, setImporting] = useState(false);
 
-  // ✅ Local input state — separate from debounced searchQuery
   const [searchInput, setSearchInput] = useState(searchQuery || '');
   const isFirstLoad = useRef(true);
+  const importRef   = useRef(null);
 
-  // ─── Initial load — full skeleton ──────────────────────────────────
+
+  // ─── Initial load ──────────────────────────────────────────────────
   useEffect(() => {
     handleFetchNotes({ page: 1, limit: 10, search: '', isInitial: true });
   }, []); // eslint-disable-line
 
-  // ─── Debounce — wait 400ms after user stops typing ─────────────────
+
+  // ─── Debounce search ───────────────────────────────────────────────
   useEffect(() => {
-    if (isFirstLoad.current) {
-      isFirstLoad.current = false;
-      return; // skip on mount — initial load already fired above
-    }
+    if (isFirstLoad.current) { isFirstLoad.current = false; return; } // ✅ skip on mount
     const timer = setTimeout(() => {
-      handleSearchQuery(searchInput);   // update Redux searchQuery
+      handleSearchQuery(searchInput);
       setPage(1);
       handleFetchNotes({ page: 1, limit: 10, search: searchInput });
     }, 400);
     return () => clearTimeout(timer);
   }, [searchInput]); // eslint-disable-line
 
-  // ─── Page change — refetch with current search ─────────────────────
+
+  // ─── Page change ───────────────────────────────────────────────────
   const loadNotes = useCallback(() => {
     handleFetchNotes({ page, limit: 10, search: searchQuery });
   }, [page, searchQuery]); // eslint-disable-line
 
   useEffect(() => {
-    if (!isFirstLoad.current) loadNotes();
+    if (page === 1 && !searchQuery) return; // ✅ skip default initial state
+    loadNotes();
   }, [page]); // eslint-disable-line
+
 
   // ─── Save note ─────────────────────────────────────────────────────
   const handleSave = async (noteData) => {
@@ -70,11 +77,7 @@ const DashboardPage = () => {
       success = await handleAddNote(noteData);
     }
     setSaving(false);
-    if (success) {
-      setShowEditor(false);
-      setEditingNote(null);
-      loadNotes();
-    }
+    if (success) { setShowEditor(false); setEditingNote(null); loadNotes(); }
   };
 
   const handleEdit        = (note) => { setEditingNote(note); setShowEditor(true); };
@@ -84,6 +87,42 @@ const DashboardPage = () => {
     setDeleteModal({ isOpen: false, noteId: null, noteTitle: '' });
     loadNotes();
   };
+
+
+  // ─── Export ────────────────────────────────────────────────────────
+  const handleExport = async () => {
+    try {
+      setExporting(true);
+      await exportNotesService();
+      toast.success('Notes exported successfully!');
+    } catch {
+      toast.error('Failed to export notes');
+    } finally {
+      setExporting(false);
+    }
+  };
+
+
+  // ─── Import ────────────────────────────────────────────────────────
+  const handleImport = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    e.target.value = ''; // ✅ reset so same file can be re-imported
+
+    try {
+      setImporting(true);
+      const res = await importNotesService(file);
+      const count = res?.data?.imported ?? 0;
+      toast.success(`${count} note${count !== 1 ? 's' : ''} imported successfully!`);
+      handleFetchNotes({ page: 1, limit: 10, search: searchQuery }); // ✅ reload after import
+    } catch (err) {
+      toast.error(err.message || 'Failed to import notes');
+    } finally {
+      setImporting(false);
+    }
+  };
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -99,15 +138,60 @@ const DashboardPage = () => {
               {pagination.total} note{pagination.total !== 1 ? 's' : ''}
             </p>
           </div>
-          <button
-            onClick={() => { setEditingNote(null); setShowEditor(true); }}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium"
-          >
-            + New Note
-          </button>
+
+          {/* Action buttons */}
+          <div className="flex items-center gap-2">
+
+            {/* Export */}
+            <button
+              onClick={handleExport}
+              disabled={exporting || notes.length === 0}
+              className="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-100 transition font-medium disabled:opacity-40 flex items-center gap-1"
+            >
+              {exporting ? (
+                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                </svg>
+              ) : '⬇️'}
+              Export
+            </button>
+
+            {/* Import */}
+            <button
+              onClick={() => importRef.current?.click()}
+              disabled={importing}
+              className="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-100 transition font-medium disabled:opacity-40 flex items-center gap-1"
+            >
+              {importing ? (
+                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                </svg>
+              ) : '⬆️'}
+              Import
+            </button>
+
+            {/* Hidden file input */}
+            <input
+              ref={importRef}
+              type="file"
+              accept=".json"
+              className="hidden"
+              onChange={handleImport}
+            />
+
+            {/* New Note */}
+            <button
+              onClick={() => { setEditingNote(null); setShowEditor(true); }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium"
+            >
+              + New Note
+            </button>
+          </div>
         </div>
 
-        {/* Search — with subtle spinner inside the input row */}
+        {/* Search */}
         <div className="mb-6 flex items-center gap-3">
           <div className="relative">
             <input
@@ -117,19 +201,15 @@ const DashboardPage = () => {
               placeholder="Search notes..."
               className="w-full sm:w-80 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            {/* ✅ Subtle spinner inside search box — only during search */}
             {isSearching && (
               <div className="absolute right-3 top-1/2 -translate-y-1/2">
                 <svg className="animate-spin h-4 w-4 text-blue-500" viewBox="0 0 24 24" fill="none">
-                  <circle className="opacity-25" cx="12" cy="12" r="10"
-                    stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor"
-                    d="M4 12a8 8 0 018-8v8z" />
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
                 </svg>
               </div>
             )}
           </div>
-          {/* Clear button */}
           {searchInput && (
             <button
               onClick={() => { setSearchInput(''); handleSearchQuery(''); loadNotes(); }}
@@ -151,10 +231,7 @@ const DashboardPage = () => {
           />
         )}
 
-        {/* Notes Grid
-            ✅ isInitialLoading → full skeleton (first visit only)
-            ✅ isSearching      → keep cards visible, spinner in search box
-            ✅ no blink on every keystroke                              */}
+        {/* Notes Grid */}
         {isInitialLoading ? (
           <NoteSkeletonGrid count={6} />
         ) : notes.length === 0 ? (

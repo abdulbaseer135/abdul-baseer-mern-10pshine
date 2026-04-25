@@ -41,36 +41,66 @@ const notesSlice = createSlice({
   initialState: {
     notes: [],
     pagination: { page: 1, limit: 10, total: 0, totalPages: 0 },
-    isInitialLoading: false,  // ✅ first page load → full skeleton
-    isSearching: false,       // ✅ search/refetch → subtle spinner, cards stay
-    loading: false,           // ✅ kept for add/edit/delete operations
+    isInitialLoading: false,
+    isSearching: false,
+    loading: false,
     error: null,
     searchQuery: '',
   },
   reducers: {
-    setSearchQuery: (state, action) => { state.searchQuery = action.payload; },
+    setSearchQuery:  (state, action) => { state.searchQuery = action.payload; },
     clearNotesError: (state) => { state.error = null; },
     resetNotes: (state) => {
       state.notes = [];
       state.pagination = { page: 1, limit: 10, total: 0, totalPages: 0 };
     },
+
+    // ✅ Socket real-time reducers
+    noteCreatedFromSocket: (state, action) => {
+      const exists = state.notes.some((n) => n._id === action.payload._id);
+      if (!exists) {
+        state.notes.unshift(action.payload);
+        state.pagination.total += 1;
+      }
+    },
+
+    noteUpdatedFromSocket: (state, action) => {
+      const index = state.notes.findIndex((n) => n._id === action.payload._id);
+      if (index !== -1) state.notes[index] = action.payload;
+    },
+
+    noteDeletedFromSocket: (state, action) => {
+      state.notes = state.notes.filter((n) => n._id !== action.payload);
+      state.pagination.total = Math.max(0, state.pagination.total - 1);
+    },
   },
+
   extraReducers: (builder) => {
     builder
       // ─── Fetch Notes ───────────────────────────────────────────────
       .addCase(fetchNotes.pending, (state, action) => {
         state.error = null;
         if (action.meta.arg?.isInitial) {
-          state.isInitialLoading = true;  // ✅ full skeleton on first load
+          state.isInitialLoading = true;
         } else {
-          state.isSearching = true;       // ✅ subtle spinner on search/refetch
+          state.isSearching = true;
         }
       })
       .addCase(fetchNotes.fulfilled, (state, action) => {
         state.isInitialLoading = false;
-        state.isSearching = false;
-        state.notes = action.payload.data?.notes ?? action.payload.data ?? action.payload;
-        state.pagination = action.payload.data?.pagination ?? state.pagination;
+        state.isSearching      = false;
+
+        // ✅ FIX — unwrap flat data shape from backend
+        const d = action.payload.data ?? action.payload;
+
+        state.notes = d.notes ?? d;  // ✅ notes array
+
+        state.pagination = {         // ✅ flat fields — no nested .pagination object
+          page:       d.page       ?? state.pagination.page,
+          limit:      d.limit      ?? state.pagination.limit,
+          total:      d.total      ?? state.pagination.total,
+          totalPages: d.totalPages ?? state.pagination.totalPages,
+        };
       })
       .addCase(fetchNotes.rejected, (state, action) => {
         state.isInitialLoading = false;
@@ -79,14 +109,14 @@ const notesSlice = createSlice({
       })
 
       // ─── Add Note ──────────────────────────────────────────────────
-      .addCase(addNote.pending,    (state) => { state.loading = true; })
-      .addCase(addNote.fulfilled,  (state, action) => {
+      .addCase(addNote.pending,   (state) => { state.loading = true; })
+      .addCase(addNote.fulfilled, (state, action) => {
         state.loading = false;
         const note = action.payload.data ?? action.payload;
         state.notes.unshift(note);
         state.pagination.total += 1;
       })
-      .addCase(addNote.rejected,   (state, action) => { state.loading = false; state.error = action.payload; })
+      .addCase(addNote.rejected,  (state, action) => { state.loading = false; state.error = action.payload; })
 
       // ─── Edit Note ─────────────────────────────────────────────────
       .addCase(editNote.pending,   (state) => { state.loading = true; })
@@ -109,5 +139,13 @@ const notesSlice = createSlice({
   },
 });
 
-export const { setSearchQuery, clearNotesError, resetNotes } = notesSlice.actions;
+export const {
+  setSearchQuery,
+  clearNotesError,
+  resetNotes,
+  noteCreatedFromSocket,
+  noteUpdatedFromSocket,
+  noteDeletedFromSocket,
+} = notesSlice.actions;
+
 export default notesSlice.reducer;
