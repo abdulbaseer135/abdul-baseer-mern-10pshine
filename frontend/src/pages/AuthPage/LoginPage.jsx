@@ -9,10 +9,10 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    console.log('Form submitted:', data);
+    // console.log('Form submitted:', data);
     handleClearError();
     const success = await handleLogin(data);
-    console.log('Login result:', success);
+    // console.log('Login result:', success);
     if (success) navigate('/dashboard');
   };
 

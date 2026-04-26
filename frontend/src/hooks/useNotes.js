@@ -8,11 +8,24 @@ import {
   setSearchQuery,
   clearNotesError,
   resetNotes,
+  noteCreatedFromSocket,   // ✅ new action
+  noteUpdatedFromSocket,   // ✅ new action
+  noteDeletedFromSocket,   // ✅ new action
 } from '../store/slices/notesSlice';
+import useSocket from './useSocket';
 
 const useNotes = () => {
   const dispatch = useDispatch();
-  const { notes, pagination, loading, error, searchQuery } = useSelector((state) => state.notes);
+  const { notes, pagination, isInitialLoading, isSearching, loading, error, searchQuery } =
+    useSelector((state) => state.notes);
+  const { user } = useSelector((state) => state.auth);
+
+  // ✅ Real-time socket listeners — update Redux state instantly
+  useSocket(user?._id, {
+    onCreated: (note) => dispatch(noteCreatedFromSocket(note)),
+    onUpdated: (note) => dispatch(noteUpdatedFromSocket(note)),
+    onDeleted: (id)   => dispatch(noteDeletedFromSocket(id)),
+  });
 
   const handleFetchNotes = async (params = {}) => {
     const result = await dispatch(fetchNotes(params));
@@ -55,12 +68,14 @@ const useNotes = () => {
   };
 
   const handleSearchQuery = (query) => dispatch(setSearchQuery(query));
-  const handleClearError = () => dispatch(clearNotesError());
-  const handleResetNotes = () => dispatch(resetNotes());
+  const handleClearError  = () => dispatch(clearNotesError());
+  const handleResetNotes  = () => dispatch(resetNotes());
 
   return {
     notes,
     pagination,
+    isInitialLoading,
+    isSearching,
     loading,
     error,
     searchQuery,
