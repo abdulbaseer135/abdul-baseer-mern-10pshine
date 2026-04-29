@@ -2,27 +2,308 @@
 @tailwind components;
 @tailwind utilities;
 
-/* TipTap Editor Styles */
+
+/* ═══════════════════════════════════════════════════
+   CSS VARIABLE TOKEN SYSTEM
+   ═══════════════════════════════════════════════════ */
+
+:root {
+  /* ─── Surfaces ──────────────────────────────────── */
+  --bg-primary:        #ffffff;
+  --bg-secondary:      #f9fafb;
+  --bg-tertiary:       #f3f4f6;
+  --bg-card:           #ffffff;
+  --bg-hover:          #f3f4f6;
+  --bg-input:          #ffffff;
+
+  /* ─── Text ──────────────────────────────────────── */
+  --text-primary:      #111827;
+  --text-secondary:    #6b7280;
+  --text-muted:        #9ca3af;
+  --text-inverse:      #ffffff;
+  --text-placeholder:  #adb5bd;
+
+  /* ─── Borders ───────────────────────────────────── */
+  --border-primary:    #e5e7eb;
+  --border-secondary:  #d1d5db;
+  --border-focus:      #6366f1;
+
+  /* ─── Accent ────────────────────────────────────── */
+  --accent-primary:    #6366f1;
+  --accent-hover:      #4f46e5;
+  --accent-light:      #eef2ff;
+
+  /* ─── Shadows ───────────────────────────────────── */
+  --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg:  0 12px 32px rgba(0, 0, 0, 0.12);
+
+  /* ─── Editor ────────────────────────────────────── */
+  --editor-blockquote-border: #dee2e6;
+  --editor-blockquote-text:   #6c757d;
+  --editor-hr:                #dee2e6;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   DARK MODE TOKENS
+   ═══════════════════════════════════════════════════ */
+
+.dark {
+  /* ─── Surfaces ──────────────────────────────────── */
+  --bg-primary:        #0a0a0a;
+  --bg-secondary:      #111111;
+  --bg-tertiary:       #1a1a1a;
+  --bg-card:           #141414;
+  --bg-hover:          #1e1e1e;
+  --bg-input:          #161616;
+
+  /* ─── Text ──────────────────────────────────────── */
+  --text-primary:      #f9fafb;
+  --text-secondary:    #9ca3af;
+  --text-muted:        #6b7280;
+  --text-inverse:      #0a0a0a;
+  --text-placeholder:  #374151;
+
+  /* ─── Borders ───────────────────────────────────── */
+  --border-primary:    rgba(255, 255, 255, 0.07);
+  --border-secondary:  rgba(255, 255, 255, 0.12);
+  --border-focus:      #818cf8;
+
+  /* ─── Accent ────────────────────────────────────── */
+  --accent-primary:    #818cf8;
+  --accent-hover:      #6366f1;
+  --accent-light:      rgba(99, 102, 241, 0.12);
+
+  /* ─── Shadows ───────────────────────────────────── */
+  --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg:  0 12px 40px rgba(0, 0, 0, 0.6);
+
+  /* ─── Editor ────────────────────────────────────── */
+  --editor-blockquote-border: #374151;
+  --editor-blockquote-text:   #9ca3af;
+  --editor-hr:                #1f2937;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   SMOOTH THEME TRANSITION
+   ═══════════════════════════════════════════════════ */
+
+*,
+*::before,
+*::after {
+  transition:
+    background-color 200ms ease,
+    border-color     200ms ease,
+    color            150ms ease,
+    box-shadow       200ms ease;
+}
+
+button,
+a,
+input,
+textarea,
+[role="button"] {
+  transition:
+    background-color 200ms ease,
+    border-color     200ms ease,
+    color            150ms ease,
+    box-shadow       200ms ease,
+    opacity          150ms ease,
+    transform        150ms ease;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   FROSTED GLASS NAVBAR
+   ═══════════════════════════════════════════════════ */
+
+.navbar-glass {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dark .navbar-glass {
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+
+/* ═══════════════════════════════════════════════════
+   NOTE CARD — Hover Lift + Glow
+   ═══════════════════════════════════════════════════ */
+
+.note-card {
+  transition:
+    transform    220ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow   220ms ease,
+    border-color 220ms ease;
+}
+
+.note-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Light mode card hover */
+:root:not(.dark) .note-card:hover {
+  box-shadow:
+    0 0 0 1px rgba(99, 102, 241, 0.2),
+    0 8px 32px rgba(99, 102, 241, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.06);
+  border-color: rgba(99, 102, 241, 0.3) !important;
+}
+
+/* Dark mode card hover */
+.dark .note-card:hover {
+  box-shadow:
+    0 0 0 1px rgba(129, 140, 248, 0.25),
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 2px 8px rgba(129, 140, 248, 0.12);
+  border-color: rgba(129, 140, 248, 0.35) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   SEARCH INPUT — Glow Focus
+   ═══════════════════════════════════════════════════ */
+
+.search-input:focus {
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.dark .search-input:focus {
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+}
+
+
+/* ═══════════════════════════════════════════════════
+   PRIMARY BUTTON — Lift + Shadow
+   ═══════════════════════════════════════════════════ */
+
+.btn-primary {
+  transition:
+    transform        150ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow       150ms ease,
+    background-color 150ms ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+
+/* ═══════════════════════════════════════════════════
+   TIPTAP EDITOR
+   ═══════════════════════════════════════════════════ */
+
 .ProseMirror {
   min-height: 200px;
   outline: none;
   padding: 0.75rem;
+  color: var(--text-primary);
+  background-color: var(--bg-input);
+  transition: background-color 200ms ease, color 150ms ease;
 }
 
 .ProseMirror p.is-editor-empty:first-child::before {
-  color: #adb5bd;
+  color: var(--text-placeholder);
   content: attr(data-placeholder);
   float: left;
   height: 0;
   pointer-events: none;
 }
 
-.ProseMirror h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
-.ProseMirror h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
-.ProseMirror ul { list-style-type: disc; padding-left: 1.5rem; }
-.ProseMirror ol { list-style-type: decimal; padding-left: 1.5rem; }
-.ProseMirror blockquote { border-left: 3px solid #dee2e6; padding-left: 1rem; color: #6c757d; }
-.ProseMirror hr { border: none; border-top: 2px solid #dee2e6; margin: 1rem 0; }
+.ProseMirror h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.ProseMirror h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.ProseMirror ul  { list-style-type: disc;    padding-left: 1.5rem; }
+.ProseMirror ol  { list-style-type: decimal; padding-left: 1.5rem; }
+
+.ProseMirror blockquote {
+  border-left: 3px solid var(--editor-blockquote-border);
+  padding-left: 1rem;
+  color: var(--editor-blockquote-text);
+}
+
+.ProseMirror hr {
+  border: none;
+  border-top: 2px solid var(--editor-hr);
+  margin: 1rem 0;
+}
+
 .ProseMirror strong { font-weight: 700; }
-.ProseMirror em { font-style: italic; }
-.ProseMirror s { text-decoration: line-through; }
+.ProseMirror em     { font-style: italic; }
+.ProseMirror s      { text-decoration: line-through; }
+
+
+/* ═══════════════════════════════════════════════════
+   SKELETON SHIMMER — Dark mode aware
+   ═══════════════════════════════════════════════════ */
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+.dark .skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    #141414 25%,
+    #1e1e1e 50%,
+    #141414 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   SCROLLBAR — Dark mode aware
+   ═══════════════════════════════════════════════════ */
+
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-secondary);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+.dark ::-webkit-scrollbar-track { background: #0a0a0a; }
+.dark ::-webkit-scrollbar-thumb { background: #1f2937; }
+.dark ::-webkit-scrollbar-thumb:hover { background: #374151; }
+
+
+/* ═══════════════════════════════════════════════════
+   TEXT SELECTION — Dark mode aware
+   ═══════════════════════════════════════════════════ */
+
+::selection {
+  background: var(--accent-light);
+  color: var(--text-primary);
+}

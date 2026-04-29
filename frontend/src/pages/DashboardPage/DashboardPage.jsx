@@ -46,7 +46,7 @@ const DashboardPage = () => {
 
   // ─── Debounce search ───────────────────────────────────────────────
   useEffect(() => {
-    if (isFirstLoad.current) { isFirstLoad.current = false; return; } // ✅ skip on mount
+    if (isFirstLoad.current) { isFirstLoad.current = false; return; }
     const timer = setTimeout(() => {
       handleSearchQuery(searchInput);
       setPage(1);
@@ -62,7 +62,7 @@ const DashboardPage = () => {
   }, [page, searchQuery]); // eslint-disable-line
 
   useEffect(() => {
-    if (page === 1 && !searchQuery) return; // ✅ skip default initial state
+    if (page === 1 && !searchQuery) return;
     loadNotes();
   }, [page]); // eslint-disable-line
 
@@ -107,15 +107,13 @@ const DashboardPage = () => {
   const handleImport = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    e.target.value = ''; // ✅ reset so same file can be re-imported
-
+    e.target.value = '';
     try {
       setImporting(true);
       const res = await importNotesService(file);
       const count = res?.data?.imported ?? 0;
       toast.success(`${count} note${count !== 1 ? 's' : ''} imported successfully!`);
-      handleFetchNotes({ page: 1, limit: 10, search: searchQuery }); // ✅ reload after import
+      handleFetchNotes({ page: 1, limit: 10, search: searchQuery });
     } catch (err) {
       toast.error(err.message || 'Failed to import notes');
     } finally {
@@ -125,28 +123,38 @@ const DashboardPage = () => {
 
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-4 py-8">
 
-        {/* Header */}
+        {/* ─── Header ──────────────────────────────────────────────── */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">My Notes</h1>
-            <p className="text-gray-500 text-sm">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              My Notes
+            </h1>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
               {pagination.total} note{pagination.total !== 1 ? 's' : ''}
             </p>
           </div>
 
-          {/* Action buttons */}
+          {/* ─── Action Buttons ──────────────────────────────────── */}
           <div className="flex items-center gap-2">
 
             {/* Export */}
             <button
               onClick={handleExport}
               disabled={exporting || notes.length === 0}
-              className="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-100 transition font-medium disabled:opacity-40 flex items-center gap-1"
+              className="
+                px-4 py-2 rounded-lg font-medium
+                border border-gray-300 dark:border-gray-700
+                text-gray-600 dark:text-gray-300
+                hover:bg-gray-100 dark:hover:bg-gray-800
+                disabled:opacity-40
+                flex items-center gap-1
+                transition-colors duration-200
+              "
             >
               {exporting ? (
                 <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
@@ -161,7 +169,15 @@ const DashboardPage = () => {
             <button
               onClick={() => importRef.current?.click()}
               disabled={importing}
-              className="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-100 transition font-medium disabled:opacity-40 flex items-center gap-1"
+              className="
+                px-4 py-2 rounded-lg font-medium
+                border border-gray-300 dark:border-gray-700
+                text-gray-600 dark:text-gray-300
+                hover:bg-gray-100 dark:hover:bg-gray-800
+                disabled:opacity-40
+                flex items-center gap-1
+                transition-colors duration-200
+              "
             >
               {importing ? (
                 <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
@@ -184,14 +200,20 @@ const DashboardPage = () => {
             {/* New Note */}
             <button
               onClick={() => { setEditingNote(null); setShowEditor(true); }}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium"
+              className="
+                px-4 py-2 rounded-lg font-medium
+                bg-blue-600 dark:bg-blue-500
+                hover:bg-blue-700 dark:hover:bg-blue-600
+                text-white
+                transition-colors duration-200
+              "
             >
               + New Note
             </button>
           </div>
         </div>
 
-        {/* Search */}
+        {/* ─── Search ──────────────────────────────────────────────── */}
         <div className="mb-6 flex items-center gap-3">
           <div className="relative">
             <input
@@ -199,11 +221,20 @@ const DashboardPage = () => {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Search notes..."
-              className="w-full sm:w-80 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="
+                w-full sm:w-80 px-4 py-2 rounded-lg
+                border border-gray-300 dark:border-gray-700
+                bg-white dark:bg-gray-900
+                text-gray-900 dark:text-gray-100
+                placeholder-gray-400 dark:placeholder-gray-600
+                focus:outline-none focus:ring-2
+                focus:ring-blue-500 dark:focus:ring-blue-400
+                transition-colors duration-200
+              "
             />
             {isSearching && (
               <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                <svg className="animate-spin h-4 w-4 text-blue-500" viewBox="0 0 24 24" fill="none">
+                <svg className="animate-spin h-4 w-4 text-blue-500 dark:text-blue-400" viewBox="0 0 24 24" fill="none">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
                 </svg>
@@ -213,14 +244,14 @@ const DashboardPage = () => {
           {searchInput && (
             <button
               onClick={() => { setSearchInput(''); handleSearchQuery(''); loadNotes(); }}
-              className="text-sm text-gray-400 hover:text-gray-600 transition"
+              className="text-sm text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
             >
               Clear
             </button>
           )}
         </div>
 
-        {/* Note Editor Modal */}
+        {/* ─── Note Editor Modal ───────────────────────────────────── */}
         {showEditor && (
           <NoteEditor
             key={editingNote?._id || 'new'}
@@ -231,7 +262,7 @@ const DashboardPage = () => {
           />
         )}
 
-        {/* Notes Grid */}
+        {/* ─── Notes Grid ──────────────────────────────────────────── */}
         {isInitialLoading ? (
           <NoteSkeletonGrid count={6} />
         ) : notes.length === 0 ? (
@@ -239,16 +270,29 @@ const DashboardPage = () => {
             <p className="text-5xl mb-4">📝</p>
             {searchInput ? (
               <>
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">No notes found</h3>
-                <p className="text-gray-500">Try a different search term</p>
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  No notes found
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400">
+                  Try a different search term
+                </p>
               </>
             ) : (
               <>
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">No notes yet</h3>
-                <p className="text-gray-500 mb-4">Create your first note to get started</p>
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  No notes yet
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400 mb-4">
+                  Create your first note to get started
+                </p>
                 <button
                   onClick={() => { setEditingNote(null); setShowEditor(true); }}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                  className="
+                    px-4 py-2 rounded-lg
+                    bg-blue-600 dark:bg-blue-500
+                    hover:bg-blue-700 dark:hover:bg-blue-600
+                    text-white transition-colors duration-200
+                  "
                 >
                   + New Note
                 </button>
@@ -268,27 +312,41 @@ const DashboardPage = () => {
           </div>
         )}
 
-        {/* Pagination */}
+        {/* ─── Pagination ──────────────────────────────────────────── */}
         {pagination.totalPages > 1 && (
           <div className="flex justify-center gap-2 mt-8">
             <button
               onClick={() => setPage((p) => Math.max(p - 1, 1))}
               disabled={page === 1}
-              className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 disabled:opacity-40"
+              className="
+                px-4 py-2 rounded-lg
+                border border-gray-300 dark:border-gray-700
+                text-gray-700 dark:text-gray-300
+                hover:bg-gray-100 dark:hover:bg-gray-800
+                disabled:opacity-40
+                transition-colors duration-200
+              "
             >← Prev</button>
-            <span className="px-4 py-2 text-gray-600">
+            <span className="px-4 py-2 text-gray-600 dark:text-gray-400">
               Page {page} of {pagination.totalPages}
             </span>
             <button
               onClick={() => setPage((p) => Math.min(p + 1, pagination.totalPages))}
               disabled={page === pagination.totalPages}
-              className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 disabled:opacity-40"
+              className="
+                px-4 py-2 rounded-lg
+                border border-gray-300 dark:border-gray-700
+                text-gray-700 dark:text-gray-300
+                hover:bg-gray-100 dark:hover:bg-gray-800
+                disabled:opacity-40
+                transition-colors duration-200
+              "
             >Next →</button>
           </div>
         )}
       </div>
 
-      {/* Delete Confirm Modal */}
+      {/* ─── Delete Confirm Modal ─────────────────────────────────── */}
       <Modal
         isOpen={deleteModal.isOpen}
         onClose={() => setDeleteModal({ isOpen: false, noteId: null, noteTitle: '' })}

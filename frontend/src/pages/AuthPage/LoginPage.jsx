@@ -3,95 +3,217 @@ import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import Spinner from '../../components/common/Spinner/Spinner';
 
+
 const LoginPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const { handleLogin, loading, error, handleClearError } = useAuth();
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    // console.log('Form submitted:', data);
     handleClearError();
     const success = await handleLogin(data);
-    // console.log('Login result:', success);
     if (success) navigate('/dashboard');
   };
 
+
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
+    <div className="
+      min-h-screen
+      bg-gray-50 dark:bg-[#0a0a0a]
+      flex items-center justify-center
+      px-4 py-12
+      transition-colors duration-200
+    ">
 
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">
-          Welcome Back
-        </h1>
-        <p className="text-center text-gray-500 mb-6">
-          Login to access your notes
-        </p>
+      {/* ─── Card ──────────────────────────────────────── */}
+      <div className="w-full max-w-md">
 
-        {error && (
-          <div className="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-lg mb-4">
-            {error}
+        {/* ─── Logo / Brand ────────────────────────────── */}
+        <div className="text-center mb-8">
+          <div className="
+            inline-flex items-center justify-center
+            w-12 h-12 rounded-2xl mb-4
+            bg-indigo-600 dark:bg-indigo-500
+            shadow-lg shadow-indigo-500/30
+          ">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
           </div>
-        )}
+          <h1 className="text-2xl font-bold tracking-tight
+            text-gray-900 dark:text-white">
+            Welcome back
+          </h1>
+          <p className="text-sm mt-1.5
+            text-gray-500 dark:text-gray-500">
+            Sign in to access your notes
+          </p>
+        </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              placeholder="you@example.com"
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.email ? 'border-red-400' : 'border-gray-300'
-              }`}
-              {...register('email', {
-                required: 'Email is required',
-                pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i, message: 'Invalid email' },
-              })}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
-            )}
-          </div>
+        {/* ─── Panel ───────────────────────────────────── */}
+        <div className="
+          bg-white dark:bg-[#141414]
+          border border-gray-200/60 dark:border-white/[0.07]
+          rounded-2xl
+          shadow-xl shadow-gray-200/60 dark:shadow-black/40
+          p-7
+        ">
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.password ? 'border-red-400' : 'border-gray-300'
-              }`}
-              {...register('password', {
-                required: 'Password is required',
-                minLength: { value: 6, message: 'Minimum 6 characters' },
-              })}
-            />
-            {errors.password && (
-              <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
-            )}
-          </div>
+          {/* Error Banner */}
+          {error && (
+            <div className="
+              flex items-start gap-2.5
+              px-4 py-3 rounded-xl mb-5
+              bg-red-50 dark:bg-red-500/[0.08]
+              border border-red-200 dark:border-red-500/[0.15]
+              text-red-600 dark:text-red-400
+              text-sm
+            ">
+              <ErrorIcon />
+              <span>{error}</span>
+            </div>
+          )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50"
-          >
-            {loading ? <Spinner /> : 'Login'}
-          </button>
-        </form>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
-        <p className="text-center text-sm text-gray-500 mt-6">
+            {/* Email */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold uppercase tracking-wider
+                text-gray-400 dark:text-gray-600">
+                Email
+              </label>
+              <input
+                type="email"
+                placeholder="you@example.com"
+                className={`
+                  w-full px-4 py-2.5 rounded-xl text-sm
+                  bg-gray-50 dark:bg-white/[0.04]
+                  text-gray-900 dark:text-gray-100
+                  placeholder-gray-400 dark:placeholder-gray-700
+                  border transition-all duration-200
+                  focus:outline-none focus:ring-3
+                  ${errors.email
+                    ? 'border-red-400 dark:border-red-500/60 focus:ring-red-400/15 dark:focus:ring-red-500/15'
+                    : 'border-gray-200 dark:border-white/[0.08] focus:border-indigo-400 dark:focus:border-indigo-500/60 focus:ring-indigo-400/15 dark:focus:ring-indigo-500/20'
+                  }
+                `}
+                {...register('email', {
+                  required: 'Email is required',
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i,
+                    message: 'Invalid email address',
+                  },
+                })}
+              />
+              {errors.email && (
+                <p className="flex items-center gap-1 text-xs text-red-500 dark:text-red-400">
+                  <ErrorIcon size={11} /> {errors.email.message}
+                </p>
+              )}
+            </div>
+
+            {/* Password */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold uppercase tracking-wider
+                text-gray-400 dark:text-gray-600">
+                Password
+              </label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                className={`
+                  w-full px-4 py-2.5 rounded-xl text-sm
+                  bg-gray-50 dark:bg-white/[0.04]
+                  text-gray-900 dark:text-gray-100
+                  placeholder-gray-400 dark:placeholder-gray-700
+                  border transition-all duration-200
+                  focus:outline-none focus:ring-3
+                  ${errors.password
+                    ? 'border-red-400 dark:border-red-500/60 focus:ring-red-400/15 dark:focus:ring-red-500/15'
+                    : 'border-gray-200 dark:border-white/[0.08] focus:border-indigo-400 dark:focus:border-indigo-500/60 focus:ring-indigo-400/15 dark:focus:ring-indigo-500/20'
+                  }
+                `}
+                {...register('password', {
+                  required: 'Password is required',
+                  minLength: { value: 6, message: 'Minimum 6 characters' },
+                })}
+              />
+              {errors.password && (
+                <p className="flex items-center gap-1 text-xs text-red-500 dark:text-red-400">
+                  <ErrorIcon size={11} /> {errors.password.message}
+                </p>
+              )}
+            </div>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="
+                btn-primary
+                w-full py-2.5 rounded-xl
+                text-sm font-semibold text-white
+                bg-indigo-600 hover:bg-indigo-500
+                dark:bg-indigo-600 dark:hover:bg-indigo-500
+                shadow-lg shadow-indigo-500/25
+                disabled:opacity-40 disabled:cursor-not-allowed
+                flex items-center justify-center gap-2
+                mt-1
+              "
+            >
+              {loading ? (
+                <>
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10"
+                      stroke="currentColor" strokeWidth="4"/>
+                    <path className="opacity-75" fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8z"/>
+                  </svg>
+                  Signing in...
+                </>
+              ) : 'Sign in'}
+            </button>
+
+          </form>
+        </div>
+
+        {/* ─── Footer Link ─────────────────────────────── */}
+        <p className="text-center text-sm mt-5
+          text-gray-500 dark:text-gray-600">
           Don't have an account?{' '}
-          <Link to="/signup" className="text-blue-600 font-medium hover:underline">
-            Sign up
+          <Link
+            to="/signup"
+            className="font-semibold
+              text-indigo-600 dark:text-indigo-400
+              hover:text-indigo-500 dark:hover:text-indigo-300
+              transition-colors duration-200"
+          >
+            Create one
           </Link>
         </p>
+
       </div>
     </div>
   );
 };
+
+
+/* ─── Icons ──────────────────────────────────────────── */
+
+const ErrorIcon = ({ size = 13 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
+    className="shrink-0 mt-px">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="12" y1="8"     x2="12"    y2="12"/>
+    <line x1="12" y1="16"    x2="12.01" y2="16"/>
+  </svg>
+);
+
 
 export default LoginPage;
