@@ -4,6 +4,28 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Notes App</title>
+
+    <!-- ✅ Anti-flash script — MUST be first before any CSS/JS loads -->
+    <!-- Reads localStorage theme BEFORE React mounts to prevent white flash -->
+    <script>
+      (function () {
+        try {
+          const stored = localStorage.getItem('theme');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const theme = stored ? stored : prefersDark ? 'dark' : 'light';
+
+          // Apply class immediately to <html> before paint
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {
+          // localStorage blocked (private browsing) — silently fallback to light
+        }
+      })();
+    </script>
+
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

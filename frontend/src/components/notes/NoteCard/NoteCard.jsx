@@ -1,42 +1,125 @@
 const NoteCard = ({ note, onEdit, onDelete }) => {
   const formatDate = (dateStr) =>
     new Date(dateStr).toLocaleDateString('en-US', {
-      year: 'numeric', month: 'short', day: 'numeric',
+      month: 'short', day: 'numeric', year: 'numeric',
     });
 
+
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition flex flex-col gap-3">
-      <div className="flex items-start justify-between gap-2">
-        <h3 className="text-lg font-semibold text-gray-800 line-clamp-1">
+    <div className="
+      note-card
+      group relative
+      bg-white dark:bg-[#141414]
+      border border-gray-200/80 dark:border-white/[0.06]
+      rounded-2xl p-5
+      shadow-sm dark:shadow-none
+      flex flex-col gap-3
+      cursor-default
+    ">
+
+      {/* ─── Top Row — Title + Date ─────────────────── */}
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="
+          text-[15px] font-semibold leading-snug
+          text-gray-900 dark:text-gray-100
+          line-clamp-1 flex-1
+        ">
           {note.title}
         </h3>
-        <span className="text-xs text-gray-400 whitespace-nowrap mt-1">
+
+        {/* Date badge */}
+        <span className="
+          shrink-0 text-[11px] font-medium
+          px-2 py-0.5 rounded-full
+          bg-gray-100 dark:bg-white/[0.05]
+          text-gray-400 dark:text-gray-600
+          border border-gray-200/60 dark:border-white/[0.04]
+          mt-0.5
+        ">
           {formatDate(note.updatedAt || note.createdAt)}
         </span>
       </div>
 
-      {/* ✅ Renders bold, italic, lists correctly */}
+      {/* ─── Content Preview ───────────────────────── */}
       <div
-        className="text-sm text-gray-600 line-clamp-3 prose prose-sm max-w-none"
-        dangerouslySetInnerHTML={{ __html: note.content || 'No content' }}
+        className="
+          text-sm leading-relaxed
+          text-gray-500 dark:text-gray-500
+          line-clamp-3
+          prose prose-sm max-w-none
+          prose-p:my-0
+          dark:prose-invert
+        "
+        dangerouslySetInnerHTML={{ __html: note.content || '<p>No content</p>' }}
       />
 
-      <div className="flex gap-2 mt-auto pt-2 border-t border-gray-100">
+      {/* ─── Divider ───────────────────────────────── */}
+      <div className="border-t border-gray-100 dark:border-white/[0.05] mt-auto" />
+
+      {/* ─── Action Buttons ────────────────────────── */}
+      <div className="flex gap-2">
+
+        {/* Edit */}
         <button
           onClick={() => onEdit(note)}
-          className="flex-1 text-sm bg-blue-50 hover:bg-blue-100 text-blue-600 font-medium py-2 rounded-lg transition"
+          className="
+            flex-1 flex items-center justify-center gap-1.5
+            text-[13px] font-medium py-2 rounded-xl
+            bg-indigo-50 dark:bg-indigo-500/[0.08]
+            hover:bg-indigo-100 dark:hover:bg-indigo-500/[0.15]
+            text-indigo-600 dark:text-indigo-400
+            border border-indigo-100 dark:border-indigo-500/[0.12]
+            hover:border-indigo-200 dark:hover:border-indigo-500/[0.25]
+            transition-all duration-200
+          "
         >
-          ✏️ Edit
+          <EditIcon />
+          Edit
         </button>
+
+        {/* Delete */}
         <button
           onClick={() => onDelete(note._id)}
-          className="flex-1 text-sm bg-red-50 hover:bg-red-100 text-red-500 font-medium py-2 rounded-lg transition"
+          className="
+            flex-1 flex items-center justify-center gap-1.5
+            text-[13px] font-medium py-2 rounded-xl
+            bg-red-50 dark:bg-red-500/[0.08]
+            hover:bg-red-100 dark:hover:bg-red-500/[0.15]
+            text-red-500 dark:text-red-400
+            border border-red-100 dark:border-red-500/[0.12]
+            hover:border-red-200 dark:hover:border-red-500/[0.25]
+            transition-all duration-200
+          "
         >
-          🗑️ Delete
+          <TrashIcon />
+          Delete
         </button>
+
       </div>
     </div>
   );
 };
+
+
+/* ─── SVG Icons — crisp at small sizes ────────────── */
+
+const EditIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+  </svg>
+);
+
+const TrashIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="3 6 5 6 21 6"/>
+    <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+    <path d="M10 11v6M14 11v6"/>
+    <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
+  </svg>
+);
+
 
 export default NoteCard;
