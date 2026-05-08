@@ -1,8 +1,10 @@
 const Note = require('../models/Note.model');
 
+
 const createNote = async (noteData) => {
   return await Note.create(noteData);
 };
+
 
 const getNotesByUser = async (userId, page = 1, limit = 10, search = '') => {
   const skip = (page - 1) * limit;
@@ -10,7 +12,7 @@ const getNotesByUser = async (userId, page = 1, limit = 10, search = '') => {
   const query = {
     userId,
     ...(search && {
-      title: { $regex: search, $options: 'i' },  // ✅ title only
+      title: { $regex: search, $options: 'i' },
     }),
   };
 
@@ -19,9 +21,11 @@ const getNotesByUser = async (userId, page = 1, limit = 10, search = '') => {
   return { notes, total, page, limit };
 };
 
+
 const getNoteById = async (id) => {
   return await Note.findById(id);
 };
+
 
 const updateNote = async (id, updateData) => {
   return await Note.findByIdAndUpdate(
@@ -31,8 +35,26 @@ const updateNote = async (id, updateData) => {
   );
 };
 
+
 const deleteNote = async (id) => {
   return await Note.findByIdAndDelete(id);
 };
 
-module.exports = { createNote, getNotesByUser, getNoteById, updateNote, deleteNote };
+
+// ─── Get Note by Share Token (public) ──────────────────────────────────
+const getNoteByShareToken = async (token) => {
+  return await Note.findOne({
+    shareToken: token,
+    isPublic: true,
+  }).populate('userId', 'name'); // ✅ attach author name for SharedNotePage
+};
+
+
+module.exports = {
+  createNote,
+  getNotesByUser,
+  getNoteById,
+  updateNote,
+  deleteNote,
+  getNoteByShareToken, // ✅
+};

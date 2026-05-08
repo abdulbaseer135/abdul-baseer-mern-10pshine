@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 /* ═══════════════════════════════════════════════════
    CSS VARIABLE TOKEN SYSTEM
    ═══════════════════════════════════════════════════ */
@@ -42,8 +41,10 @@
   --editor-blockquote-border: #dee2e6;
   --editor-blockquote-text:   #6c757d;
   --editor-hr:                #dee2e6;
-}
 
+  /* ─── Shared Note Content Text ──────────────────── */
+  --shared-note-text: #111827;  /* ✅ NEW */
+}
 
 /* ═══════════════════════════════════════════════════
    DARK MODE TOKENS
@@ -84,8 +85,10 @@
   --editor-blockquote-border: #374151;
   --editor-blockquote-text:   #9ca3af;
   --editor-hr:                #1f2937;
-}
 
+  /* ─── Shared Note Content Text ──────────────────── */
+  --shared-note-text: #e5e7eb;  /* ✅ NEW — light gray for dark mode */
+}
 
 /* ═══════════════════════════════════════════════════
    SMOOTH THEME TRANSITION
@@ -115,7 +118,6 @@ textarea,
     transform        150ms ease;
 }
 
-
 /* ═══════════════════════════════════════════════════
    FROSTED GLASS NAVBAR
    ═══════════════════════════════════════════════════ */
@@ -134,7 +136,6 @@ textarea,
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-
 /* ═══════════════════════════════════════════════════
    NOTE CARD — Hover Lift + Glow
    ═══════════════════════════════════════════════════ */
@@ -150,7 +151,6 @@ textarea,
   transform: translateY(-3px);
 }
 
-/* Light mode card hover */
 :root:not(.dark) .note-card:hover {
   box-shadow:
     0 0 0 1px rgba(99, 102, 241, 0.2),
@@ -159,7 +159,6 @@ textarea,
   border-color: rgba(99, 102, 241, 0.3) !important;
 }
 
-/* Dark mode card hover */
 .dark .note-card:hover {
   box-shadow:
     0 0 0 1px rgba(129, 140, 248, 0.25),
@@ -167,7 +166,6 @@ textarea,
     0 2px 8px rgba(129, 140, 248, 0.12);
   border-color: rgba(129, 140, 248, 0.35) !important;
 }
-
 
 /* ═══════════════════════════════════════════════════
    SEARCH INPUT — Glow Focus
@@ -180,7 +178,6 @@ textarea,
 .dark .search-input:focus {
   box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
 }
-
 
 /* ═══════════════════════════════════════════════════
    PRIMARY BUTTON — Lift + Shadow
@@ -202,7 +199,6 @@ textarea,
   transform: translateY(0);
   box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
 }
-
 
 /* ═══════════════════════════════════════════════════
    TIPTAP EDITOR
@@ -258,6 +254,17 @@ textarea,
 .ProseMirror em     { font-style: italic; }
 .ProseMirror s      { text-decoration: line-through; }
 
+/* ═══════════════════════════════════════════════════
+   SHARED NOTE CONTENT — Override editor inline styles
+   ✅ KEY FIX: uses --shared-note-text instead of
+   --text-inverse (which is #0a0a0a black in dark mode!)
+   ═══════════════════════════════════════════════════ */
+
+.shared-note-content,
+.shared-note-content * {
+  color: var(--shared-note-text) !important;
+  background-color: transparent !important;
+}
 
 /* ═══════════════════════════════════════════════════
    SKELETON SHIMMER — Dark mode aware
@@ -279,7 +286,6 @@ textarea,
   animation: shimmer 1.5s ease-in-out infinite;
 }
 
-
 /* ═══════════════════════════════════════════════════
    SCROLLBAR — Dark mode aware
    ═══════════════════════════════════════════════════ */
@@ -297,7 +303,6 @@ textarea,
 .dark ::-webkit-scrollbar-track { background: #0a0a0a; }
 .dark ::-webkit-scrollbar-thumb { background: #1f2937; }
 .dark ::-webkit-scrollbar-thumb:hover { background: #374151; }
-
 
 /* ═══════════════════════════════════════════════════
    TEXT SELECTION — Dark mode aware
