@@ -1,13 +1,16 @@
 const asyncHandler = require('../utils/asyncHandler');
-const ApiResponse = require('../utils/ApiResponse');
+const ApiResponse  = require('../utils/ApiResponse');
 const notesService = require('../services/notes.service');
-const { getIO } = require('../config/socket');
+const { getIO }    = require('../config/socket');
+const crypto       = require('crypto'); // ✅ for generating share token
+
 
 const createNote = asyncHandler(async (req, res) => {
   const note = await notesService.create(req.user._id, req.body);
   getIO().to(req.user._id.toString()).emit('note:created', note);
   return res.status(201).json(new ApiResponse(201, note, 'Note created successfully'));
 });
+
 
 const getAllNotes = asyncHandler(async (req, res) => {
   const page   = parseInt(req.query.page)  || 1;
@@ -17,10 +20,12 @@ const getAllNotes = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, result, 'Notes fetched successfully'));
 });
 
+
 const getNoteById = asyncHandler(async (req, res) => {
   const note = await notesService.getOne(req.params.id, req.user._id);
   return res.status(200).json(new ApiResponse(200, note, 'Note fetched successfully'));
 });
+
 
 const updateNote = asyncHandler(async (req, res) => {
   const note = await notesService.update(req.params.id, req.user._id, req.body);
@@ -28,19 +33,19 @@ const updateNote = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, note, 'Note updated successfully'));
 });
 
+
 const deleteNote = asyncHandler(async (req, res) => {
   await notesService.remove(req.params.id, req.user._id);
   getIO().to(req.user._id.toString()).emit('note:deleted', { id: req.params.id });
   return res.status(200).json(new ApiResponse(200, null, 'Note deleted successfully'));
 });
 
+
 // ─── Export ────────────────────────────────────────────────────────────
 const exportNotes = asyncHandler(async (req, res) => {
-  // ✅ Fetch ALL notes for this user (no pagination limit)
   const result = await notesService.getAll(req.user._id, 1, 1000, '');
   const notes  = result.notes ?? result;
 
-  // ✅ Strip internal fields — export only clean data
   const exportData = notes.map(({ title, content, createdAt, updatedAt }) => ({
     title,
     content,
@@ -50,28 +55,25 @@ const exportNotes = asyncHandler(async (req, res) => {
 
   const payload = JSON.stringify({ exported_at: new Date(), notes: exportData }, null, 2);
 
-  // ✅ Send as downloadable .json file
   res.setHeader('Content-Disposition', 'attachment; filename="notes.json"');
   res.setHeader('Content-Type', 'application/json');
   return res.status(200).send(payload);
 });
 
+
 // ─── Import ────────────────────────────────────────────────────────────
 const importNotes = asyncHandler(async (req, res) => {
   const { notes } = req.body;
 
-  // ✅ Validate — must be a non-empty array
   if (!Array.isArray(notes) || notes.length === 0) {
     return res.status(400).json(new ApiResponse(400, null, 'Invalid import file — notes array required'));
   }
 
-  // ✅ Validate each note has at least a title
   const validNotes = notes.filter((n) => n.title?.trim());
   if (validNotes.length === 0) {
     return res.status(400).json(new ApiResponse(400, null, 'No valid notes found in import file'));
   }
 
-  // ✅ Create all valid notes for this user
   const created = await Promise.all(
     validNotes.map((n) =>
       notesService.create(req.user._id, {
@@ -81,7 +83,6 @@ const importNotes = asyncHandler(async (req, res) => {
     )
   );
 
-  // ✅ Emit socket event for each imported note
   created.forEach((note) => {
     getIO().to(req.user._id.toString()).emit('note:created', note);
   });
@@ -91,12 +92,51 @@ const importNotes = asyncHandler(async (req, res) => {
   );
 });
 
+
+// ─── Toggle Share ───────────────────────────────────────────────────────
+const toggleShare = asyncHandler(async (req, res) => {
+  const note = await notesService.getOne(req.params.id, req.user._id);
+
+  if (note.isPublic) {
+    // ✅ Turn OFF sharing — clear token
+    note.isPublic   = false;
+    note.shareToken = null;
+  } else {
+    // ✅ Turn ON sharing — generate a secure unique token
+    note.isPublic   = true;
+    note.shareToken = crypto.randomBytes(32).toString('hex');
+  }
+
+  await note.save();
+
+  return res.status(200).json(
+    new ApiResponse(200, note, note.isPublic ? 'Note sharing enabled' : 'Note sharing disabled')
+  );
+});
+
+
+// ─── Get Shared Note (public — no auth) ────────────────────────────────
+const getSharedNote = asyncHandler(async (req, res) => {
+  const note = await notesService.getByShareToken(req.params.token);
+
+  if (!note) {
+    return res.status(404).json(
+      new ApiResponse(404, null, 'Note not found or sharing has been disabled')
+    );
+  }
+
+  return res.status(200).json(new ApiResponse(200, note, 'Shared note fetched successfully'));
+});
+
+
 module.exports = {
   createNote,
   getAllNotes,
   getNoteById,
   updateNote,
   deleteNote,
-  exportNotes,  // ✅
-  importNotes,  // ✅
+  exportNotes,
+  importNotes,
+  toggleShare,   // ✅
+  getSharedNote, // ✅
 };

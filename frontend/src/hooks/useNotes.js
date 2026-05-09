@@ -8,11 +8,13 @@ import {
   setSearchQuery,
   clearNotesError,
   resetNotes,
-  noteCreatedFromSocket,   // ✅ new action
-  noteUpdatedFromSocket,   // ✅ new action
-  noteDeletedFromSocket,   // ✅ new action
+  noteCreatedFromSocket,
+  noteUpdatedFromSocket,
+  noteDeletedFromSocket,
 } from '../store/slices/notesSlice';
+import { toggleShareNoteService } from '../services/notes.service'; // ✅
 import useSocket from './useSocket';
+
 
 const useNotes = () => {
   const dispatch = useDispatch();
@@ -20,12 +22,14 @@ const useNotes = () => {
     useSelector((state) => state.notes);
   const { user } = useSelector((state) => state.auth);
 
-  // ✅ Real-time socket listeners — update Redux state instantly
+
+  // ✅ Real-time socket listeners
   useSocket(user?._id, {
     onCreated: (note) => dispatch(noteCreatedFromSocket(note)),
     onUpdated: (note) => dispatch(noteUpdatedFromSocket(note)),
     onDeleted: (id)   => dispatch(noteDeletedFromSocket(id)),
   });
+
 
   const handleFetchNotes = async (params = {}) => {
     const result = await dispatch(fetchNotes(params));
@@ -33,6 +37,7 @@ const useNotes = () => {
       toast.error(result.payload || 'Failed to load notes');
     }
   };
+
 
   const handleAddNote = async (noteData) => {
     const result = await dispatch(addNote(noteData));
@@ -45,6 +50,7 @@ const useNotes = () => {
     }
   };
 
+
   const handleEditNote = async (id, data) => {
     const result = await dispatch(editNote({ id, data }));
     if (editNote.fulfilled.match(result)) {
@@ -55,6 +61,7 @@ const useNotes = () => {
       return false;
     }
   };
+
 
   const handleRemoveNote = async (id) => {
     const result = await dispatch(removeNote(id));
@@ -67,9 +74,34 @@ const useNotes = () => {
     }
   };
 
+
+  // ─── Toggle Share ─────────────────────────────────────────────────────
+  const handleToggleShare = async (noteId) => {
+    try {
+      const res  = await toggleShareNoteService(noteId);
+      const note = res.data;
+
+      // ✅ Update this note in Redux state without a full refetch
+      dispatch(noteUpdatedFromSocket(note));
+
+      if (note.isPublic) {
+        toast.success('Note is now public — link ready to copy!');
+      } else {
+        toast.info('Note sharing disabled');
+      }
+
+      return note; // ✅ return updated note so NoteCard can read shareToken
+    } catch {
+      toast.error('Failed to update sharing');
+      return null;
+    }
+  };
+
+
   const handleSearchQuery = (query) => dispatch(setSearchQuery(query));
   const handleClearError  = () => dispatch(clearNotesError());
   const handleResetNotes  = () => dispatch(resetNotes());
+
 
   return {
     notes,
@@ -83,10 +115,12 @@ const useNotes = () => {
     handleAddNote,
     handleEditNote,
     handleRemoveNote,
+    handleToggleShare,  // ✅
     handleSearchQuery,
     handleClearError,
     handleResetNotes,
   };
 };
+
 
 export default useNotes;

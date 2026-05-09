@@ -21,6 +21,7 @@ const DashboardPage = () => {
     handleAddNote,
     handleEditNote,
     handleRemoveNote,
+    handleToggleShare,  // ✅
     searchQuery,
     handleSearchQuery,
   } = useNotes();
@@ -28,8 +29,8 @@ const DashboardPage = () => {
   const [showEditor, setShowEditor]   = useState(false);
   const [editingNote, setEditingNote] = useState(null);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, noteId: null, noteTitle: '' });
-  const [page, setPage]     = useState(1);
-  const [saving, setSaving] = useState(false);
+  const [page, setPage]       = useState(1);
+  const [saving, setSaving]   = useState(false);
   const [exporting, setExporting] = useState(false);
   const [importing, setImporting] = useState(false);
 
@@ -110,7 +111,7 @@ const DashboardPage = () => {
     e.target.value = '';
     try {
       setImporting(true);
-      const res = await importNotesService(file);
+      const res   = await importNotesService(file);
       const count = res?.data?.imported ?? 0;
       toast.success(`${count} note${count !== 1 ? 's' : ''} imported successfully!`);
       handleFetchNotes({ page: 1, limit: 10, search: searchQuery });
@@ -204,8 +205,7 @@ const DashboardPage = () => {
                 px-4 py-2 rounded-lg font-medium
                 bg-blue-600 dark:bg-blue-500
                 hover:bg-blue-700 dark:hover:bg-blue-600
-                text-white
-                transition-colors duration-200
+                text-white transition-colors duration-200
               "
             >
               + New Note
@@ -307,6 +307,7 @@ const DashboardPage = () => {
                 note={note}
                 onEdit={() => handleEdit(note)}
                 onDelete={() => handleDeleteClick(note)}
+                onShare={handleToggleShare}  // ✅
               />
             ))}
           </div>
@@ -323,8 +324,7 @@ const DashboardPage = () => {
                 border border-gray-300 dark:border-gray-700
                 text-gray-700 dark:text-gray-300
                 hover:bg-gray-100 dark:hover:bg-gray-800
-                disabled:opacity-40
-                transition-colors duration-200
+                disabled:opacity-40 transition-colors duration-200
               "
             >← Prev</button>
             <span className="px-4 py-2 text-gray-600 dark:text-gray-400">
@@ -338,8 +338,7 @@ const DashboardPage = () => {
                 border border-gray-300 dark:border-gray-700
                 text-gray-700 dark:text-gray-300
                 hover:bg-gray-100 dark:hover:bg-gray-800
-                disabled:opacity-40
-                transition-colors duration-200
+                disabled:opacity-40 transition-colors duration-200
               "
             >Next →</button>
           </div>

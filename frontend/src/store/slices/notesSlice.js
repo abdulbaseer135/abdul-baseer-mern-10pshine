@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getNotesService, createNoteService, updateNoteService, deleteNoteService } from '../../services/notes.service';
 
+
 // Thunks
 export const fetchNotes = createAsyncThunk('notes/fetchNotes', async (params = {}, { rejectWithValue }) => {
   try {
@@ -10,6 +11,7 @@ export const fetchNotes = createAsyncThunk('notes/fetchNotes', async (params = {
   }
 });
 
+
 export const addNote = createAsyncThunk('notes/addNote', async (noteData, { rejectWithValue }) => {
   try {
     return await createNoteService(noteData);
@@ -17,6 +19,7 @@ export const addNote = createAsyncThunk('notes/addNote', async (noteData, { reje
     return rejectWithValue(err.response?.data?.message || 'Failed to create note');
   }
 });
+
 
 export const editNote = createAsyncThunk('notes/editNote', async ({ id, data }, { rejectWithValue }) => {
   try {
@@ -26,6 +29,7 @@ export const editNote = createAsyncThunk('notes/editNote', async ({ id, data }, 
   }
 });
 
+
 export const removeNote = createAsyncThunk('notes/removeNote', async (id, { rejectWithValue }) => {
   try {
     await deleteNoteService(id);
@@ -34,6 +38,7 @@ export const removeNote = createAsyncThunk('notes/removeNote', async (id, { reje
     return rejectWithValue(err.response?.data?.message || 'Failed to delete note');
   }
 });
+
 
 // Slice
 const notesSlice = createSlice({
@@ -55,8 +60,10 @@ const notesSlice = createSlice({
       state.pagination = { page: 1, limit: 10, total: 0, totalPages: 0 };
     },
 
-    // ✅ Socket real-time reducers
+    // ─── Socket real-time reducers ─────────────────────────────────
     noteCreatedFromSocket: (state, action) => {
+      // ✅ Guard: socket fires AFTER addNote.fulfilled already added it
+      // so only add if not already present in state
       const exists = state.notes.some((n) => n._id === action.payload._id);
       if (!exists) {
         state.notes.unshift(action.payload);
@@ -70,8 +77,12 @@ const notesSlice = createSlice({
     },
 
     noteDeletedFromSocket: (state, action) => {
-      state.notes = state.notes.filter((n) => n._id !== action.payload);
-      state.pagination.total = Math.max(0, state.pagination.total - 1);
+      const exists = state.notes.some((n) => n._id === action.payload);
+      if (exists) {
+        // ✅ Guard: only update total if note was actually in current page
+        state.notes = state.notes.filter((n) => n._id !== action.payload);
+        state.pagination.total = Math.max(0, state.pagination.total - 1);
+      }
     },
   },
 
@@ -90,12 +101,11 @@ const notesSlice = createSlice({
         state.isInitialLoading = false;
         state.isSearching      = false;
 
-        // ✅ FIX — unwrap flat data shape from backend
         const d = action.payload.data ?? action.payload;
 
-        state.notes = d.notes ?? d;  // ✅ notes array
+        state.notes = d.notes ?? d;
 
-        state.pagination = {         // ✅ flat fields — no nested .pagination object
+        state.pagination = {
           page:       d.page       ?? state.pagination.page,
           limit:      d.limit      ?? state.pagination.limit,
           total:      d.total      ?? state.pagination.total,
@@ -104,8 +114,8 @@ const notesSlice = createSlice({
       })
       .addCase(fetchNotes.rejected, (state, action) => {
         state.isInitialLoading = false;
-        state.isSearching = false;
-        state.error = action.payload;
+        state.isSearching      = false;
+        state.error            = action.payload;
       })
 
       // ─── Add Note ──────────────────────────────────────────────────
@@ -113,31 +123,50 @@ const notesSlice = createSlice({
       .addCase(addNote.fulfilled, (state, action) => {
         state.loading = false;
         const note = action.payload.data ?? action.payload;
-        state.notes.unshift(note);
-        state.pagination.total += 1;
+        // ✅ Guard: socket may have already added this note
+        // so check before inserting to prevent duplicate key warning
+        const exists = state.notes.some((n) => n._id === note._id);
+        if (!exists) {
+          state.notes.unshift(note);
+          state.pagination.total += 1;
+        }
       })
-      .addCase(addNote.rejected,  (state, action) => { state.loading = false; state.error = action.payload; })
+      .addCase(addNote.rejected,  (state, action) => {
+        state.loading = false;
+        state.error   = action.payload;
+      })
 
       // ─── Edit Note ─────────────────────────────────────────────────
       .addCase(editNote.pending,   (state) => { state.loading = true; })
       .addCase(editNote.fulfilled, (state, action) => {
         state.loading = false;
         const updated = action.payload.data ?? action.payload;
-        const index = state.notes.findIndex((n) => n._id === updated._id);
+        const index   = state.notes.findIndex((n) => n._id === updated._id);
         if (index !== -1) state.notes[index] = updated;
       })
-      .addCase(editNote.rejected,  (state, action) => { state.loading = false; state.error = action.payload; })
+      .addCase(editNote.rejected,  (state, action) => {
+        state.loading = false;
+        state.error   = action.payload;
+      })
 
       // ─── Remove Note ───────────────────────────────────────────────
       .addCase(removeNote.pending,   (state) => { state.loading = true; })
       .addCase(removeNote.fulfilled, (state, action) => {
-        state.loading = false;
-        state.notes = state.notes.filter((n) => n._id !== action.payload);
-        state.pagination.total = Math.max(0, state.pagination.total - 1);
+        state.loading  = false;
+        // ✅ Guard: socket may have already removed it
+        const exists = state.notes.some((n) => n._id === action.payload);
+        if (exists) {
+          state.notes = state.notes.filter((n) => n._id !== action.payload);
+          state.pagination.total = Math.max(0, state.pagination.total - 1);
+        }
       })
-      .addCase(removeNote.rejected,  (state, action) => { state.loading = false; state.error = action.payload; });
+      .addCase(removeNote.rejected,  (state, action) => {
+        state.loading = false;
+        state.error   = action.payload;
+      });
   },
 });
+
 
 export const {
   setSearchQuery,
@@ -147,5 +176,6 @@ export const {
   noteUpdatedFromSocket,
   noteDeletedFromSocket,
 } = notesSlice.actions;
+
 
 export default notesSlice.reducer;
