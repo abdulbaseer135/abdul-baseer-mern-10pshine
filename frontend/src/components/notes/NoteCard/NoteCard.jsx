@@ -1,10 +1,14 @@
 import { toast } from 'react-toastify';
 
-const NoteCard = ({ note, onEdit, onDelete, onShare }) => {
+const NoteCard = ({ note, onEdit, onDelete, onShare, onView }) => {
   const formatDate = (dateStr) =>
     new Date(dateStr).toLocaleDateString('en-US', {
       month: 'short', day: 'numeric', year: 'numeric',
     });
+
+  // ✅ Strip HTML tags to get plain text for preview
+  const stripHtml = (html) => html.replace(/<[^>]*>/g, '');
+  const plainTextContent = stripHtml(note.content || '');
 
   // ✅ Build the public share URL from the note's token
   const shareUrl = note.isPublic && note.shareToken
@@ -16,21 +20,23 @@ const NoteCard = ({ note, onEdit, onDelete, onShare }) => {
     toast.success('Share link copied to clipboard!');
   };
 
-
   return (
     <div className="
       note-card
-      group relative
       bg-white dark:bg-[#141414]
       border border-gray-200/80 dark:border-white/[0.06]
+      border-l-4 border-l-transparent
+      hover:border-l-indigo-500 dark:hover:border-l-indigo-400
       rounded-2xl p-5
       shadow-sm dark:shadow-none
-      flex flex-col gap-3
+      flex flex-col justify-between
       cursor-default
+      h-full min-h-[220px]
+      transition-all duration-200
     ">
 
-      {/* ─── Top Row — Title + Date ─────────────────── */}
-      <div className="flex items-start justify-between gap-3">
+      {/* ─── Top Row — Title + Date ────────────────────── */}
+      <div className="flex items-start justify-between gap-3 mb-3">
         <h3 className="
           text-[15px] font-semibold leading-snug
           text-gray-900 dark:text-gray-100
@@ -46,120 +52,127 @@ const NoteCard = ({ note, onEdit, onDelete, onShare }) => {
           bg-gray-100 dark:bg-white/[0.05]
           text-gray-400 dark:text-gray-600
           border border-gray-200/60 dark:border-white/[0.04]
-          mt-0.5
         ">
           {formatDate(note.updatedAt || note.createdAt)}
         </span>
       </div>
 
-      {/* ─── Content Preview ───────────────────────── */}
-      <div
-        className="
+      {/* ─── Content Preview — Plain Text, 3 Lines Max ──────── */}
+      <div className="mb-3 flex-grow">
+        <p className="
           text-sm leading-relaxed
-          text-gray-500 dark:text-gray-500
+          text-gray-600 dark:text-gray-400
           line-clamp-3
-          prose prose-sm max-w-none
-          prose-p:my-0
-          dark:prose-invert
-        "
-        dangerouslySetInnerHTML={{ __html: note.content || '<p>No content</p>' }}
-      />
-
-      {/* ─── Shared Badge — visible when note is public ── */}
-      {note.isPublic && (
-        <div className="
-          flex items-center gap-1.5
-          px-2.5 py-1 rounded-lg w-fit
-          bg-green-50 dark:bg-green-500/[0.08]
-          border border-green-100 dark:border-green-500/[0.15]
         ">
-          <span className="w-1.5 h-1.5 rounded-full bg-green-500 dark:bg-green-400 animate-pulse" />
-          <span className="text-[11px] font-medium text-green-600 dark:text-green-400">
+          {plainTextContent || 'No content'}
+        </p>
+      </div>
+
+      {/* ─── Badge Container — Always Reserved Space ──────────────────────────── */}
+      <div className="h-8 flex items-center mt-2 mb-1">
+        {note.isPublic && (
+          <span className="inline-flex items-center gap-1.5 px-3 py-1
+            rounded-full text-xs font-medium
+            bg-green-50 text-green-700 border border-green-200
+            dark:bg-green-900/20 dark:text-green-400 dark:border-green-800">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-500 dark:bg-green-400 animate-pulse" />
             Public link active
           </span>
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* ─── Divider ───────────────────────────────── */}
-      <div className="border-t border-gray-100 dark:border-white/[0.05] mt-auto" />
+      {/* ─── Divider ────────────────────────────────────── */}
+      <div className="border-t border-gray-100 dark:border-white/[0.05] mb-3" />
 
-      {/* ─── Action Buttons ────────────────────────── */}
-      <div className="flex gap-2">
+      {/* ─── Action Buttons — Single Row with Icons Only ──── */}
+      <div className="flex gap-1.5 justify-start">
+        
+        {/* View Full Note */}
+        <button
+          onClick={() => onView(note)}
+          title="View full note"
+          className="
+            p-2 rounded-lg
+            bg-gray-100 dark:bg-white/[0.05]
+            hover:bg-gray-200 dark:hover:bg-white/[0.08]
+            text-gray-600 dark:text-gray-400
+            border border-gray-200 dark:border-white/[0.08]
+            hover:border-gray-300 dark:hover:border-white/[0.12]
+            transition-all duration-200
+          "
+        >
+          <ReadMoreIcon />
+        </button>
 
-        {/* Edit */}
+        {/* Edit Note */}
         <button
           onClick={() => onEdit(note)}
+          title="Edit note"
           className="
-            flex-1 flex items-center justify-center gap-1.5
-            text-[13px] font-medium py-2 rounded-xl
-            bg-indigo-50 dark:bg-indigo-500/[0.08]
-            hover:bg-indigo-100 dark:hover:bg-indigo-500/[0.15]
-            text-indigo-600 dark:text-indigo-400
-            border border-indigo-100 dark:border-indigo-500/[0.12]
-            hover:border-indigo-200 dark:hover:border-indigo-500/[0.25]
+            p-2 rounded-lg
+            bg-gray-100 dark:bg-white/[0.05]
+            hover:bg-gray-200 dark:hover:bg-white/[0.08]
+            text-gray-600 dark:text-gray-400
+            border border-gray-200 dark:border-white/[0.08]
+            hover:border-gray-300 dark:hover:border-white/[0.12]
             transition-all duration-200
           "
         >
           <EditIcon />
-          Edit
         </button>
 
-        {/* ─── Share Toggle ──────────────────────────── */}
-        <button
-          onClick={() => onShare(note._id)}
-          title={note.isPublic ? 'Disable sharing' : 'Share note'}
-          className={`
-            flex items-center justify-center gap-1.5
-            text-[13px] font-medium py-2 px-3 rounded-xl
-            border transition-all duration-200
-            ${note.isPublic
-              ? 'bg-green-50 dark:bg-green-500/[0.08] text-green-600 dark:text-green-400 border-green-100 dark:border-green-500/[0.15] hover:bg-green-100 dark:hover:bg-green-500/[0.15]'
-              : 'bg-gray-50 dark:bg-white/[0.03] text-gray-400 dark:text-gray-600 border-gray-200 dark:border-white/[0.06] hover:text-gray-600 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/[0.06]'
-            }
-          `}
-        >
-          <ShareIcon />
-        </button>
-
-        {/* ─── Copy Link — only shown when note is public ── */}
-        {note.isPublic && shareUrl && (
-          <button
-            onClick={handleCopyLink}
-            title="Copy share link"
-            className="
-              flex items-center justify-center gap-1.5
-              text-[13px] font-medium py-2 px-3 rounded-xl
-              bg-indigo-50 dark:bg-indigo-500/[0.08]
-              hover:bg-indigo-100 dark:hover:bg-indigo-500/[0.15]
-              text-indigo-500 dark:text-indigo-400
-              border border-indigo-100 dark:border-indigo-500/[0.12]
-              hover:border-indigo-200 dark:hover:border-indigo-500/[0.25]
-              transition-all duration-200
-            "
-          >
-            <LinkIcon />
-          </button>
-        )}
-
-        {/* Delete */}
+        {/* Delete Note */}
         <button
           onClick={() => onDelete(note._id)}
+          title="Delete note"
           className="
-            flex-1 flex items-center justify-center gap-1.5
-            text-[13px] font-medium py-2 rounded-xl
-            bg-red-50 dark:bg-red-500/[0.08]
-            hover:bg-red-100 dark:hover:bg-red-500/[0.15]
-            text-red-500 dark:text-red-400
-            border border-red-100 dark:border-red-500/[0.12]
-            hover:border-red-200 dark:hover:border-red-500/[0.25]
+            p-2 rounded-lg
+            bg-gray-100 dark:bg-white/[0.05]
+            hover:bg-red-100 dark:hover:bg-red-500/[0.08]
+            text-gray-600 dark:text-gray-400
+            hover:text-red-600 dark:hover:text-red-400
+            border border-gray-200 dark:border-white/[0.08]
+            hover:border-red-200 dark:hover:border-red-500/[0.12]
             transition-all duration-200
           "
         >
           <TrashIcon />
-          Delete
         </button>
 
+        {/* Share Toggle */}
+        <button
+          onClick={() => onShare(note._id)}
+          title={note.isPublic ? 'Disable sharing' : 'Share note'}
+          className="
+            p-2 rounded-lg
+            bg-gray-100 dark:bg-white/[0.05]
+            hover:bg-gray-200 dark:hover:bg-white/[0.08]
+            text-gray-600 dark:text-gray-400
+            border border-gray-200 dark:border-white/[0.08]
+            hover:border-gray-300 dark:hover:border-white/[0.12]
+            transition-all duration-200
+          "
+        >
+          <ShareIcon />
+        </button>
+
+        {/* Copy Share Link */}
+        <button
+          onClick={() => note.isPublic && shareUrl && handleCopyLink()}
+          disabled={!note.isPublic || !shareUrl}
+          title={note.isPublic && shareUrl ? 'Copy share link' : 'Share note first'}
+          className={`
+            p-2 rounded-lg border transition-all duration-200
+            ${note.isPublic && shareUrl
+              ? 'bg-gray-100 dark:bg-white/[0.05] hover:bg-gray-200 dark:hover:bg-white/[0.08] text-gray-600 dark:text-gray-400 border-gray-200 dark:border-white/[0.08] hover:border-gray-300 dark:hover:border-white/[0.12] cursor-pointer'
+              : 'bg-gray-50 dark:bg-white/[0.02] text-gray-300 dark:text-gray-700 border-gray-100 dark:border-white/[0.04] cursor-not-allowed opacity-40'
+            }
+          `}
+        >
+          <LinkIcon />
+        </button>
       </div>
+
     </div>
   );
 };
@@ -201,6 +214,14 @@ const LinkIcon = () => (
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
     <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+  </svg>
+);
+
+const ReadMoreIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+    <circle cx="12" cy="12" r="3"/>
   </svg>
 );
 

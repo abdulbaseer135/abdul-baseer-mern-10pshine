@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import useNotes from '../../hooks/useNotes';
 import NoteCard from '../../components/notes/NoteCard/NoteCard';
 import NoteEditor from '../../components/notes/NoteEditor/NoteEditor';
+import NoteViewer from '../../components/notes/NoteViewer/NoteViewer';
 import Modal from '../../components/common/Modal/Modal';
 import Navbar from '../../components/common/Navbar/Navbar';
 import { NoteSkeletonGrid } from '../../components/common/Skeleton/NoteSkeleton';
@@ -28,11 +29,13 @@ const DashboardPage = () => {
 
   const [showEditor, setShowEditor]   = useState(false);
   const [editingNote, setEditingNote] = useState(null);
+  const [viewingNote, setViewingNote] = useState(null);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, noteId: null, noteTitle: '' });
   const [page, setPage]       = useState(1);
   const [saving, setSaving]   = useState(false);
   const [exporting, setExporting] = useState(false);
   const [importing, setImporting] = useState(false);
+  const [sortOrder, setSortOrder] = useState('');
 
   const [searchInput, setSearchInput] = useState(searchQuery || '');
   const isFirstLoad = useRef(true);
@@ -68,6 +71,25 @@ const DashboardPage = () => {
   }, [page]); // eslint-disable-line
 
 
+  // ─── Sort notes based on selected order ──────────────────────────
+  const sortedNotes = [...notes].sort((a, b) => {
+    switch(sortOrder) {
+      case '':
+        return 0; // no sorting - original API order
+      case 'newest':
+        return new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt);
+      case 'oldest':
+        return new Date(a.updatedAt || a.createdAt) - new Date(b.updatedAt || b.createdAt);
+      case 'az':
+        return (a.title || '').localeCompare(b.title || '');
+      case 'za':
+        return (b.title || '').localeCompare(a.title || '');
+      default:
+        return 0;
+    }
+  });
+
+
   // ─── Save note ─────────────────────────────────────────────────────
   const handleSave = async (noteData) => {
     setSaving(true);
@@ -97,7 +119,7 @@ const DashboardPage = () => {
       await exportNotesService();
       toast.success('Notes exported successfully!');
     } catch {
-      toast.error('Failed to export notes');
+      toast.error('Something went wrong. Try again.');
     } finally {
       setExporting(false);
     }
@@ -116,7 +138,7 @@ const DashboardPage = () => {
       toast.success(`${count} note${count !== 1 ? 's' : ''} imported successfully!`);
       handleFetchNotes({ page: 1, limit: 10, search: searchQuery });
     } catch (err) {
-      toast.error(err.message || 'Failed to import notes');
+      toast.error('Something went wrong. Try again.');
     } finally {
       setImporting(false);
     }
@@ -213,18 +235,20 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        {/* ─── Search ──────────────────────────────────────────────── */}
+        {/* ─── Search + Sort ───────────────────────────────────────────────── */}
         <div className="mb-6 flex items-center gap-3">
-          <div className="relative">
+          
+          {/* Search Input — Half Width */}
+          <div className="relative w-1/2 max-w-md">
             <input
               type="text"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Search notes..."
               className="
-                w-full sm:w-80 px-4 py-2 rounded-lg
-                border border-gray-300 dark:border-gray-700
-                bg-white dark:bg-gray-900
+                w-full px-4 py-2 rounded-lg
+                border border-gray-300 dark:border-white/10
+                bg-white dark:bg-[#141414]
                 text-gray-900 dark:text-gray-100
                 placeholder-gray-400 dark:placeholder-gray-600
                 focus:outline-none focus:ring-2
@@ -241,10 +265,55 @@ const DashboardPage = () => {
               </div>
             )}
           </div>
+
+          {/* Sort Dropdown with Label */}
+          <div className="relative ml-auto">
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="
+                appearance-none pl-4 pr-9 py-2 rounded-lg
+                border border-gray-300 dark:border-white/10
+                bg-white dark:bg-[#141414]
+                text-gray-700 dark:text-gray-300
+                text-sm font-medium
+                focus:outline-none focus:ring-2
+                focus:ring-blue-500 dark:focus:ring-blue-400
+                transition-colors duration-200
+                cursor-pointer
+              "
+            >
+              <option value="" className="text-gray-400">Select</option>
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+              <option value="az">A → Z</option>
+              <option value="za">Z → A</option>
+            </select>
+            {/* Chevron Icon */}
+            <svg
+              className="
+                absolute right-3 top-1/2 -translate-y-1/2
+                w-4 h-4 text-gray-600 dark:text-gray-400
+                pointer-events-none
+              "
+              viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+            >
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+
+          {/* Clear Search Button */}
           {searchInput && (
             <button
               onClick={() => { setSearchInput(''); handleSearchQuery(''); loadNotes(); }}
-              className="text-sm text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
+              className="
+                px-3 py-2 rounded-lg text-sm font-medium
+                text-gray-600 dark:text-gray-400
+                hover:text-gray-900 dark:hover:text-gray-100
+                hover:bg-gray-100 dark:hover:bg-white/[0.05]
+                border border-gray-200 dark:border-white/[0.08]
+                transition-colors duration-200
+              "
             >
               Clear
             </button>
@@ -259,6 +328,14 @@ const DashboardPage = () => {
             onSave={handleSave}
             onClose={() => { setShowEditor(false); setEditingNote(null); }}
             loading={saving}
+          />
+        )}
+
+        {/* ─── Note Viewer Modal ───────────────────────────────────── */}
+        {viewingNote && (
+          <NoteViewer
+            note={viewingNote}
+            onClose={() => setViewingNote(null)}
           />
         )}
 
@@ -301,13 +378,14 @@ const DashboardPage = () => {
           </div>
         ) : (
           <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 transition-opacity duration-200 ${isSearching ? 'opacity-60' : 'opacity-100'}`}>
-            {notes.map((note) => (
+            {sortedNotes.map((note) => (
               <NoteCard
                 key={note._id}
                 note={note}
                 onEdit={() => handleEdit(note)}
                 onDelete={() => handleDeleteClick(note)}
                 onShare={handleToggleShare}  // ✅
+                onView={() => setViewingNote(note)}
               />
             ))}
           </div>
