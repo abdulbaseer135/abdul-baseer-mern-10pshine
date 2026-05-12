@@ -32,6 +32,23 @@ module.exports = {
         'dark-md': '0 4px 12px rgba(0, 0, 0, 0.4)',
         'dark-lg': '0 12px 32px rgba(0, 0, 0, 0.5)',
       },
+      keyframes: {
+        // ✅ Voice button pulsing animation
+        voicePulse: {
+          '0%, 100%': { boxShadow: '0 0 0 0 rgba(239, 68, 68, 0.5)' },
+          '50%': { boxShadow: '0 0 0 8px rgba(239, 68, 68, 0)' },
+        },
+        // ✅ Sound bar animation for listening indicator
+        soundBar: {
+          '0%, 100%': { transform: 'scaleY(0.4)' },
+          '50%': { transform: 'scaleY(1)' },
+        },
+      },
+      animation: {
+        // ✅ Animation utility classes
+        voicePulse: 'voicePulse 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        soundBar: 'soundBar 0.8s ease-in-out infinite',
+      },
     },
   },
   plugins: [],
