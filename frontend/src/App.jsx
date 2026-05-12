@@ -52,7 +52,22 @@ const App = () => {
         />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer
+        position="top-center"
+        autoClose={2500}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        toastClassName={() =>
+          'relative flex items-center p-3 px-4 mb-2 rounded-xl shadow-lg ' +
+          'bg-white dark:bg-[#1c1c1c] text-gray-800 dark:text-gray-100 ' +
+          'border border-gray-100 dark:border-white/10 text-sm font-medium ' +
+          'min-w-[280px] max-w-[360px]'
+        }
+        progressClassName="bg-indigo-500 rounded-full"
+      />
     </BrowserRouter>
   );
 };

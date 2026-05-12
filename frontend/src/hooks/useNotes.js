@@ -34,7 +34,7 @@ const useNotes = () => {
   const handleFetchNotes = async (params = {}) => {
     const result = await dispatch(fetchNotes(params));
     if (fetchNotes.rejected.match(result)) {
-      toast.error(result.payload || 'Failed to load notes');
+      toast.error('Something went wrong. Try again.');
     }
   };
 
@@ -42,10 +42,10 @@ const useNotes = () => {
   const handleAddNote = async (noteData) => {
     const result = await dispatch(addNote(noteData));
     if (addNote.fulfilled.match(result)) {
-      toast.success('Note created!');
+      toast.success('Note created successfully!');
       return true;
     } else {
-      toast.error(result.payload || 'Failed to create note');
+      toast.error('Something went wrong. Try again.');
       return false;
     }
   };
@@ -54,10 +54,10 @@ const useNotes = () => {
   const handleEditNote = async (id, data) => {
     const result = await dispatch(editNote({ id, data }));
     if (editNote.fulfilled.match(result)) {
-      toast.success('Note updated!');
+      toast.success('Note updated successfully!');
       return true;
     } else {
-      toast.error(result.payload || 'Failed to update note');
+      toast.error('Something went wrong. Try again.');
       return false;
     }
   };
@@ -66,10 +66,10 @@ const useNotes = () => {
   const handleRemoveNote = async (id) => {
     const result = await dispatch(removeNote(id));
     if (removeNote.fulfilled.match(result)) {
-      toast.success('Note deleted!');
+      toast.success('Note deleted successfully!');
       return true;
     } else {
-      toast.error(result.payload || 'Failed to delete note');
+      toast.error('Something went wrong. Try again.');
       return false;
     }
   };
@@ -85,14 +85,14 @@ const useNotes = () => {
       dispatch(noteUpdatedFromSocket(note));
 
       if (note.isPublic) {
-        toast.success('Note is now public — link ready to copy!');
+        toast.success('Note is now public!');
       } else {
-        toast.info('Note sharing disabled');
+        toast.info('Sharing disabled for this note.');
       }
 
       return note; // ✅ return updated note so NoteCard can read shareToken
     } catch {
-      toast.error('Failed to update sharing');
+      toast.error('Something went wrong. Try again.');
       return null;
     }
   };

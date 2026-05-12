@@ -18,10 +18,10 @@ const useAuth = () => {
   const handleLogin = async (credentials) => {
     const result = await dispatch(login(credentials));
     if (login.fulfilled.match(result)) {
-      toast.success('Login successful!');
+      toast.success('Welcome back!');
       return true;
     } else {
-      toast.error(result.payload || 'Login failed');
+      toast.error('Something went wrong. Try again.');
       return false;
     }
   };
@@ -32,7 +32,7 @@ const useAuth = () => {
       toast.success('Account created successfully!');
       return true;
     } else {
-      toast.error(result.payload || 'Registration failed');
+      toast.error('Something went wrong. Try again.');
       return false;
     }
   };
@@ -40,7 +40,7 @@ const useAuth = () => {
   const handleFetchProfile = async () => {
     const result = await dispatch(fetchProfile());
     if (fetchProfile.rejected.match(result)) {
-      toast.error(result.payload || 'Failed to load profile');
+      toast.error('Something went wrong. Try again.');
     }
   };
 
@@ -49,7 +49,7 @@ const useAuth = () => {
     if (updateProfile.fulfilled.match(result)) {
       toast.success('Profile updated successfully!');
     } else {
-      toast.error(result.payload || 'Failed to update profile');
+      toast.error('Something went wrong. Try again.');
     }
   };
 
@@ -59,7 +59,7 @@ const useAuth = () => {
       toast.success('Password changed successfully!');
       return true;
     } else {
-      toast.error(result.payload || 'Failed to change password');
+      toast.error('Something went wrong. Try again.');
       return false;
     }
   };
@@ -70,7 +70,7 @@ const useAuth = () => {
       toast.success('Account deleted');
       return true;
     } else {
-      toast.error(result.payload || 'Failed to delete account');
+      toast.error('Something went wrong. Try again.');
       return false;
     }
   };
