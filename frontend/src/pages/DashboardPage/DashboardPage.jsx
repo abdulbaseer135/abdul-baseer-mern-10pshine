@@ -134,11 +134,24 @@ const DashboardPage = () => {
     try {
       setImporting(true);
       const res   = await importNotesService(file);
-      const count = res?.data?.imported ?? 0;
-      toast.success(`${count} note${count !== 1 ? 's' : ''} imported successfully!`);
+      const data  = res?.data || res;
+      const importedCount = data?.importedCount ?? 0;
+      const skippedCount  = data?.skippedCount ?? 0;
+
+      // ✅ Show different messages based on import results
+      if (importedCount === 0 && skippedCount > 0) {
+        toast.warning(`All ${skippedCount} note(s) were duplicates and skipped.`);
+      } else if (importedCount > 0 && skippedCount > 0) {
+        toast.success(
+          `${importedCount} note${importedCount !== 1 ? 's' : ''} imported. ${skippedCount} duplicate${skippedCount !== 1 ? 's' : ''} skipped.`
+        );
+      } else if (importedCount > 0) {
+        toast.success(`${importedCount} note${importedCount !== 1 ? 's' : ''} imported successfully!`);
+      }
+
       handleFetchNotes({ page: 1, limit: 10, search: searchQuery });
     } catch (err) {
-      toast.error('Something went wrong. Try again.');
+      toast.error(err.message || 'Something went wrong. Try again.');
     } finally {
       setImporting(false);
     }

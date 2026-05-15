@@ -31,6 +31,25 @@ userSchema.pre('save', async function () {
   this.password = await bcrypt.hash(this.password, 12);
 });
 
+// ═════════════════════════════════════════════════════════════════════
+// ✅ CASCADE DELETE: When a user is deleted, delete all their notes
+// ═════════════════════════════════════════════════════════════════════
+// Note: Using async middleware without 'next' parameter
+// Mongoose automatically waits for the promise to resolve
+userSchema.pre('deleteOne', { document: true, query: false }, async function () {
+  try {
+    const Note = mongoose.model('Note');
+    const result = await Note.deleteMany({ userId: this._id });
+    // Log deletion for debugging
+    console.log(`Deleted ${result.deletedCount} notes for user ${this._id}`);
+  } catch (error) {
+    console.error('Error deleting user notes:', error);
+    throw error;
+  }
+  // No need to call next() with async middleware
+  // Mongoose automatically continues after this returns
+});
+
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
