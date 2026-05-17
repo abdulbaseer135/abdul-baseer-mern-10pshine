@@ -46,7 +46,10 @@ const exportNotes = asyncHandler(async (req, res) => {
   const result = await notesService.getAll(req.user._id, 1, 1000, '');
   const notes  = result.notes ?? result;
 
-  const exportData = notes.map(({ title, content, createdAt, updatedAt }) => ({
+  // ✅ Include noteId in export for portable identity
+  const exportData = notes.map(({ _id, noteId, title, content, createdAt, updatedAt }) => ({
+    _id,           // Include MongoDB _id for reference
+    noteId,        // Include portable noteId for re-import
     title,
     content,
     createdAt,
@@ -74,21 +77,63 @@ const importNotes = asyncHandler(async (req, res) => {
     return res.status(400).json(new ApiResponse(400, null, 'No valid notes found in import file'));
   }
 
-  const created = await Promise.all(
-    validNotes.map((n) =>
-      notesService.create(req.user._id, {
-        title:   n.title.trim(),
-        content: n.content || '',
-      })
-    )
-  );
+  // ═════════════════════════════════════════════════════════════════════
+  // ✅ IMPORT STRATEGY - OPTION B: Skip duplicates and report
+  // Preserve noteId if provided, otherwise generate new one
+  // Do NOT trust incoming userId from uploaded JSON
+  // ═════════════════════════════════════════════════════════════════════
 
-  created.forEach((note) => {
-    getIO().to(req.user._id.toString()).emit('note:created', note);
-  });
+  const importedNotes = [];
+  const skippedNotes = [];
+
+  for (const n of validNotes) {
+    const noteTitle = n.title.trim();
+    let noteToCreate = {
+      title: noteTitle,
+      content: n.content || '',
+      userId: req.user._id,  // ✅ Force userId to authenticated user
+    };
+
+    // If noteId is provided in import file and has valid format, try to preserve it
+    if (n.noteId && typeof n.noteId === 'string') {
+      const existingNote = await notesService.getByNoteId(n.noteId);
+      if (existingNote) {
+        // ✅ Skip if this noteId already exists for this user
+        skippedNotes.push({
+          noteId: n.noteId,
+          title: noteTitle,
+          reason: 'Note with this ID already exists',
+        });
+        continue;
+      }
+      // ✅ Use the provided noteId (preserve identity)
+      noteToCreate.noteId = n.noteId;
+    }
+    // If no noteId provided, the model will generate one automatically
+
+    try {
+      const created = await notesService.create(req.user._id, noteToCreate);
+      importedNotes.push(created);
+      getIO().to(req.user._id.toString()).emit('note:created', created);
+    } catch (error) {
+      skippedNotes.push({
+        title: noteTitle,
+        reason: error.message || 'Failed to import note',
+      });
+    }
+  }
 
   return res.status(201).json(
-    new ApiResponse(201, { imported: created.length }, `${created.length} notes imported successfully`)
+    new ApiResponse(
+      201,
+      {
+        importedCount: importedNotes.length,
+        skippedCount: skippedNotes.length,
+        skipped: skippedNotes,
+        imported: importedNotes,
+      },
+      `${importedNotes.length} note(s) imported, ${skippedNotes.length} skipped`
+    )
   );
 });
 

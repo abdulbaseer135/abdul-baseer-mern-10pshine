@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { v4: uuidv4 } = require('uuid');
 
 const noteSchema = new mongoose.Schema(
   {
@@ -18,6 +19,16 @@ const noteSchema = new mongoose.Schema(
       required: true,
     },
 
+    // ─── Note Identity ─────────────────────────────────
+    // noteId: portable/export-safe unique identity
+    // _id: internal database identity (handled by MongoDB)
+    noteId: {
+      type: String,
+      required: true,
+      unique: true,
+      default: () => uuidv4(),
+    },
+
     // ─── Note Sharing ──────────────────────────────────
     isPublic: {
       type: Boolean,
@@ -32,7 +43,15 @@ const noteSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ✅ Only enforces uniqueness when shareToken is an actual string (not null)
+// ✅ Indexes for performance and uniqueness
+
+// User's notes sorted by creation date
+noteSchema.index({ userId: 1, createdAt: -1 });
+
+// Quick lookup by noteId (for export/import)
+noteSchema.index({ noteId: 1 });
+
+// Only enforces uniqueness when shareToken is an actual string (not null)
 // sparse: true + partialFilterExpression prevents null values from being indexed
 noteSchema.index(
   { shareToken: 1 },

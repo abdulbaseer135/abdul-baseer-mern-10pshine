@@ -5,14 +5,15 @@ const {
   updateNote,
   deleteNote,
   getNoteByShareToken, // ✅ new DAL function we'll add next
+  getNoteByNoteId,     // ✅ new DAL function for checking noteId during import
 } = require('../dal/notes.dal');
 const ApiError = require('../utils/ApiError');
 const logger   = require('../config/logger');
 
 
-const create = async (userId, { title, content }) => {
-  logger.info({ userId, title }, 'Creating new note');
-  const note = await createNote({ title, content, userId });
+const create = async (userId, { title, content, noteId }) => {
+  logger.info({ userId, title, noteId }, 'Creating new note');
+  const note = await createNote({ title, content, userId, noteId });
   logger.info({ userId, noteId: note._id }, 'Note created successfully');
   return note;
 };
@@ -92,4 +93,14 @@ const getByShareToken = async (token) => {
 };
 
 
-module.exports = { create, getAll, getOne, update, remove, getByShareToken }; // ✅
+// ═════════════════════════════════════════════════════════════════════
+// ✅ NEW: Check if a portable noteId already exists (for import validation)
+// ═════════════════════════════════════════════════════════════════════
+const getByNoteId = async (noteId) => {
+  logger.info({ noteId }, 'Checking if noteId exists');
+  const note = await getNoteByNoteId(noteId);
+  return note;
+};
+
+
+module.exports = { create, getAll, getOne, update, remove, getByShareToken, getByNoteId }; // ✅

@@ -20,8 +20,19 @@ const updateUser = async (id, updateData) => {
   ).select('-password').lean();
 };
 
+// ═════════════════════════════════════════════════════════════════════
+// ✅ CASCADE DELETE: Must use document instance to trigger middleware
+// Do NOT use findByIdAndDelete() alone as it bypasses pre-hooks
+// ═════════════════════════════════════════════════════════════════════
 const deleteUser = async (id) => {
-  return await User.findByIdAndDelete(id);
+  const user = await User.findById(id);
+  if (!user) {
+    return null;
+  }
+  // Use document.deleteOne() to trigger pre-delete middleware
+  // This ensures all user's notes are deleted before user is deleted
+  await user.deleteOne();
+  return user;
 };
 
 module.exports = { createUser, findByEmail, findById, updateUser, deleteUser };

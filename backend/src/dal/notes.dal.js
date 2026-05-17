@@ -50,11 +50,20 @@ const getNoteByShareToken = async (token) => {
 };
 
 
+// ═════════════════════════════════════════════════════════════════════
+// ✅ NEW: Get Note by portable noteId (for import validation)
+// ═════════════════════════════════════════════════════════════════════
+const getNoteByNoteId = async (noteId) => {
+  return await Note.findOne({ noteId });
+};
+
+
 module.exports = {
   createNote,
   getNotesByUser,
   getNoteById,
   updateNote,
   deleteNote,
-  getNoteByShareToken, // ✅
+  getNoteByShareToken,
+  getNoteByNoteId, // ✅
 };
