@@ -41,30 +41,30 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar-glass sticky top-0 z-50 px-6 py-3.5 flex items-center justify-between">
+    <nav className="navbar-glass sticky top-0 z-50 px-3 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between gap-2">
 
       {/* ─── Logo ─────────────────────────────────── */}
-      <Link to="/dashboard" className="flex items-center gap-2 group">
-        <span className="text-xl">📝</span>
+      <Link to="/dashboard" className="flex items-center gap-1.5 sm:gap-2 group min-w-0">
+        <span className="text-lg sm:text-xl flex-shrink-0">📝</span>
         <span className="
-          text-lg font-bold
+          text-base sm:text-lg font-bold
           text-gray-900 dark:text-white
           group-hover:text-indigo-600 dark:group-hover:text-indigo-400
-          transition-colors duration-200
+          transition-colors duration-200 truncate
         ">
-          Notes App
+          Notes
         </span>
       </Link>
 
       {/* ─── Right Actions ────────────────────────── */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
 
         {/* Theme Toggle */}
         <button
           onClick={() => dispatch(toggleTheme())}
           aria-label={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           className="
-            w-9 h-9 rounded-xl flex items-center justify-center
+            w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center
             text-gray-500 dark:text-gray-400
             hover:text-gray-900 dark:hover:text-white
             hover:bg-gray-100 dark:hover:bg-white/10
@@ -77,20 +77,20 @@ const Navbar = () => {
         </button>
 
         {/* Divider */}
-        <div className="w-px h-6 bg-gray-200 dark:bg-white/10 mx-1" />
+        <div className="w-px h-5 sm:h-6 bg-gray-200 dark:bg-white/10 mx-0.5 sm:mx-1" />
 
         {/* Profile */}
         <Link
           to="/profile"
           className="
-            flex items-center gap-2.5 px-2 py-1.5 rounded-xl
+            flex items-center gap-1.5 sm:gap-2.5 px-1.5 sm:px-2 py-1.5 rounded-xl
             hover:bg-gray-100 dark:hover:bg-white/[0.08]
             transition-all duration-200 group
           "
         >
           {/* Gradient avatar ring */}
           <div className="
-            w-8 h-8 rounded-full p-[2px] shrink-0
+            w-7 h-7 sm:w-8 sm:h-8 rounded-full p-[2px] shrink-0
             bg-gradient-to-br from-indigo-500 to-blue-500
             shadow-lg shadow-indigo-500/25
           ">

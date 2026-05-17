@@ -87,3 +87,10 @@ export const getSharedNoteService = async (token) => {
   const res = await api.get(`/notes/shared/${token}`);
   return res.data; // ✅ returns the note with author name populated
 };
+
+
+// ─── Toggle Pin (PR 2) ───────────────────────────────────────────────────
+export const togglePinNoteService = async (noteId) => {
+  const res = await api.patch(`/notes/${noteId}/pin`);
+  return res.data; // ✅ returns updated note with isPinned toggled
+};

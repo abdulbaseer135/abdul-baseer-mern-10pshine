@@ -11,10 +11,10 @@ const ApiError = require('../utils/ApiError');
 const logger   = require('../config/logger');
 
 
-const create = async (userId, { title, content, noteId }) => {
-  logger.info({ userId, title, noteId }, 'Creating new note');
-  const note = await createNote({ title, content, userId, noteId });
-  logger.info({ userId, noteId: note._id }, 'Note created successfully');
+const create = async (userId, { title, content, noteId, category, isPinned, taskStatus }) => {
+  logger.info({ userId, title, category, isPinned }, 'Creating new note');
+  const note = await createNote({ title, content, userId, noteId, category, isPinned, taskStatus });
+  logger.info({ userId, noteId: note._id, category }, 'Note created successfully');
   return note;
 };
 

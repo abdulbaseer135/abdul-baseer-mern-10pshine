@@ -112,21 +112,21 @@ const ProfilePage = () => {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#0a0a0a] transition-colors duration-200">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
       <Navbar />
 
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
+      <div className="w-full max-w-2xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8">
 
         {/* ─── Profile Header Card ─────────────────────── */}
         <div className="
           bg-white dark:bg-[#141414]
           border border-gray-200/60 dark:border-white/[0.07]
-          rounded-2xl p-6 mb-6
+          rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8
           shadow-sm dark:shadow-none
-          flex items-center gap-5
+          flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-5
         ">
           <div className="
-            w-16 h-16 rounded-2xl p-[2.5px] shrink-0
+            w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl p-[2.5px] shrink-0
             bg-gradient-to-br from-indigo-500 to-blue-500
             shadow-lg shadow-indigo-500/25
           ">
@@ -134,22 +134,22 @@ const ProfilePage = () => {
               w-full h-full rounded-[13px]
               bg-white dark:bg-[#1a1a1a]
               flex items-center justify-center
-              text-2xl font-bold
+              text-xl sm:text-2xl font-bold
               text-indigo-600 dark:text-indigo-400
             ">
               {user?.name?.charAt(0)?.toUpperCase() || '?'}
             </div>
           </div>
 
-          <div className="min-w-0">
-            <h1 className="text-xl font-bold truncate text-gray-900 dark:text-white">
+          <div className="min-w-0 text-center sm:text-left flex-1">
+            <h1 className="text-lg sm:text-xl font-bold truncate text-gray-900 dark:text-white">
               {user?.name || 'Loading...'}
             </h1>
-            <p className="text-sm truncate text-gray-500 dark:text-gray-500 mt-0.5">
+            <p className="text-xs sm:text-sm truncate text-gray-500 dark:text-gray-500 mt-0.5">
               {user?.email}
             </p>
             {user?.createdAt && (
-              <p className="text-xs mt-1 text-gray-400 dark:text-gray-700">
+              <p className="text-[10px] sm:text-xs mt-1 text-gray-400 dark:text-gray-700">
                 Member since {formatDate(user.createdAt)}
               </p>
             )}
@@ -158,18 +158,18 @@ const ProfilePage = () => {
 
         {/* ─── Tabs ────────────────────────────────────── */}
         <div className="
-          flex gap-1 p-1 mb-6
+          flex gap-1 p-1 mb-6 sm:mb-8
           bg-gray-100 dark:bg-white/[0.04]
           border border-gray-200 dark:border-white/[0.06]
-          rounded-xl
+          rounded-lg sm:rounded-xl
         ">
           {TABS.map(({ key, label, icon }) => (
             <button
               key={key}
               onClick={() => setActiveTab(key)}
               className={`
-                flex-1 flex items-center justify-center gap-2
-                px-3 py-2 rounded-lg text-sm font-medium
+                flex-1 flex items-center justify-center gap-1 sm:gap-2
+                px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium
                 transition-all duration-200
                 ${activeTab === key
                   ? key === 'danger'
@@ -180,6 +180,7 @@ const ProfilePage = () => {
               `}
             >
               <span className={`
+                text-xs sm:text-sm flex items-center justify-center
                 ${activeTab === key
                   ? key === 'danger' ? 'text-red-500 dark:text-red-400' : 'text-indigo-500 dark:text-indigo-400'
                   : 'text-gray-400 dark:text-gray-600'
@@ -197,22 +198,22 @@ const ProfilePage = () => {
           <div className="
             bg-white dark:bg-[#141414]
             border border-gray-200/60 dark:border-white/[0.07]
-            rounded-2xl p-6 shadow-sm dark:shadow-none
+            rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm dark:shadow-none
           ">
-            <h2 className="text-sm font-semibold uppercase tracking-wider
-              text-gray-400 dark:text-gray-600 mb-5">
+            <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-wider
+              text-gray-400 dark:text-gray-600 mb-4 sm:mb-5">
               Edit Profile
             </h2>
 
-            <form onSubmit={handleProfileSubmit(onUpdateProfile)} className="space-y-4">
-              <div className="flex flex-col gap-1.5">
+            <form onSubmit={handleProfileSubmit(onUpdateProfile)} className="space-y-3 sm:space-y-4">
+              <div className="flex flex-col gap-1 sm:gap-1.5">
                 <label className="text-xs font-semibold uppercase tracking-wider
                   text-gray-400 dark:text-gray-600">
                   Full Name
                 </label>
                 <input
                   type="text"
-                  className={inputClass(profileErrors.name)}
+                  className={`${inputClass(profileErrors.name)} text-sm sm:text-base`}
                   {...registerProfile('name', {
                     required: 'Name is required',
                     minLength: { value: 2, message: 'Minimum 2 characters' },
@@ -225,7 +226,7 @@ const ProfilePage = () => {
                 )}
               </div>
 
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1 sm:gap-1.5">
                 <label className="text-xs font-semibold uppercase tracking-wider
                   text-gray-400 dark:text-gray-600">
                   Email
@@ -234,7 +235,7 @@ const ProfilePage = () => {
                   type="email"
                   disabled
                   className="
-                    w-full px-4 py-2.5 rounded-xl text-sm
+                    w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm
                     bg-gray-100 dark:bg-white/[0.02]
                     border border-gray-200 dark:border-white/[0.05]
                     text-gray-400 dark:text-gray-700
@@ -247,12 +248,12 @@ const ProfilePage = () => {
                 </p>
               </div>
 
-              <div className="flex justify-between items-center pt-2">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => navigate(ROUTES.DASHBOARD)}
                   className="
-                    flex items-center gap-1.5 text-sm
+                    flex items-center gap-1.5 text-xs sm:text-sm
                     text-gray-500 dark:text-gray-600
                     hover:text-gray-900 dark:hover:text-gray-300
                     transition-colors duration-200
@@ -264,11 +265,11 @@ const ProfilePage = () => {
                   type="submit"
                   disabled={loading}
                   className="
-                    px-5 py-2 rounded-xl text-sm font-semibold
+                    w-full sm:w-auto px-4 sm:px-5 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold
                     bg-indigo-600 hover:bg-indigo-500
                     text-white shadow-lg shadow-indigo-500/25
                     disabled:opacity-40 disabled:cursor-not-allowed
-                    flex items-center gap-2
+                    flex items-center justify-center gap-2
                     transition-all duration-200
                   "
                 >
@@ -284,26 +285,26 @@ const ProfilePage = () => {
           <div className="
             bg-white dark:bg-[#141414]
             border border-gray-200/60 dark:border-white/[0.07]
-            rounded-2xl p-6 shadow-sm dark:shadow-none
+            rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm dark:shadow-none
           ">
-            <h2 className="text-sm font-semibold uppercase tracking-wider
-              text-gray-400 dark:text-gray-600 mb-5">
+            <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-wider
+              text-gray-400 dark:text-gray-600 mb-4 sm:mb-5">
               Change Password
             </h2>
 
             {passwordSuccess && (
               <div className="
-                flex items-center gap-2.5
-                px-4 py-3 rounded-xl mb-5
+                flex items-center gap-2 sm:gap-2.5
+                px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl mb-4 sm:mb-5
                 bg-green-50 dark:bg-green-500/[0.08]
                 border border-green-200 dark:border-green-500/[0.15]
-                text-green-700 dark:text-green-400 text-sm
+                text-green-700 dark:text-green-400 text-xs sm:text-sm
               ">
                 <CheckIcon /> Password changed successfully!
               </div>
             )}
 
-            <form onSubmit={handlePasswordSubmit(onChangePassword)} className="space-y-4">
+            <form onSubmit={handlePasswordSubmit(onChangePassword)} className="space-y-3 sm:space-y-4">
               <PasswordField
                 label="Current Password"
                 placeholder="Enter current password"
@@ -314,7 +315,7 @@ const ProfilePage = () => {
                 registration={registerPassword('oldPassword', { required: 'Current password is required' })}
               />
 
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1 sm:gap-1.5">
                 <label className="text-xs font-semibold uppercase tracking-wider
                   text-gray-400 dark:text-gray-600">
                   New Password
@@ -323,7 +324,7 @@ const ProfilePage = () => {
                   <input
                     type={showNewPassword ? 'text' : 'password'}
                     placeholder="Enter new password"
-                    className={`${inputClass(!!passwordErrors.newPassword)} pr-11`}
+                    className={`${inputClass(!!passwordErrors.newPassword)} pr-11 text-sm sm:text-base`}
                     {...registerPassword('newPassword', {
                       required: 'New password is required',
                       pattern: { value: PASSWORD_RULES, message: 'Does not meet all requirements below' },
@@ -334,10 +335,10 @@ const ProfilePage = () => {
 
                 {newPassword.length > 0 && (
                   <div className="mt-1">
-                    <div className="flex gap-1 mb-1.5">
+                    <div className="flex gap-1 mb-1">
                       {[1,2,3,4,5].map((i) => (
                         <div key={i} className={`
-                          h-1 flex-1 rounded-full transition-all duration-300
+                          h-0.5 sm:h-1 flex-1 rounded-full transition-all duration-300
                           ${i <= strength.score ? strength.color : 'bg-gray-200 dark:bg-white/[0.07]'}
                         `}/>
                       ))}

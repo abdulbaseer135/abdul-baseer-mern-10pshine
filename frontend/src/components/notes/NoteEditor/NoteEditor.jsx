@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import RichTextEditor from './RichTextEditor';
 import useSpeechToText from '../../../hooks/useSpeechToText';
+import { NOTE_CATEGORIES, TASK_STATUSES, CATEGORY_INFO, TASK_STATUS_INFO } from '../../../utils/noteConstants';
 
 
 const NoteEditor = ({ note, onSave, onClose, loading }) => {
@@ -9,6 +10,8 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
   const [content, setContent]           = useState('');
   const [contentError, setContentError] = useState('');
   const [title, setTitle]               = useState('');
+  const [category, setCategory]         = useState('general'); // ✅ PR 2
+  const [taskStatus, setTaskStatus]     = useState('todo');    // ✅ PR 2
   const richTextEditorRef              = useRef(null);
 
   // ✅ CONTENT VOICE — separate hook instance
@@ -24,10 +27,14 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
       reset({ title: note.title });
       setTitle(note.title || '');
       setContent(note.content || '');
+      setCategory(note.category || 'general'); // ✅ PR 2
+      setTaskStatus(note.taskStatus || 'todo'); // ✅ PR 2
     } else {
       reset({ title: '' });
       setTitle('');
       setContent('');
+      setCategory('general'); // ✅ PR 2
+      setTaskStatus('todo');   // ✅ PR 2
     }
     setContentError('');
   }, [note, reset]);
@@ -149,7 +156,21 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
     const plainText = content.replace(/<[^>]+>/g, '').trim();
     if (!plainText) { setContentError('Content is required'); return; }
     setContentError('');
-    onSave({ title: title || data.title, content });
+    
+    // ✅ PR 2: Normalize data
+    const noteData = {
+      title: title || data.title,
+      content,
+      category,
+      isPinned: note?.isPinned || false, // Preserve existing isPinned
+    };
+    
+    // ✅ Only include taskStatus if category is 'task'
+    if (category === 'task') {
+      noteData.taskStatus = taskStatus;
+    }
+    
+    onSave(noteData);
   };
 
 
@@ -159,7 +180,7 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
       className="
         fixed inset-0 z-50
         flex items-center justify-center
-        px-4 py-6
+        px-3 sm:px-4 py-4 sm:py-6
         bg-black/50 dark:bg-black/70
         backdrop-blur-sm
       "
@@ -171,7 +192,7 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
         w-full max-w-2xl
         bg-white dark:bg-[#141414]
         border border-gray-200/60 dark:border-white/[0.07]
-        rounded-2xl shadow-2xl dark:shadow-black/60
+        rounded-xl sm:rounded-2xl shadow-2xl dark:shadow-black/60
         flex flex-col
         max-h-[90vh]
         animate-in
@@ -180,20 +201,20 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
         {/* ─── Header ──────────────────────────────────── */}
         <div className="
           flex items-center justify-between
-          px-6 py-4
+          px-4 sm:px-6 py-3 sm:py-4
           border-b border-gray-100 dark:border-white/[0.06]
           shrink-0
         ">
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 sm:gap-2.5">
             {/* Icon badge */}
             <div className="
-              w-8 h-8 rounded-xl flex items-center justify-center
+              w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center text-xs sm:text-sm
               bg-indigo-50 dark:bg-indigo-500/[0.12]
               border border-indigo-100 dark:border-indigo-500/[0.15]
             ">
               {note ? <EditIcon /> : <PlusIcon />}
             </div>
-            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-gray-100">
               {note ? 'Edit Note' : 'New Note'}
             </h2>
           </div>
@@ -203,7 +224,7 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
             onClick={onClose}
             aria-label="Close"
             className="
-              w-8 h-8 rounded-xl flex items-center justify-center
+              w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center text-xs sm:text-sm
               text-gray-400 dark:text-gray-600
               hover:text-gray-700 dark:hover:text-gray-300
               hover:bg-gray-100 dark:hover:bg-white/[0.07]
@@ -219,7 +240,7 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
         {/* ─── Form Body ───────────────────────────────── */}
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-5 px-6 py-5 overflow-y-auto"
+          className="flex flex-col gap-4 sm:gap-5 px-4 sm:px-6 py-4 sm:py-5 overflow-y-auto"
         >
 
           {/* Title field */}
@@ -307,6 +328,68 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
             )}
           </div>
 
+          {/* ✅ PR 2: Category Field */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-semibold uppercase tracking-wider
+              text-gray-400 dark:text-gray-600">
+              Category
+            </label>
+            <div className="flex gap-2 flex-wrap">
+              {NOTE_CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => {
+                    setCategory(cat);
+                    // Clear taskStatus if switching away from task
+                    if (cat !== 'task') {
+                      setTaskStatus('todo');
+                    }
+                  }}
+                  className={`
+                    px-4 py-2 rounded-full text-sm font-medium
+                    border transition-all duration-200
+                    ${category === cat
+                      ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300'
+                      : 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500'
+                    }
+                  `}
+                >
+                  {CATEGORY_INFO[cat].icon} {CATEGORY_INFO[cat].label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* ✅ PR 2: Task Status Field (Show only for task category) */}
+          {category === 'task' && (
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold uppercase tracking-wider
+                text-gray-400 dark:text-gray-600">
+                Task Status
+              </label>
+              <div className="flex gap-2 flex-wrap">
+                {TASK_STATUSES.map((status) => (
+                  <button
+                    key={status}
+                    type="button"
+                    onClick={() => setTaskStatus(status)}
+                    className={`
+                      px-4 py-2 rounded-full text-sm font-medium
+                      border transition-all duration-200
+                      ${taskStatus === status
+                        ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300'
+                        : 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500'
+                      }
+                    `}
+                  >
+                    {TASK_STATUS_INFO[status].icon} {TASK_STATUS_INFO[status].label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Content field */}
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-semibold uppercase tracking-wider
@@ -348,14 +431,14 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
           </div>
 
           {/* ─── Footer Buttons ──────────────────────── */}
-          <div className="flex gap-3 pt-1 pb-1">
+          <div className="flex gap-2 sm:gap-3 pt-1 sm:pt-2 pb-1">
 
             {/* Cancel */}
             <button
               type="button"
               onClick={onClose}
               className="
-                flex-1 py-2.5 rounded-xl text-sm font-medium
+                flex-1 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium
                 border border-gray-200 dark:border-white/[0.08]
                 text-gray-600 dark:text-gray-400
                 hover:bg-gray-100 dark:hover:bg-white/[0.06]
@@ -373,7 +456,7 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
               disabled={loading}
               className="
                 btn-primary
-                flex-1 py-2.5 rounded-xl text-sm font-semibold
+                flex-1 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold
                 bg-indigo-600 hover:bg-indigo-500
                 dark:bg-indigo-600 dark:hover:bg-indigo-500
                 text-white
