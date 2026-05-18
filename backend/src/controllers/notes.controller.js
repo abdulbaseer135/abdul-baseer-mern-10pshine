@@ -174,6 +174,22 @@ const getSharedNote = asyncHandler(async (req, res) => {
 });
 
 
+// ─── Toggle Pin (PR 2) ──────────────────────────────────────────────────
+const togglePin = asyncHandler(async (req, res) => {
+  const note = await notesService.getOne(req.params.id, req.user._id);
+
+  // Toggle isPinned
+  note.isPinned = !note.isPinned;
+  await note.save();
+
+  getIO().to(req.user._id.toString()).emit('note:updated', note);
+
+  return res.status(200).json(
+    new ApiResponse(200, note, note.isPinned ? 'Note pinned successfully' : 'Note unpinned successfully')
+  );
+});
+
+
 module.exports = {
   createNote,
   getAllNotes,
@@ -184,4 +200,5 @@ module.exports = {
   importNotes,
   toggleShare,   // ✅
   getSharedNote, // ✅
+  togglePin,     // ✅ PR 2
 };

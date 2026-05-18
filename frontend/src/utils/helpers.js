@@ -38,3 +38,42 @@ export const truncateTitle = (title, maxLength = NOTE_TITLE_MAX_LENGTH) => {
   if (title.length <= maxLength) return title;
   return title.substring(0, maxLength).trim() + '...';
 };
+
+// ─── PR 2: Note Sorting Helper ────────────────────────────────────────────
+/**
+ * Sort notes by pinned status first, then by updatedAt descending
+ * Pinned notes always appear first, then by most recently updated
+ */
+export const sortNotesByPinnedAndDate = (notes) => {
+  if (!Array.isArray(notes)) return [];
+  return [...notes].sort((a, b) => {
+    // First: sort by isPinned (true comes first)
+    if (a.isPinned !== b.isPinned) {
+      return a.isPinned ? -1 : 1;
+    }
+    // Then: sort by updatedAt descending (newest first)
+    return new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt);
+  });
+};
+
+/**
+ * Filter notes by selected filter
+ */
+export const filterNotesByCategory = (notes, filter) => {
+  if (!Array.isArray(notes)) return [];
+
+  switch (filter) {
+    case 'all':
+      return notes;
+    case 'pinned':
+      return notes.filter((n) => n.isPinned);
+    case 'general':
+      return notes.filter((n) => n.category === 'general');
+    case 'idea':
+      return notes.filter((n) => n.category === 'idea');
+    case 'task':
+      return notes.filter((n) => n.category === 'task');
+    default:
+      return notes;
+  }
+};

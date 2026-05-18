@@ -10,6 +10,7 @@ const {
   importNotes,
   toggleShare,    // ✅
   getSharedNote,  // ✅
+  togglePin,      // ✅ PR 2
 } = require('../controllers/notes.controller');
 const { protect } = require('../middleware/auth.middleware');
 
@@ -30,6 +31,10 @@ router.post('/import', importNotes);   // POST /api/v1/notes/import
 
 // ─── Share Toggle ───────────────────────────────────────────────────────
 router.patch('/:id/share', toggleShare); // ✅ PATCH /api/v1/notes/:id/share
+
+
+// ─── Pin Toggle (PR 2) ──────────────────────────────────────────────────
+router.patch('/:id/pin', togglePin); // ✅ PATCH /api/v1/notes/:id/pin
 
 
 // ─── Standard CRUD ─────────────────────────────────────────────────────

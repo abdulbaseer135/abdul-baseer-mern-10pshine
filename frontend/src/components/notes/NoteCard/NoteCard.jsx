@@ -1,6 +1,7 @@
 import { toast } from 'react-toastify';
+import { CATEGORY_INFO, TASK_STATUS_INFO } from '../../../utils/noteConstants'; // ✅ PR 2
 
-const NoteCard = ({ note, onEdit, onDelete, onShare, onView }) => {
+const NoteCard = ({ note, onEdit, onDelete, onShare, onView, onPin }) => {
   const formatDate = (dateStr) =>
     new Date(dateStr).toLocaleDateString('en-US', {
       month: 'short', day: 'numeric', year: 'numeric',
@@ -27,18 +28,18 @@ const NoteCard = ({ note, onEdit, onDelete, onShare, onView }) => {
       border border-gray-200/80 dark:border-white/[0.06]
       border-l-4 border-l-transparent
       hover:border-l-indigo-500 dark:hover:border-l-indigo-400
-      rounded-2xl p-5
-      shadow-sm dark:shadow-none
+      rounded-xl sm:rounded-2xl p-3.5 sm:p-5
+      shadow-sm dark:shadow-none hover:shadow-md dark:hover:shadow-none
       flex flex-col justify-between
       cursor-default
-      h-full min-h-[220px]
+      h-full min-h-[200px] sm:min-h-[220px]
       transition-all duration-200
     ">
 
       {/* ─── Top Row — Title + Date ────────────────────── */}
-      <div className="flex items-start justify-between gap-3 mb-3">
+      <div className="flex items-start justify-between gap-2 sm:gap-3 mb-2 sm:mb-3">
         <h3 className="
-          text-[15px] font-semibold leading-snug
+          text-sm sm:text-[15px] font-semibold leading-snug
           text-gray-900 dark:text-gray-100
           line-clamp-1 flex-1
         ">
@@ -47,20 +48,21 @@ const NoteCard = ({ note, onEdit, onDelete, onShare, onView }) => {
 
         {/* Date badge */}
         <span className="
-          shrink-0 text-[11px] font-medium
+          shrink-0 text-[10px] sm:text-[11px] font-medium
           px-2 py-0.5 rounded-full
           bg-gray-100 dark:bg-white/[0.05]
           text-gray-400 dark:text-gray-600
           border border-gray-200/60 dark:border-white/[0.04]
+          whitespace-nowrap
         ">
           {formatDate(note.updatedAt || note.createdAt)}
         </span>
       </div>
 
       {/* ─── Content Preview — Plain Text, 3 Lines Max ──────── */}
-      <div className="mb-3 flex-grow">
+      <div className="mb-2 sm:mb-3 flex-grow">
         <p className="
-          text-sm leading-relaxed
+          text-xs sm:text-sm leading-relaxed
           text-gray-600 dark:text-gray-400
           line-clamp-3
         ">
@@ -68,31 +70,56 @@ const NoteCard = ({ note, onEdit, onDelete, onShare, onView }) => {
         </p>
       </div>
 
-      {/* ─── Badge Container — Always Reserved Space ──────────────────────────── */}
-      <div className="h-8 flex items-center mt-2 mb-1">
+      {/* ─── Badge Container — Category + Task Status + Sharing ────────────────────────────── */}
+      <div className="flex items-center gap-1.5 sm:gap-2 mt-2 sm:mt-2 mb-2 sm:mb-3 flex-wrap">
+        {/* ✅ PR 2: Category Badge */}
+        {note.category && (
+          <span className={`
+            inline-flex items-center gap-0.5 sm:gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1
+            rounded-full text-[9px] sm:text-[11px] font-semibold
+            border
+            ${CATEGORY_INFO[note.category]?.color || 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600'}
+          `}>
+            {CATEGORY_INFO[note.category]?.icon} {CATEGORY_INFO[note.category]?.label}
+          </span>
+        )}
+
+        {/* ✅ PR 2: Task Status Badge (show only for task category) */}
+        {note.category === 'task' && note.taskStatus && (
+          <span className={`
+            inline-flex items-center gap-1 px-2.5 py-1
+            rounded-full text-[11px] font-semibold
+            border
+            ${TASK_STATUS_INFO[note.taskStatus]?.color || 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600'}
+          `}>
+            {TASK_STATUS_INFO[note.taskStatus]?.icon} {TASK_STATUS_INFO[note.taskStatus]?.label}
+          </span>
+        )}
+
+        {/* Sharing indicator */}
         {note.isPublic && (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1
-            rounded-full text-xs font-medium
-            bg-green-50 text-green-700 border border-green-200
-            dark:bg-green-900/20 dark:text-green-400 dark:border-green-800">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-500 dark:bg-green-400 animate-pulse" />
-            Public link active
+          <span className="inline-flex items-center gap-0.5 sm:gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1
+            rounded-full text-[9px] sm:text-[11px] font-semibold
+            bg-green-50 text-green-700 border border-green-300
+            dark:bg-green-900/30 dark:text-green-300 dark:border-green-700">
+            <span className="w-1 sm:w-1.5 h-1 sm:h-1.5 rounded-full bg-green-500 dark:bg-green-400 animate-pulse" />
+            Public
           </span>
         )}
       </div>
 
       {/* ─── Divider ────────────────────────────────────── */}
-      <div className="border-t border-gray-100 dark:border-white/[0.05] mb-3" />
+      <div className="border-t border-gray-100 dark:border-white/[0.05] mb-2 sm:mb-3" />
 
       {/* ─── Action Buttons — Single Row with Icons Only ──── */}
-      <div className="flex gap-1.5 justify-start">
+      <div className="flex gap-1 sm:gap-1.5 justify-start">
         
         {/* View Full Note */}
         <button
           onClick={() => onView(note)}
           title="View full note"
           className="
-            p-2 rounded-lg
+            p-1.5 sm:p-2 rounded-lg
             bg-gray-100 dark:bg-white/[0.05]
             hover:bg-gray-200 dark:hover:bg-white/[0.08]
             text-gray-600 dark:text-gray-400
@@ -109,7 +136,7 @@ const NoteCard = ({ note, onEdit, onDelete, onShare, onView }) => {
           onClick={() => onEdit(note)}
           title="Edit note"
           className="
-            p-2 rounded-lg
+            p-1.5 sm:p-2 rounded-lg
             bg-gray-100 dark:bg-white/[0.05]
             hover:bg-gray-200 dark:hover:bg-white/[0.08]
             text-gray-600 dark:text-gray-400
@@ -121,12 +148,29 @@ const NoteCard = ({ note, onEdit, onDelete, onShare, onView }) => {
           <EditIcon />
         </button>
 
+        {/* ✅ PR 2: Pin Toggle Button */}
+        {onPin && (
+          <button
+            onClick={() => onPin(note._id)}
+            title={note.isPinned ? 'Unpin note' : 'Pin note'}
+            className={`
+              p-1.5 sm:p-2 rounded-lg border transition-all duration-200
+              ${note.isPinned
+                ? 'bg-amber-100 dark:bg-amber-500/[0.15] text-amber-600 dark:text-amber-400 border-amber-300 dark:border-amber-600 hover:bg-amber-200 dark:hover:bg-amber-500/[0.25]'
+                : 'bg-gray-100 dark:bg-white/[0.05] text-gray-600 dark:text-gray-400 border-gray-200 dark:border-white/[0.08] hover:bg-gray-200 dark:hover:bg-white/[0.08] hover:border-gray-300 dark:hover:border-white/[0.12]'
+              }
+            `}
+          >
+            <PinIcon filled={note.isPinned} />
+          </button>
+        )}
+
         {/* Delete Note */}
         <button
           onClick={() => onDelete(note._id)}
           title="Delete note"
           className="
-            p-2 rounded-lg
+            p-1.5 sm:p-2 rounded-lg
             bg-gray-100 dark:bg-white/[0.05]
             hover:bg-red-100 dark:hover:bg-red-500/[0.08]
             text-gray-600 dark:text-gray-400
@@ -144,7 +188,7 @@ const NoteCard = ({ note, onEdit, onDelete, onShare, onView }) => {
           onClick={() => onShare(note._id)}
           title={note.isPublic ? 'Disable sharing' : 'Share note'}
           className="
-            p-2 rounded-lg
+            p-1.5 sm:p-2 rounded-lg
             bg-gray-100 dark:bg-white/[0.05]
             hover:bg-gray-200 dark:hover:bg-white/[0.08]
             text-gray-600 dark:text-gray-400
@@ -162,7 +206,7 @@ const NoteCard = ({ note, onEdit, onDelete, onShare, onView }) => {
           disabled={!note.isPublic || !shareUrl}
           title={note.isPublic && shareUrl ? 'Copy share link' : 'Share note first'}
           className={`
-            p-2 rounded-lg border transition-all duration-200
+            p-1.5 sm:p-2 rounded-lg border transition-all duration-200
             ${note.isPublic && shareUrl
               ? 'bg-gray-100 dark:bg-white/[0.05] hover:bg-gray-200 dark:hover:bg-white/[0.08] text-gray-600 dark:text-gray-400 border-gray-200 dark:border-white/[0.08] hover:border-gray-300 dark:hover:border-white/[0.12] cursor-pointer'
               : 'bg-gray-50 dark:bg-white/[0.02] text-gray-300 dark:text-gray-700 border-gray-100 dark:border-white/[0.04] cursor-not-allowed opacity-40'
@@ -223,6 +267,22 @@ const ReadMoreIcon = () => (
     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
     <circle cx="12" cy="12" r="3"/>
   </svg>
+);
+
+// ✅ PR 2: Pin Icon
+const PinIcon = ({ filled = false }) => (
+  filled ? (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+      <path d="M12 2c-5.33 4-8 6.5-8 9.5 0 3 2.5 5 8 5s8-2 8-5c0-3-2.67-5.5-8-9.5z"/>
+      <circle cx="12" cy="19" r="3" fill="currentColor"/>
+    </svg>
+  ) : (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2c-5.33 4-8 6.5-8 9.5 0 3 2.5 5 8 5s8-2 8-5c0-3-2.67-5.5-8-9.5z"/>
+      <circle cx="12" cy="19" r="3"/>
+    </svg>
+  )
 );
 
 
