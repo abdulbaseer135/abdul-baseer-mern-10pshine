@@ -119,10 +119,21 @@ const LoginPage = () => {
 
             {/* Password */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider
-                text-gray-400 dark:text-gray-600">
-                Password
-              </label>
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold uppercase tracking-wider
+                  text-gray-400 dark:text-gray-600">
+                  Password
+                </label>
+                <Link
+                  to="/forgot-password"
+                  className="text-xs font-medium
+                    text-indigo-600 dark:text-indigo-400
+                    hover:text-indigo-500 dark:hover:text-indigo-300
+                    transition-colors duration-200"
+                >
+                  Forgot password?
+                </Link>
+              </div>
               <input
                 type="password"
                 placeholder="••••••••"

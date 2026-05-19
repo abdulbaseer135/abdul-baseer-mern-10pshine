@@ -38,3 +38,22 @@ export const changePasswordService = async (data) => {
   const res = await api.put('/users/change-password', data);
   return res.data;
 };
+
+// ─── OTP & Password Reset ──────────────────────────────────────────────
+// ✅ NEW: Send OTP email
+export const sendOTPService = async (email, purpose) => {
+  const res = await api.post('/auth/send-otp', { email, purpose });
+  return res.data;
+};
+
+// ✅ NEW: Verify OTP code
+export const verifyOTPService = async (email, otp, purpose) => {
+  const res = await api.post('/auth/verify-otp', { email, otp, purpose });
+  return res.data;
+};
+
+// ✅ NEW: Reset password with new password
+export const resetPasswordService = async (email, newPassword) => {
+  const res = await api.post('/auth/reset-password', { email, newPassword });
+  return res.data;
+};

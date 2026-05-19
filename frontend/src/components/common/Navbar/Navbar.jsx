@@ -88,23 +88,31 @@ const Navbar = () => {
             transition-all duration-200 group
           "
         >
-          {/* Gradient avatar ring */}
-          <div className="
-            w-7 h-7 sm:w-8 sm:h-8 rounded-full p-[2px] shrink-0
-            bg-gradient-to-br from-indigo-500 to-blue-500
-            shadow-lg shadow-indigo-500/25
-          ">
+          {/* ✅ Show image if available, fallback to letter avatar */}
+          {user?.profileImage ? (
+            <img
+              src={user.profileImage}
+              alt={user.name}
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover shrink-0"
+            />
+          ) : (
             <div className="
-              w-full h-full rounded-full
-              bg-white dark:bg-gray-900
-              flex items-center justify-center
+              w-7 h-7 sm:w-8 sm:h-8 rounded-full p-[2px] shrink-0
+              bg-gradient-to-br from-indigo-500 to-blue-500
+              shadow-lg shadow-indigo-500/25
             ">
-              <span className="text-xs font-bold
-                text-indigo-600 dark:text-indigo-400">
-                {user?.name?.charAt(0).toUpperCase()}
-              </span>
+              <div className="
+                w-full h-full rounded-full
+                bg-white dark:bg-gray-900
+                flex items-center justify-center
+              ">
+                <span className="text-xs font-bold
+                  text-indigo-600 dark:text-indigo-400">
+                  {user?.name?.charAt(0).toUpperCase()}
+                </span>
+              </div>
             </div>
-          </div>
+          )}
           <span className="
             text-sm font-medium hidden sm:block
             text-gray-700 dark:text-gray-300

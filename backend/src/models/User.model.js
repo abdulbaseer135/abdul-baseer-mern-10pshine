@@ -15,12 +15,35 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-password: {
-  type: String,
-  required: [true, 'Password is required'],
-  minlength: 6,
-  select: false,   // ← this must be here
-},
+    password: {
+      type: String,
+      required: [true, 'Password is required'],
+      minlength: 6,
+      select: false,   // ← this must be here
+    },
+    profileImage: {
+      type: String,
+      default: null,
+    },
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    otp: {
+      code: {
+        type: String,
+        default: null,
+      },
+      expiresAt: {
+        type: Date,
+        default: null,
+      },
+      purpose: {
+        type: String,
+        enum: ['verify', 'reset'],
+        default: null,
+      },
+    },
   },
   { timestamps: true }
 );
