@@ -22,11 +22,7 @@ export const changePasswordService = async (data) => {
 
 // ✅ NEW: Upload profile image
 export const uploadProfileImageService = async (formData) => {
-  const res = await api.post('/profile/upload-image', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
+  const res = await api.post('/profile/upload-image', formData);
   return res.data.data;
 };
 

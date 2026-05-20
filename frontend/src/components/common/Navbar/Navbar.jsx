@@ -41,103 +41,162 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar-glass sticky top-0 z-50 px-3 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between gap-2">
+    <nav className="navbar-glass sticky top-0 z-50 px-3 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between gap-2" style={{
+      backgroundColor: 'var(--surface-panel)',
+      borderBottomColor: 'var(--border-default)',
+      borderBottomWidth: '1px',
+      boxShadow: 'var(--shadow-sm)'
+    }}>
 
-      {/* ─── Logo ─────────────────────────────────── */}
-      <Link to="/dashboard" className="flex items-center gap-1.5 sm:gap-2 group min-w-0">
-        <span className="text-lg sm:text-xl flex-shrink-0">📝</span>
+      {/* ─── Logo — Premium Brand ─────────────────────────────────── */}
+      <Link to="/dashboard" className="flex items-center gap-2 group min-w-0 flex-shrink-0">
+        <span className="text-xl sm:text-2xl flex-shrink-0 group-hover:scale-110 transition-transform duration-200">📝</span>
         <span className="
-          text-base sm:text-lg font-bold
-          text-gray-900 dark:text-white
-          group-hover:text-indigo-600 dark:group-hover:text-indigo-400
-          transition-colors duration-200 truncate
-        ">
+          text-base sm:text-lg font-bold tracking-tight
+          transition-colors duration-200 hidden sm:block
+        " style={{ color: 'var(--text-primary)' }}>
           Notes
         </span>
       </Link>
 
-      {/* ─── Right Actions ────────────────────────── */}
-      <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+      {/* ─── Right Actions — Premium Controls ────────────────────────────────── */}
+      <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
 
-        {/* Theme Toggle */}
+        {/* Theme Toggle — More premium size and styling */}
         <button
           onClick={() => dispatch(toggleTheme())}
           aria-label={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           className="
-            w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center
-            text-gray-500 dark:text-gray-400
-            hover:text-gray-900 dark:hover:text-white
-            hover:bg-gray-100 dark:hover:bg-white/10
-            border border-gray-200 dark:border-white/10
-            hover:border-gray-300 dark:hover:border-white/20
-            transition-all duration-200
+            w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center
+            border transition-all duration-200 flex-shrink-0
           "
+          style={{
+            backgroundColor: 'var(--surface-elevated)',
+            borderColor: 'var(--border-default)',
+            color: 'var(--text-secondary)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--surface-hover)';
+            e.currentTarget.style.borderColor = 'var(--border-strong)';
+            e.currentTarget.style.color = 'var(--text-primary)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--surface-elevated)';
+            e.currentTarget.style.borderColor = 'var(--border-default)';
+            e.currentTarget.style.color = 'var(--text-secondary)';
+          }}
         >
           {mode === 'dark' ? <SunIcon /> : <MoonIcon />}
         </button>
 
-        {/* Divider */}
-        <div className="w-px h-5 sm:h-6 bg-gray-200 dark:bg-white/10 mx-0.5 sm:mx-1" />
+        {/* Divider — More prominent */}
+        <div className="w-px h-6 sm:h-7 mx-1 flex-shrink-0" style={{ backgroundColor: 'var(--border-default)' }} />
 
-        {/* Profile */}
+        {/* Profile — Better spacing and hierarchy */}
         <Link
           to="/profile"
           className="
-            flex items-center gap-1.5 sm:gap-2.5 px-1.5 sm:px-2 py-1.5 rounded-xl
-            hover:bg-gray-100 dark:hover:bg-white/[0.08]
+            hidden sm:flex items-center gap-3 px-3 py-2 rounded-lg
             transition-all duration-200 group
           "
+          style={{ backgroundColor: 'transparent' }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--surface-elevated)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }}
         >
           {/* ✅ Show image if available, fallback to letter avatar */}
           {user?.profileImage ? (
             <img
               src={user.profileImage}
               alt={user.name}
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover shrink-0"
+              className="w-8 h-8 rounded-full object-cover shrink-0"
+              style={{ borderColor: 'var(--border-default)', borderWidth: '1px' }}
             />
           ) : (
             <div className="
-              w-7 h-7 sm:w-8 sm:h-8 rounded-full p-[2px] shrink-0
-              bg-gradient-to-br from-indigo-500 to-blue-500
-              shadow-lg shadow-indigo-500/25
-            ">
-              <div className="
-                w-full h-full rounded-full
-                bg-white dark:bg-gray-900
-                flex items-center justify-center
-              ">
-                <span className="text-xs font-bold
-                  text-indigo-600 dark:text-indigo-400">
-                  {user?.name?.charAt(0).toUpperCase()}
-                </span>
-              </div>
+              w-8 h-8 rounded-full p-0.5 shrink-0
+              flex items-center justify-center
+            " style={{
+              background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+              border: '1px solid #818cf8'
+            }}>
+              <span className="text-xs font-bold text-white">
+                {user?.name?.charAt(0).toUpperCase()}
+              </span>
             </div>
           )}
           <span className="
-            text-sm font-medium hidden sm:block
-            text-gray-700 dark:text-gray-300
-            group-hover:text-gray-900 dark:group-hover:text-white
-            transition-colors duration-200
-          ">
+            text-sm font-medium
+            transition-colors duration-200 line-clamp-1
+          " style={{ color: 'var(--text-secondary)' }}>
             {user?.name}
           </span>
         </Link>
 
-        {/* Logout — ghost style */}
+        {/* Mobile Profile Button */}
+        <Link
+          to="/profile"
+          className="
+            sm:hidden w-9 h-9 rounded-lg flex items-center justify-center
+            transition-all duration-200
+          "
+          style={{ backgroundColor: 'transparent' }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--surface-elevated)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }}
+        >
+          {user?.profileImage ? (
+            <img
+              src={user.profileImage}
+              alt={user.name}
+              className="w-9 h-9 rounded-full object-cover"
+            />
+          ) : (
+            <div className="
+              w-9 h-9 rounded-full
+              flex items-center justify-center
+            " style={{
+              background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+              border: '1px solid #818cf8'
+            }}>
+              <span className="text-xs font-bold text-white">
+                {user?.name?.charAt(0).toUpperCase()}
+              </span>
+            </div>
+          )}
+        </Link>
+
+        {/* Logout Button — Premium styling */}
         <button
           onClick={handleLogout}
           className="
-            text-sm px-4 py-2 rounded-xl font-medium
-            bg-red-500/10 dark:bg-red-500/15
-            hover:bg-red-500 dark:hover:bg-red-500
-            text-red-600 dark:text-red-400
-            hover:text-white dark:hover:text-white
-            border border-red-200 dark:border-red-500/20
-            hover:border-red-500
-            transition-all duration-200
+            px-3 sm:px-4 py-2 rounded-lg font-medium text-sm
+            border transition-all duration-200 flex-shrink-0
           "
+          style={{
+            backgroundColor: 'transparent',
+            borderColor: 'var(--border-default)',
+            color: 'var(--text-secondary)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'rgba(255, 107, 107, 0.1)';
+            e.currentTarget.style.borderColor = '#ff6b6b';
+            e.currentTarget.style.color = '#ff6b6b';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent';
+            e.currentTarget.style.borderColor = 'var(--border-default)';
+            e.currentTarget.style.color = 'var(--text-secondary)';
+          }}
         >
-          Logout
+          <span className="hidden sm:inline">Logout</span>
+          <span className="sm:hidden">↪</span>
         </button>
 
       </div>
