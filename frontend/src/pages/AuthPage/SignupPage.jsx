@@ -42,7 +42,15 @@ const SignupPage = () => {
   const onSubmit = async (data) => {
     handleClearError();
     const success = await handleRegister(data);
-    if (success) navigate('/dashboard');
+    if (success) {
+      // Redirect to OTP verification with email and purpose
+      navigate('/verify-otp', { 
+        state: { 
+          email: data.email,
+          purpose: 'verify'
+        }
+      });
+    }
   };
 
   // ─── Shared input class builder ──────────────────

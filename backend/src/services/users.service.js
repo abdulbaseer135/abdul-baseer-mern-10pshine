@@ -7,6 +7,23 @@ const logger = require('../config/logger');
 // ✅ Same rule as frontend and auth.service.js
 const PASSWORD_RULES = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
+/**
+ * Format user object to ensure full image URLs
+ */
+const formatUserWithImageUrl = (user) => {
+  if (!user) return null;
+  
+  const userObj = user.toObject ? user.toObject() : user;
+  
+  // Convert relative image paths to full URLs
+  if (userObj.profileImage && !userObj.profileImage.startsWith('http')) {
+    const baseUrl = process.env.BACKEND_URL || 'http://localhost:5000';
+    userObj.profileImage = `${baseUrl}${userObj.profileImage}`;
+  }
+  
+  return userObj;
+};
+
 const getProfile = async (userId) => {
   logger.info({ userId }, 'Fetching user profile');
 
@@ -17,7 +34,7 @@ const getProfile = async (userId) => {
   }
 
   logger.info({ userId }, 'Profile fetched successfully');
-  return user;
+  return formatUserWithImageUrl(user);
 };
 
 const updateProfile = async (userId, updateData) => {
@@ -33,7 +50,7 @@ const updateProfile = async (userId, updateData) => {
   }
 
   logger.info({ userId }, 'Profile updated successfully');
-  return user;
+  return formatUserWithImageUrl(user);
 };
 
 const deleteProfile = async (userId) => {
@@ -46,7 +63,7 @@ const deleteProfile = async (userId) => {
   }
 
   logger.info({ userId }, 'User account deleted successfully');
-  return user;
+  return formatUserWithImageUrl(user);
 };
 
 const changePassword = async (userId, oldPassword, newPassword) => {

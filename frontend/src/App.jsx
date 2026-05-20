@@ -5,6 +5,9 @@ import { useEffect } from 'react';          // ✅ add this
 import 'react-toastify/dist/ReactToastify.css';
 import LoginPage from './pages/AuthPage/LoginPage';
 import SignupPage from './pages/AuthPage/SignupPage';
+import ForgotPasswordPage from './pages/AuthPage/ForgotPasswordPage';
+import OTPVerificationPage from './pages/AuthPage/OTPVerificationPage';
+import ResetPasswordPage from './pages/AuthPage/ResetPasswordPage';
 import DashboardPage from './pages/DashboardPage/DashboardPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import SharedNotePage from './pages/SharedNotePage/SharedNotePage';
@@ -30,6 +33,9 @@ const App = () => {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login"  element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/verify-otp" element={<OTPVerificationPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
 
         {/* ✅ Public shared note route — no auth required */}
         <Route path="/shared/:token" element={<SharedNotePage />} />

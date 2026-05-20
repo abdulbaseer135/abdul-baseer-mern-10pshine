@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const requestLogger = require('./middleware/requestLogger.middleware');
 const errorHandler = require('./middleware/errorHandler.middleware');
 const routes = require('./routes/index');
@@ -25,6 +26,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // HTTP request logging
 app.use(requestLogger);
+
+// ✅ Serve uploads directory as static files
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // API routes
 app.use('/api/v1', routes);

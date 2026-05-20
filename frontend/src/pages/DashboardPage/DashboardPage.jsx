@@ -238,7 +238,7 @@ const DashboardPage = () => {
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
                 </svg>
               ) : '⬇️'}
-              <span className="hidden sm:inline">Export</span>
+              <span className="inline">Export</span>
             </button>
 
             {/* Import */}
@@ -262,7 +262,7 @@ const DashboardPage = () => {
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
                 </svg>
               ) : '⬆️'}
-              <span className="hidden sm:inline">Import</span>
+              <span className="inline">Import</span>
             </button>
 
             {/* Hidden file input */}
