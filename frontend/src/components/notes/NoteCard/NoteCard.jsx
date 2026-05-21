@@ -22,111 +22,157 @@ const NoteCard = ({ note, onEdit, onDelete, onShare, onView, onPin }) => {
   };
 
   return (
-    <div className="
-      note-card
-      bg-white dark:bg-[#141414]
-      border border-gray-200/80 dark:border-white/[0.06]
-      border-l-4 border-l-transparent
-      hover:border-l-indigo-500 dark:hover:border-l-indigo-400
-      rounded-xl sm:rounded-2xl p-3.5 sm:p-5
-      shadow-sm dark:shadow-none hover:shadow-md dark:hover:shadow-none
-      flex flex-col justify-between
-      cursor-default
-      h-full min-h-[200px] sm:min-h-[220px]
-      transition-all duration-200
-    ">
+    <div 
+      className="
+        note-card
+        p-4 sm:p-5
+        flex flex-col justify-between
+        h-full min-h-[240px] sm:min-h-[260px]
+        group transition-all duration-200 ease-out
+        border rounded-lg
+      "
+      style={{
+        backgroundColor: 'var(--surface-elevated)',
+        borderColor: note.isPinned ? 'var(--warning-primary)' : 'var(--border-default)',
+        borderWidth: note.isPinned ? '2px' : '1px',
+        boxShadow: 'var(--shadow-sm)'
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+        e.currentTarget.style.borderColor = note.isPinned ? 'var(--warning-primary)' : 'var(--border-strong)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+        e.currentTarget.style.borderColor = note.isPinned ? 'var(--warning-primary)' : 'var(--border-default)';
+      }}
+    >
 
-      {/* ─── Top Row — Title + Date ────────────────────── */}
-      <div className="flex items-start justify-between gap-2 sm:gap-3 mb-2 sm:mb-3">
-        <h3 className="
-          text-sm sm:text-[15px] font-semibold leading-snug
-          text-gray-900 dark:text-gray-100
-          line-clamp-1 flex-1
-        ">
-          {note.title}
-        </h3>
+      {/* ─── Top Section — Title + Date ────────────────────── */}
+      <div className="mb-3">
+        {/* Title Row */}
+        <div className="flex items-start justify-between gap-2 mb-2">
+          <h3 
+            className="
+              text-base sm:text-lg font-bold leading-tight tracking-tight
+              line-clamp-2 flex-1
+            "
+            style={{ color: 'var(--text-primary)' }}
+          >
+            {note.title}
+          </h3>
 
-        {/* Date badge */}
-        <span className="
-          shrink-0 text-[10px] sm:text-[11px] font-medium
-          px-2 py-0.5 rounded-full
-          bg-gray-100 dark:bg-white/[0.05]
-          text-gray-400 dark:text-gray-600
-          border border-gray-200/60 dark:border-white/[0.04]
-          whitespace-nowrap
-        ">
-          {formatDate(note.updatedAt || note.createdAt)}
-        </span>
-      </div>
+          {/* Date Badge — Refined, minimal */}
+          <span 
+            className="
+              shrink-0 text-2xs font-medium
+              px-1.5 py-0.5 rounded-md
+              border
+              whitespace-nowrap
+            "
+            style={{
+              backgroundColor: 'var(--surface-input)',
+              borderColor: 'var(--border-subtle)',
+              color: 'var(--text-tertiary)'
+            }}
+          >
+            {formatDate(note.updatedAt || note.createdAt)}
+          </span>
+        </div>
 
-      {/* ─── Content Preview — Plain Text, 3 Lines Max ──────── */}
-      <div className="mb-2 sm:mb-3 flex-grow">
-        <p className="
-          text-xs sm:text-sm leading-relaxed
-          text-gray-600 dark:text-gray-400
-          line-clamp-3
-        ">
-          {plainTextContent || 'No content'}
+        {/* Content Preview — Premium readability with tight rhythm */}
+        <p 
+          className="
+            text-sm leading-snug
+            line-clamp-3 mb-2.5
+          "
+          style={{ color: 'var(--text-secondary)' }}
+        >
+          {plainTextContent || <em style={{ color: 'var(--text-muted)' }}>No content</em>}
         </p>
       </div>
 
-      {/* ─── Badge Container — Category + Task Status + Sharing ────────────────────────────── */}
-      <div className="flex items-center gap-1.5 sm:gap-2 mt-2 sm:mt-2 mb-2 sm:mb-3 flex-wrap">
-        {/* ✅ PR 2: Category Badge */}
+      {/* ─── Metadata Badges — Compact composition ────────────────────────────── */}
+      <div className="mb-2.5 flex items-center gap-1.5 flex-wrap">
+        {/* ✅ Category Badge */}
         {note.category && (
-          <span className={`
-            inline-flex items-center gap-0.5 sm:gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1
-            rounded-full text-[9px] sm:text-[11px] font-semibold
-            border
-            ${CATEGORY_INFO[note.category]?.color || 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600'}
-          `}>
+          <span 
+            className={`
+              inline-flex items-center gap-0.5 px-2 py-0.5
+              rounded-sm text-xs font-semibold
+              border transition-all duration-150
+              ${CATEGORY_INFO[note.category]?.color || 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600'}
+            `}
+          >
             {CATEGORY_INFO[note.category]?.icon} {CATEGORY_INFO[note.category]?.label}
           </span>
         )}
 
-        {/* ✅ PR 2: Task Status Badge (show only for task category) */}
+        {/* ✅ Task Status Badge (show only for task category) */}
         {note.category === 'task' && note.taskStatus && (
-          <span className={`
-            inline-flex items-center gap-1 px-2.5 py-1
-            rounded-full text-[11px] font-semibold
-            border
-            ${TASK_STATUS_INFO[note.taskStatus]?.color || 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600'}
-          `}>
+          <span 
+            className={`
+              inline-flex items-center gap-0.5 px-2 py-0.5
+              rounded-sm text-xs font-semibold
+              border transition-all duration-150
+              ${TASK_STATUS_INFO[note.taskStatus]?.color || 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600'}
+            `}
+          >
             {TASK_STATUS_INFO[note.taskStatus]?.icon} {TASK_STATUS_INFO[note.taskStatus]?.label}
           </span>
         )}
 
         {/* Sharing indicator */}
         {note.isPublic && (
-          <span className="inline-flex items-center gap-0.5 sm:gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1
-            rounded-full text-[9px] sm:text-[11px] font-semibold
-            bg-green-50 text-green-700 border border-green-300
-            dark:bg-green-900/30 dark:text-green-300 dark:border-green-700">
-            <span className="w-1 sm:w-1.5 h-1 sm:h-1.5 rounded-full bg-green-500 dark:bg-green-400 animate-pulse" />
+          <span 
+            className="
+              inline-flex items-center gap-0.5 px-2 py-0.5
+              rounded-sm text-xs font-semibold
+              border transition-all duration-150
+            "
+            style={{
+              backgroundColor: 'var(--success-primary)',
+              borderColor: 'var(--success-primary)',
+              color: 'white'
+            }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
             Public
           </span>
         )}
       </div>
 
       {/* ─── Divider ────────────────────────────────────── */}
-      <div className="border-t border-gray-100 dark:border-white/[0.05] mb-2 sm:mb-3" />
+      <div 
+        className="border-t mb-3" 
+        style={{ borderColor: 'var(--border-subtle)' }} 
+      />
 
-      {/* ─── Action Buttons — Single Row with Icons Only ──── */}
-      <div className="flex gap-1 sm:gap-1.5 justify-start">
+      {/* ─── Action Buttons — Carefully composed, compact row ──── */}
+      <div className="flex gap-1 justify-start flex-wrap">
         
         {/* View Full Note */}
         <button
           onClick={() => onView(note)}
           title="View full note"
           className="
-            p-1.5 sm:p-2 rounded-lg
-            bg-gray-100 dark:bg-white/[0.05]
-            hover:bg-gray-200 dark:hover:bg-white/[0.08]
-            text-gray-600 dark:text-gray-400
-            border border-gray-200 dark:border-white/[0.08]
-            hover:border-gray-300 dark:hover:border-white/[0.12]
-            transition-all duration-200
+            p-1.5 rounded-md transition-all duration-200
+            border hover:shadow-md
           "
+          style={{
+            backgroundColor: 'var(--surface-input)',
+            borderColor: 'var(--border-default)',
+            color: 'var(--text-secondary)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--surface-hover)';
+            e.currentTarget.style.borderColor = 'var(--border-strong)';
+            e.currentTarget.style.color = 'var(--text-primary)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--surface-input)';
+            e.currentTarget.style.borderColor = 'var(--border-default)';
+            e.currentTarget.style.color = 'var(--text-secondary)';
+          }}
         >
           <ReadMoreIcon />
         </button>
@@ -136,30 +182,55 @@ const NoteCard = ({ note, onEdit, onDelete, onShare, onView, onPin }) => {
           onClick={() => onEdit(note)}
           title="Edit note"
           className="
-            p-1.5 sm:p-2 rounded-lg
-            bg-gray-100 dark:bg-white/[0.05]
-            hover:bg-gray-200 dark:hover:bg-white/[0.08]
-            text-gray-600 dark:text-gray-400
-            border border-gray-200 dark:border-white/[0.08]
-            hover:border-gray-300 dark:hover:border-white/[0.12]
-            transition-all duration-200
+            p-1.5 rounded-md transition-all duration-200
+            border hover:shadow-md
           "
+          style={{
+            backgroundColor: 'var(--surface-input)',
+            borderColor: 'var(--border-default)',
+            color: 'var(--text-secondary)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--surface-hover)';
+            e.currentTarget.style.borderColor = 'var(--border-strong)';
+            e.currentTarget.style.color = 'var(--text-primary)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--surface-input)';
+            e.currentTarget.style.borderColor = 'var(--border-default)';
+            e.currentTarget.style.color = 'var(--text-secondary)';
+          }}
         >
           <EditIcon />
         </button>
 
-        {/* ✅ PR 2: Pin Toggle Button */}
+        {/* ✅ PIN Toggle Button */}
         {onPin && (
           <button
             onClick={() => onPin(note._id)}
             title={note.isPinned ? 'Unpin note' : 'Pin note'}
-            className={`
-              p-1.5 sm:p-2 rounded-lg border transition-all duration-200
-              ${note.isPinned
-                ? 'bg-amber-100 dark:bg-amber-500/[0.15] text-amber-600 dark:text-amber-400 border-amber-300 dark:border-amber-600 hover:bg-amber-200 dark:hover:bg-amber-500/[0.25]'
-                : 'bg-gray-100 dark:bg-white/[0.05] text-gray-600 dark:text-gray-400 border-gray-200 dark:border-white/[0.08] hover:bg-gray-200 dark:hover:bg-white/[0.08] hover:border-gray-300 dark:hover:border-white/[0.12]'
+            className="
+              p-1.5 rounded-md border transition-all duration-200 hover:shadow-md
+            "
+            style={{
+              backgroundColor: note.isPinned ? 'rgba(250, 204, 21, 0.15)' : 'var(--surface-input)',
+              borderColor: note.isPinned ? 'var(--warning-primary)' : 'var(--border-default)',
+              color: note.isPinned ? 'var(--warning-primary)' : 'var(--text-secondary)'
+            }}
+            onMouseEnter={(e) => {
+              if (!note.isPinned) {
+                e.currentTarget.style.backgroundColor = 'var(--surface-hover)';
+                e.currentTarget.style.borderColor = 'var(--border-strong)';
+                e.currentTarget.style.color = 'var(--text-primary)';
               }
-            `}
+            }}
+            onMouseLeave={(e) => {
+              if (!note.isPinned) {
+                e.currentTarget.style.backgroundColor = 'var(--surface-input)';
+                e.currentTarget.style.borderColor = 'var(--border-default)';
+                e.currentTarget.style.color = 'var(--text-secondary)';
+              }
+            }}
           >
             <PinIcon filled={note.isPinned} />
           </button>
@@ -170,15 +241,24 @@ const NoteCard = ({ note, onEdit, onDelete, onShare, onView, onPin }) => {
           onClick={() => onDelete(note._id)}
           title="Delete note"
           className="
-            p-1.5 sm:p-2 rounded-lg
-            bg-gray-100 dark:bg-white/[0.05]
-            hover:bg-red-100 dark:hover:bg-red-500/[0.08]
-            text-gray-600 dark:text-gray-400
-            hover:text-red-600 dark:hover:text-red-400
-            border border-gray-200 dark:border-white/[0.08]
-            hover:border-red-200 dark:hover:border-red-500/[0.12]
-            transition-all duration-200
+            p-1.5 rounded-md border transition-all duration-200
+            hover:shadow-md
           "
+          style={{
+            backgroundColor: 'var(--surface-input)',
+            borderColor: 'var(--border-default)',
+            color: 'var(--text-secondary)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'rgba(255, 107, 107, 0.15)';
+            e.currentTarget.style.borderColor = 'var(--danger-primary)';
+            e.currentTarget.style.color = 'var(--danger-primary)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--surface-input)';
+            e.currentTarget.style.borderColor = 'var(--border-default)';
+            e.currentTarget.style.color = 'var(--text-secondary)';
+          }}
         >
           <TrashIcon />
         </button>
@@ -188,14 +268,24 @@ const NoteCard = ({ note, onEdit, onDelete, onShare, onView, onPin }) => {
           onClick={() => onShare(note._id)}
           title={note.isPublic ? 'Disable sharing' : 'Share note'}
           className="
-            p-1.5 sm:p-2 rounded-lg
-            bg-gray-100 dark:bg-white/[0.05]
-            hover:bg-gray-200 dark:hover:bg-white/[0.08]
-            text-gray-600 dark:text-gray-400
-            border border-gray-200 dark:border-white/[0.08]
-            hover:border-gray-300 dark:hover:border-white/[0.12]
-            transition-all duration-200
+            p-1.5 rounded-md border transition-all duration-200
+            hover:shadow-md
           "
+          style={{
+            backgroundColor: 'var(--surface-input)',
+            borderColor: 'var(--border-default)',
+            color: 'var(--text-secondary)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--surface-hover)';
+            e.currentTarget.style.borderColor = 'var(--border-strong)';
+            e.currentTarget.style.color = 'var(--text-primary)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--surface-input)';
+            e.currentTarget.style.borderColor = 'var(--border-default)';
+            e.currentTarget.style.color = 'var(--text-secondary)';
+          }}
         >
           <ShareIcon />
         </button>
@@ -206,12 +296,31 @@ const NoteCard = ({ note, onEdit, onDelete, onShare, onView, onPin }) => {
           disabled={!note.isPublic || !shareUrl}
           title={note.isPublic && shareUrl ? 'Copy share link' : 'Share note first'}
           className={`
-            p-1.5 sm:p-2 rounded-lg border transition-all duration-200
+            p-1.5 rounded-md border transition-all duration-200 hover:shadow-md
             ${note.isPublic && shareUrl
-              ? 'bg-gray-100 dark:bg-white/[0.05] hover:bg-gray-200 dark:hover:bg-white/[0.08] text-gray-600 dark:text-gray-400 border-gray-200 dark:border-white/[0.08] hover:border-gray-300 dark:hover:border-white/[0.12] cursor-pointer'
-              : 'bg-gray-50 dark:bg-white/[0.02] text-gray-300 dark:text-gray-700 border-gray-100 dark:border-white/[0.04] cursor-not-allowed opacity-40'
+              ? 'cursor-pointer'
+              : 'opacity-40 cursor-not-allowed'
             }
           `}
+          style={{
+            backgroundColor: 'var(--surface-input)',
+            borderColor: 'var(--border-default)',
+            color: 'var(--text-secondary)'
+          }}
+          onMouseEnter={(e) => {
+            if (note.isPublic && shareUrl) {
+              e.currentTarget.style.backgroundColor = 'var(--surface-hover)';
+              e.currentTarget.style.borderColor = 'var(--border-strong)';
+              e.currentTarget.style.color = 'var(--text-primary)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (note.isPublic && shareUrl) {
+              e.currentTarget.style.backgroundColor = 'var(--surface-input)';
+              e.currentTarget.style.borderColor = 'var(--border-default)';
+              e.currentTarget.style.color = 'var(--text-secondary)';
+            }
+          }}
         >
           <LinkIcon />
         </button>

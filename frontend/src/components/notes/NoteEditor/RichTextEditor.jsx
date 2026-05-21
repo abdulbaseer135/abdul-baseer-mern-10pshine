@@ -9,38 +9,84 @@ const MenuBar = ({ editor, onVoiceToggle, isVoiceListening, isVoiceSupported, is
   // Disable content voice button if title voice is active
   const canUseVoice = !isTitleListening;
 
+  // Toolbar button class
+  const toolbarBtnClass = (isActive) => `
+    px-2 py-1.5 text-xs rounded-md transition-all duration-150 font-medium
+    ${isActive 
+      ? 'bg-indigo-600 dark:bg-indigo-500 text-white' 
+      : 'bg-white dark:bg-slate-600 border border-slate-300 dark:border-slate-500 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-500'
+    }
+  `;
+
   return (
-    <div className="flex flex-wrap gap-1 p-2 border-b border-gray-200 dark:border-white/[0.06] bg-gray-50 dark:bg-white/[0.03] rounded-t-lg">
+    <div className="flex flex-wrap gap-1 p-2 border-b border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 rounded-t-md">
+      {/* ─── Text Formatting ──────────────────── */}
       <button type="button" onClick={() => editor.chain().focus().toggleBold().run()}
-        className={`px-2 py-1 text-sm rounded transition-colors ${editor.isActive('bold') ? 'bg-gray-800 dark:bg-gray-700 text-white' : 'bg-white dark:bg-white/[0.08] border border-gray-300 dark:border-white/[0.12] hover:bg-gray-100 dark:hover:bg-white/[0.15]'}`}>B</button>
+        className={toolbarBtnClass(editor.isActive('bold'))}>
+        <strong>B</strong>
+      </button>
       <button type="button" onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={`px-2 py-1 text-sm rounded italic transition-colors ${editor.isActive('italic') ? 'bg-gray-800 dark:bg-gray-700 text-white' : 'bg-white dark:bg-white/[0.08] border border-gray-300 dark:border-white/[0.12] hover:bg-gray-100 dark:hover:bg-white/[0.15]'}`}>I</button>
+        className={toolbarBtnClass(editor.isActive('italic'))}>
+        <em>I</em>
+      </button>
       <button type="button" onClick={() => editor.chain().focus().toggleStrike().run()}
-        className={`px-2 py-1 text-sm rounded line-through transition-colors ${editor.isActive('strike') ? 'bg-gray-800 dark:bg-gray-700 text-white' : 'bg-white dark:bg-white/[0.08] border border-gray-300 dark:border-white/[0.12] hover:bg-gray-100 dark:hover:bg-white/[0.15]'}`}>S</button>
-      <div className="w-px bg-gray-300 dark:bg-white/[0.08] mx-1" />
+        className={toolbarBtnClass(editor.isActive('strike'))}>
+        <s>S</s>
+      </button>
+
+      {/* Divider */}
+      <div className="w-px bg-slate-300 dark:bg-slate-500 mx-0.5" />
+
+      {/* ─── Headings ──────────────────────────── */}
       <button type="button" onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        className={`px-2 py-1 text-sm rounded transition-colors ${editor.isActive('heading', { level: 1 }) ? 'bg-gray-800 dark:bg-gray-700 text-white' : 'bg-white dark:bg-white/[0.08] border border-gray-300 dark:border-white/[0.12] hover:bg-gray-100 dark:hover:bg-white/[0.15]'}`}>H1</button>
+        className={toolbarBtnClass(editor.isActive('heading', { level: 1 }))}>
+        H1
+      </button>
       <button type="button" onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={`px-2 py-1 text-sm rounded transition-colors ${editor.isActive('heading', { level: 2 }) ? 'bg-gray-800 dark:bg-gray-700 text-white' : 'bg-white dark:bg-white/[0.08] border border-gray-300 dark:border-white/[0.12] hover:bg-gray-100 dark:hover:bg-white/[0.15]'}`}>H2</button>
-      <div className="w-px bg-gray-300 dark:bg-white/[0.08] mx-1" />
+        className={toolbarBtnClass(editor.isActive('heading', { level: 2 }))}>
+        H2
+      </button>
+
+      {/* Divider */}
+      <div className="w-px bg-slate-300 dark:bg-slate-500 mx-0.5" />
+
+      {/* ─── Lists & Blocks ──────────────────────── */}
       <button type="button" onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={`px-2 py-1 text-sm rounded transition-colors ${editor.isActive('bulletList') ? 'bg-gray-800 dark:bg-gray-700 text-white' : 'bg-white dark:bg-white/[0.08] border border-gray-300 dark:border-white/[0.12] hover:bg-gray-100 dark:hover:bg-white/[0.15]'}`}>• List</button>
+        className={toolbarBtnClass(editor.isActive('bulletList'))}>
+        • List
+      </button>
       <button type="button" onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        className={`px-2 py-1 text-sm rounded transition-colors ${editor.isActive('orderedList') ? 'bg-gray-800 dark:bg-gray-700 text-white' : 'bg-white dark:bg-white/[0.08] border border-gray-300 dark:border-white/[0.12] hover:bg-gray-100 dark:hover:bg-white/[0.15]'}`}>1. List</button>
-      <div className="w-px bg-gray-300 dark:bg-white/[0.08] mx-1" />
+        className={toolbarBtnClass(editor.isActive('orderedList'))}>
+        1. List
+      </button>
       <button type="button" onClick={() => editor.chain().focus().toggleBlockquote().run()}
-        className={`px-2 py-1 text-sm rounded transition-colors ${editor.isActive('blockquote') ? 'bg-gray-800 dark:bg-gray-700 text-white' : 'bg-white dark:bg-white/[0.08] border border-gray-300 dark:border-white/[0.12] hover:bg-gray-100 dark:hover:bg-white/[0.15]'}`}>" Quote</button>
+        className={toolbarBtnClass(editor.isActive('blockquote'))}>
+        " Quote
+      </button>
       <button type="button" onClick={() => editor.chain().focus().setHorizontalRule().run()}
-        className="px-2 py-1 text-sm rounded bg-white dark:bg-white/[0.08] border border-gray-300 dark:border-white/[0.12] hover:bg-gray-100 dark:hover:bg-white/[0.15] transition-colors">— HR</button>
-      <div className="w-px bg-gray-300 dark:bg-white/[0.08] mx-1" />
+        className={toolbarBtnClass(false)}>
+        — HR
+      </button>
+
+      {/* Divider */}
+      <div className="w-px bg-slate-300 dark:bg-slate-500 mx-0.5" />
+
+      {/* ─── Undo/Redo ──────────────────────────── */}
       <button type="button" onClick={() => editor.chain().focus().undo().run()}
         disabled={!editor.can().undo()}
-        className="px-2 py-1 text-sm rounded bg-white dark:bg-white/[0.08] border border-gray-300 dark:border-white/[0.12] hover:bg-gray-100 dark:hover:bg-white/[0.15] transition-colors disabled:opacity-40">↩ Undo</button>
+        className={`${toolbarBtnClass(false)} disabled:opacity-40 disabled:cursor-not-allowed`}>
+        ↩ Undo
+      </button>
       <button type="button" onClick={() => editor.chain().focus().redo().run()}
         disabled={!editor.can().redo()}
-        className="px-2 py-1 text-sm rounded bg-white dark:bg-white/[0.08] border border-gray-300 dark:border-white/[0.12] hover:bg-gray-100 dark:hover:bg-white/[0.15] transition-colors disabled:opacity-40">↪ Redo</button>
-      <div className="w-px bg-gray-300 dark:bg-white/[0.08] mx-1" />
+        className={`${toolbarBtnClass(false)} disabled:opacity-40 disabled:cursor-not-allowed`}>
+        ↪ Redo
+      </button>
+
+      {/* Divider */}
+      <div className="w-px bg-slate-300 dark:bg-slate-500 mx-0.5" />
       
+      {/* ─── Voice Input ──────────────────────────── */}
       {isVoiceSupported && (
         <button
           type="button"
@@ -48,12 +94,12 @@ const MenuBar = ({ editor, onVoiceToggle, isVoiceListening, isVoiceSupported, is
           disabled={!canUseVoice}
           aria-label={isVoiceListening ? 'Stop voice input' : 'Start voice input'}
           title={isTitleListening ? 'Stop title voice to use content voice' : ''}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+          className={`flex items-center gap-1 px-2 py-1.5 rounded-md text-xs font-medium transition-all duration-150 ${
             !canUseVoice
-              ? 'opacity-50 cursor-not-allowed text-gray-400 border border-gray-300 dark:border-gray-700'
+              ? 'opacity-40 cursor-not-allowed text-slate-500 dark:text-slate-400'
               : isVoiceListening
-              ? 'text-white bg-red-500 border border-red-500 shadow-md shadow-red-500/30'
-              : 'text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-indigo-400 hover:text-indigo-600'
+              ? 'text-white bg-red-500 border border-red-600 shadow-sm shadow-red-500/30'
+              : 'text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-500 hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-indigo-50/50 dark:hover:bg-slate-600'
           }`}
         >
           {isVoiceListening ? (
@@ -62,7 +108,7 @@ const MenuBar = ({ editor, onVoiceToggle, isVoiceListening, isVoiceSupported, is
                 {[0, 0.15, 0.3, 0.15, 0].map((delay, i) => (
                   <span
                     key={i}
-                    className="w-[3px] bg-white rounded-full animate-soundBar"
+                    className="w-[2px] bg-white rounded-full animate-soundBar"
                     style={{
                       animationDelay: `${delay}s`,
                       height: i === 2 ? '100%' : i % 2 === 0 ? '40%' : '70%',
@@ -71,7 +117,6 @@ const MenuBar = ({ editor, onVoiceToggle, isVoiceListening, isVoiceSupported, is
                 ))}
               </span>
               <span>Listening</span>
-              <span className="text-red-200 text-[10px]">tap to stop</span>
             </>
           ) : (
             <>
@@ -125,8 +170,8 @@ const RichTextEditor = forwardRef((props, ref) => {
   );
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="border border-gray-300 dark:border-white/[0.08] rounded-lg overflow-hidden focus-within:ring-2 dark:focus-within:ring-indigo-500/30 focus-within:ring-blue-500">
+    <div className="flex flex-col gap-0">
+      <div className="border border-slate-300 dark:border-slate-600 rounded-md overflow-hidden">
         <MenuBar
           editor={editor}
           onVoiceToggle={onContentVoiceToggle}
@@ -137,7 +182,7 @@ const RichTextEditor = forwardRef((props, ref) => {
 
         <EditorContent
           editor={editor}
-          className="prose dark:prose-invert max-w-none p-3 min-h-[200px] focus:outline-none text-gray-900 dark:text-gray-100"
+          className="prose dark:prose-invert max-w-none p-3 min-h-[160px] focus:outline-none text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-700"
         />
       </div>
     </div>

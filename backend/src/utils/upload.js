@@ -15,14 +15,21 @@ const storage = multer.diskStorage({
   },
 });
 
-// File filter - only allow images
+// File filter - accept all image types by MIME type or file extension
 const fileFilter = (req, file, cb) => {
-  const allowedMimes = ['image/jpeg', 'image/png', 'image/webp'];
+  // List of allowed image extensions
+  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.tiff', '.tif', '.heic', '.heif', '.ico', '.avif', '.jp2'];
   
-  if (allowedMimes.includes(file.mimetype)) {
+  // Check both MIME type and file extension for maximum compatibility
+  const isImageMime = file.mimetype && file.mimetype.toLowerCase().includes('image');
+  const ext = path.extname(file.originalname).toLowerCase();
+  const isImageExt = allowedExtensions.includes(ext);
+  
+  if (isImageMime || isImageExt) {
     cb(null, true);
   } else {
-    cb(new ApiError(400, 'Only JPEG, PNG, and WebP images are allowed'));
+    // Reject the file
+    cb(new Error(`Only image files are allowed. Received: ${file.mimetype || 'unknown MIME type'}`));
   }
 };
 
@@ -31,7 +38,7 @@ const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 2 * 1024 * 1024, // 2MB
+    fileSize: 5 * 1024 * 1024, // 5MB
   },
 });
 
@@ -39,11 +46,12 @@ const upload = multer({
 const handleUploadError = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json(new ApiError(400, 'File size must not exceed 2MB'));
+      return res.status(400).json(new ApiError(400, 'File size must not exceed 5MB'));
     }
+    return res.status(400).json(new ApiError(400, err.message));
   }
-  if (err instanceof ApiError) {
-    return res.status(err.statusCode).json(err);
+  if (err) {
+    return res.status(400).json(new ApiError(400, err.message || 'Upload failed'));
   }
   next();
 };

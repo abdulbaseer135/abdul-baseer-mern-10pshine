@@ -19,22 +19,20 @@ const LoginPage = () => {
   return (
     <div className="
       min-h-screen
-      bg-gray-50 dark:bg-[#0a0a0a]
       flex items-center justify-center
       px-4 py-12
-      transition-colors duration-200
-    ">
+    "
+    style={{ backgroundColor: 'var(--surface-page-bg)' }}>
 
-      {/* ─── Card ──────────────────────────────────────── */}
+      {/* ─── Card Container ────────────────────────────────────────── */}
       <div className="w-full max-w-md">
 
         {/* ─── Logo / Brand ────────────────────────────── */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-7">
           <div className="
             inline-flex items-center justify-center
-            w-12 h-12 rounded-2xl mb-4
+            w-11 h-11 rounded-lg mb-3.5
             bg-indigo-600 dark:bg-indigo-500
-            shadow-lg shadow-indigo-500/30
           ">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
               stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -45,35 +43,39 @@ const LoginPage = () => {
               <polyline points="10 9 9 9 8 9"/>
             </svg>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight
-            text-gray-900 dark:text-white">
+          <h1 className="text-2xl font-bold tracking-tight mb-1
+            text-slate-900 dark:text-white">
             Welcome back
           </h1>
-          <p className="text-sm mt-1.5
-            text-gray-500 dark:text-gray-500">
+          <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
             Sign in to access your notes
           </p>
         </div>
 
         {/* ─── Panel ───────────────────────────────────── */}
         <div className="
-          bg-white dark:bg-[#141414]
-          border border-gray-200/60 dark:border-white/[0.07]
-          rounded-2xl
-          shadow-xl shadow-gray-200/60 dark:shadow-black/40
-          p-7
-        ">
+          rounded-lg
+          border
+          p-6
+        "
+        style={{
+          backgroundColor: 'var(--surface-elevated)',
+          borderColor: 'var(--border-default)',
+          boxShadow: 'var(--shadow-md)'
+        }}>
 
           {/* Error Banner */}
           {error && (
             <div className="
               flex items-start gap-2.5
-              px-4 py-3 rounded-xl mb-5
-              bg-red-50 dark:bg-red-500/[0.08]
-              border border-red-200 dark:border-red-500/[0.15]
-              text-red-600 dark:text-red-400
-              text-sm
-            ">
+              px-3 py-2.5 rounded-md mb-4
+              border text-sm
+            "
+            style={{
+              backgroundColor: 'rgba(239, 68, 68, 0.08)',
+              borderColor: 'var(--danger-primary)',
+              color: 'var(--danger-primary)'
+            }}>
               <ErrorIcon />
               <span>{error}</span>
             </div>
@@ -83,25 +85,40 @@ const LoginPage = () => {
 
             {/* Email */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider
-                text-gray-400 dark:text-gray-600">
+              <label className="text-xs font-semibold"
+                style={{ color: 'var(--text-primary)' }}>
                 Email
               </label>
               <input
                 type="email"
                 placeholder="you@example.com"
                 className={`
-                  w-full px-4 py-2.5 rounded-xl text-sm
-                  bg-gray-50 dark:bg-white/[0.04]
-                  text-gray-900 dark:text-gray-100
-                  placeholder-gray-400 dark:placeholder-gray-700
-                  border transition-all duration-200
-                  focus:outline-none focus:ring-3
+                  w-full px-3.5 py-2.5 rounded-lg text-sm
+                  border transition-all duration-150
+                  focus:outline-none focus:ring-2
                   ${errors.email
-                    ? 'border-red-400 dark:border-red-500/60 focus:ring-red-400/15 dark:focus:ring-red-500/15'
-                    : 'border-gray-200 dark:border-white/[0.08] focus:border-indigo-400 dark:focus:border-indigo-500/60 focus:ring-indigo-400/15 dark:focus:ring-indigo-500/20'
+                    ? 'focus:ring-red-500/30'
+                    : 'focus:ring-indigo-500/30'
                   }
                 `}
+                style={{
+                  backgroundColor: 'var(--surface-input)',
+                  borderColor: errors.email ? 'var(--danger-primary)' : 'var(--border-default)',
+                  color: 'var(--text-primary)',
+                  ...{
+                    '--tw-ring-color': errors.email ? 'rgba(255, 107, 107, 0.3)' : 'rgba(129, 140, 248, 0.3)'
+                  }
+                }}
+                onFocus={(e) => {
+                  if (!errors.email) {
+                    e.target.style.borderColor = 'var(--border-focus)';
+                  }
+                }}
+                onBlur={(e) => {
+                  if (!errors.email) {
+                    e.target.style.borderColor = 'var(--border-default)';
+                  }
+                }}
                 {...register('email', {
                   required: 'Email is required',
                   pattern: {
@@ -111,7 +128,8 @@ const LoginPage = () => {
                 })}
               />
               {errors.email && (
-                <p className="flex items-center gap-1 text-xs text-red-500 dark:text-red-400">
+                <p className="flex items-center gap-1 text-xs"
+                  style={{ color: 'var(--danger-primary)' }}>
                   <ErrorIcon size={11} /> {errors.email.message}
                 </p>
               )}
@@ -120,42 +138,58 @@ const LoginPage = () => {
             {/* Password */}
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold uppercase tracking-wider
-                  text-gray-400 dark:text-gray-600">
+                <label className="text-xs font-semibold"
+                  style={{ color: 'var(--text-primary)' }}>
                   Password
                 </label>
                 <Link
                   to="/forgot-password"
-                  className="text-xs font-medium
-                    text-indigo-600 dark:text-indigo-400
-                    hover:text-indigo-500 dark:hover:text-indigo-300
-                    transition-colors duration-200"
+                  className="text-xs font-medium transition-colors duration-150"
+                  style={{ color: 'var(--accent-primary)' }}
+                  onMouseEnter={(e) => e.target.style.color = 'var(--accent-hover)'}
+                  onMouseLeave={(e) => e.target.style.color = 'var(--accent-primary)'}
                 >
-                  Forgot password?
+                  Forgot?
                 </Link>
               </div>
               <input
                 type="password"
                 placeholder="••••••••"
                 className={`
-                  w-full px-4 py-2.5 rounded-xl text-sm
-                  bg-gray-50 dark:bg-white/[0.04]
-                  text-gray-900 dark:text-gray-100
-                  placeholder-gray-400 dark:placeholder-gray-700
-                  border transition-all duration-200
-                  focus:outline-none focus:ring-3
+                  w-full px-3.5 py-2.5 rounded-lg text-sm
+                  border transition-all duration-150
+                  focus:outline-none focus:ring-2
                   ${errors.password
-                    ? 'border-red-400 dark:border-red-500/60 focus:ring-red-400/15 dark:focus:ring-red-500/15'
-                    : 'border-gray-200 dark:border-white/[0.08] focus:border-indigo-400 dark:focus:border-indigo-500/60 focus:ring-indigo-400/15 dark:focus:ring-indigo-500/20'
+                    ? 'focus:ring-red-500/30'
+                    : 'focus:ring-indigo-500/30'
                   }
                 `}
+                style={{
+                  backgroundColor: 'var(--surface-input)',
+                  borderColor: errors.password ? 'var(--danger-primary)' : 'var(--border-default)',
+                  color: 'var(--text-primary)',
+                  ...{
+                    '--tw-ring-color': errors.password ? 'rgba(255, 107, 107, 0.3)' : 'rgba(129, 140, 248, 0.3)'
+                  }
+                }}
+                onFocus={(e) => {
+                  if (!errors.password) {
+                    e.target.style.borderColor = 'var(--border-focus)';
+                  }
+                }}
+                onBlur={(e) => {
+                  if (!errors.password) {
+                    e.target.style.borderColor = 'var(--border-default)';
+                  }
+                }}
                 {...register('password', {
                   required: 'Password is required',
                   minLength: { value: 6, message: 'Minimum 6 characters' },
                 })}
               />
               {errors.password && (
-                <p className="flex items-center gap-1 text-xs text-red-500 dark:text-red-400">
+                <p className="flex items-center gap-1 text-xs"
+                  style={{ color: 'var(--danger-primary)' }}>
                   <ErrorIcon size={11} /> {errors.password.message}
                 </p>
               )}
@@ -166,16 +200,33 @@ const LoginPage = () => {
               type="submit"
               disabled={loading}
               className="
-                btn-primary
-                w-full py-2.5 rounded-xl
+                w-full py-2.5 mt-2 rounded-lg
                 text-sm font-semibold text-white
-                bg-indigo-600 hover:bg-indigo-500
-                dark:bg-indigo-600 dark:hover:bg-indigo-500
-                shadow-lg shadow-indigo-500/25
-                disabled:opacity-40 disabled:cursor-not-allowed
-                flex items-center justify-center gap-2
-                mt-1
+                bg-indigo-600 dark:bg-indigo-500
+                hover:bg-indigo-700 dark:hover:bg-indigo-600
+                active:bg-indigo-800 dark:active:bg-indigo-700
+                disabled:opacity-50 disabled:cursor-not-allowed
+                transition-all duration-150
+                flex items-center justify-center gap-2.5
+                shadow-sm hover:shadow-md
               "
+              style={{
+                boxShadow: loading ? 'var(--shadow-sm)' : 'var(--shadow-sm)',
+                backgroundColor: 'var(--accent-primary)',
+                color: 'white'
+              }}
+              onMouseEnter={(e) => {
+                if (!loading) {
+                  e.target.style.backgroundColor = 'var(--accent-hover)';
+                  e.target.style.boxShadow = 'var(--shadow-md)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!loading) {
+                  e.target.style.backgroundColor = 'var(--accent-primary)';
+                  e.target.style.boxShadow = 'var(--shadow-sm)';
+                }
+              }}
             >
               {loading ? (
                 <>
@@ -193,16 +244,16 @@ const LoginPage = () => {
           </form>
         </div>
 
-        {/* ─── Footer Link ─────────────────────────────── */}
-        <p className="text-center text-sm mt-5
-          text-gray-500 dark:text-gray-600">
+        {/* ─── Footer Link ───────────────────────────────── */}
+        <p className="text-center text-sm mt-5"
+          style={{ color: 'var(--text-tertiary)' }}>
           Don't have an account?{' '}
           <Link
             to="/signup"
-            className="font-semibold
-              text-indigo-600 dark:text-indigo-400
-              hover:text-indigo-500 dark:hover:text-indigo-300
-              transition-colors duration-200"
+            className="font-semibold transition-colors duration-150"
+            style={{ color: 'var(--accent-primary)' }}
+            onMouseEnter={(e) => e.target.style.color = 'var(--accent-hover)'}
+            onMouseLeave={(e) => e.target.style.color = 'var(--accent-primary)'}
           >
             Create one
           </Link>

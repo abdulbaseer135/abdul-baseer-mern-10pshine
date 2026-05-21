@@ -198,71 +198,105 @@ const DashboardPage = () => {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--surface-page-bg)' }}>
       <Navbar />
 
-      <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
 
-        {/* ─── Header ──────────────────────────────────────────────── */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
-          <div className="flex-1 w-full">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 truncate">
+        {/* ─── Page Header — Premium, refined ────────────────────────── */}
+        <div className="mb-7 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 sm:gap-5">
+          <div className="flex-1">
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-1" style={{ color: 'var(--text-primary)' }}>
               My Notes
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-              {pagination.total} note{pagination.total !== 1 ? 's' : ''}
+            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+              <span className="font-medium">{pagination.total}</span> note{pagination.total !== 1 ? 's' : ''} 
+              <span className="mx-1.5">•</span>
+              <span className="font-medium">{currentFilter === 'all' ? 'All notes' : FILTER_OPTIONS.find(f => f.id === currentFilter)?.label}</span>
             </p>
           </div>
 
-          {/* ─── Action Buttons — Mobile Friendly ──────────────────────────────── */}
-          <div className="w-full sm:w-auto flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap justify-end sm:justify-start">
+          {/* ─── Action Buttons — Better hierarchy ──────────────────────────────── */}
+          <div className="w-full sm:w-auto flex items-center gap-2 flex-wrap sm:flex-nowrap justify-end">
 
-            {/* Export */}
+            {/* Export — Quiet secondary action */}
             <button
               onClick={handleExport}
               disabled={exporting || notes.length === 0}
-              title="Export notes"
+              title="Export all notes to JSON"
               className="
-                flex-1 sm:flex-none px-2.5 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm
-                border border-gray-300 dark:border-gray-700
-                text-gray-600 dark:text-gray-300
-                hover:bg-gray-100 dark:hover:bg-gray-800
-                disabled:opacity-40
-                flex items-center justify-center sm:justify-start gap-1
-                transition-colors duration-200 whitespace-nowrap
+                px-3 py-1.5 rounded-lg font-medium text-xs
+                border
+                transition-all duration-200 flex items-center justify-center gap-2 flex-shrink-0
+                disabled:opacity-40 disabled:cursor-not-allowed
               "
+              style={{
+                backgroundColor: 'transparent',
+                borderColor: 'var(--border-subtle)',
+                color: 'var(--text-tertiary)'
+              }}
+              onMouseEnter={(e) => {
+                if (!e.currentTarget.disabled) {
+                  e.currentTarget.style.backgroundColor = 'var(--surface-input)';
+                  e.currentTarget.style.borderColor = 'var(--border-default)';
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.borderColor = 'var(--border-subtle)';
+                e.currentTarget.style.color = 'var(--text-tertiary)';
+              }}
             >
               {exporting ? (
-                <svg className="animate-spin h-3.5 w-3.5 sm:h-4 sm:w-4" viewBox="0 0 24 24" fill="none">
+                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
                 </svg>
-              ) : '⬇️'}
-              <span className="inline">Export</span>
+              ) : (<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v4a2 2 0 002 2h12a2 2 0 002-2v-4m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>)}
+              <span className="hidden sm:inline">Export</span>
             </button>
 
-            {/* Import */}
+            {/* Import — Quiet secondary action */}
             <button
               onClick={() => importRef.current?.click()}
               disabled={importing}
-              title="Import notes"
+              title="Import notes from JSON"
               className="
-                flex-1 sm:flex-none px-2.5 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm
-                border border-gray-300 dark:border-gray-700
-                text-gray-600 dark:text-gray-300
-                hover:bg-gray-100 dark:hover:bg-gray-800
-                disabled:opacity-40
-                flex items-center justify-center sm:justify-start gap-1
-                transition-colors duration-200 whitespace-nowrap
+                px-3 py-1.5 rounded-lg font-medium text-xs
+                border
+                transition-all duration-200 flex items-center justify-center gap-2 flex-shrink-0
+                disabled:opacity-40 disabled:cursor-not-allowed
               "
+              style={{
+                backgroundColor: 'transparent',
+                borderColor: 'var(--border-subtle)',
+                color: 'var(--text-tertiary)'
+              }}
+              onMouseEnter={(e) => {
+                if (!e.currentTarget.disabled) {
+                  e.currentTarget.style.backgroundColor = 'var(--surface-input)';
+                  e.currentTarget.style.borderColor = 'var(--border-default)';
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.borderColor = 'var(--border-subtle)';
+                e.currentTarget.style.color = 'var(--text-tertiary)';
+              }}
             >
               {importing ? (
-                <svg className="animate-spin h-3.5 w-3.5 sm:h-4 sm:w-4" viewBox="0 0 24 24" fill="none">
+                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
                 </svg>
-              ) : '⬆️'}
-              <span className="inline">Import</span>
+              ) : (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3-3m0 0l3 3m-3-3v6" />
+                </svg>
+              )}
+              <span className="hidden sm:inline">Import</span>
             </button>
 
             {/* Hidden file input */}
@@ -274,129 +308,145 @@ const DashboardPage = () => {
               onChange={handleImport}
             />
 
-            {/* New Note — Full Width on Mobile */}
+            {/* Add Note — Dominant primary action */}
             <button
               onClick={() => { setEditingNote(null); setShowEditor(true); }}
               className="
-                flex-1 sm:flex-none px-2.5 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm
-                bg-blue-600 dark:bg-blue-500
-                hover:bg-blue-700 dark:hover:bg-blue-600
-                text-white transition-colors duration-200 whitespace-nowrap ml-auto sm:ml-0
+                px-4 py-2 rounded-lg font-semibold text-sm
+                bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800
+                dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:active:bg-indigo-700
+                text-white
+                transition-all duration-200 flex items-center justify-center gap-2 flex-shrink-0
+                shadow-md hover:shadow-lg
               "
             >
-              + Add Note
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 5v14m7-7H5" strokeWidth={2} stroke="currentColor" fill="none" strokeLinecap="round"/></svg>
+              <span>Add Note</span>
             </button>
           </div>
         </div>
 
-        {/* ─── Search + Sort Toolbar ───────────────────────────────────── */}
-        <div className="mb-6 flex flex-col gap-3">
+        {/* ─── Search + Sort + Filter Toolbar — Premium, intentional ──────────────────────────────── */}
+        <div className="mb-5 flex flex-col gap-3">
           
-          {/* Search Input + Sort (Desktop) */}
-          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+          {/* Search Input + Sort Dropdown */}
+          <div className="flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center">
             
-            {/* Search Input */}
-            <div className="relative w-full sm:w-[35%]">
+            {/* Search Input — Refined, premium */}
+            <div className="relative w-full sm:flex-1">
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--text-muted)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
               <input
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 placeholder="Search notes..."
                 className="
-                  w-full px-3 sm:px-4 py-2.5 rounded-lg text-sm sm:text-base
-                  border border-gray-200 dark:border-white/10
-                  bg-white dark:bg-white/[0.03]
-                  text-gray-900 dark:text-gray-100
-                  placeholder-gray-400 dark:placeholder-gray-500
-                  focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40
-                  focus:border-blue-300 dark:focus:border-blue-400/50
+                  w-full pl-10 pr-10 py-2 rounded-lg text-sm
+                  border
+                  focus:outline-none focus:ring-2 focus:ring-indigo-500/30
                   transition-all duration-200
+                  placeholder:text-text-muted
                 "
+                style={{
+                  backgroundColor: 'var(--surface-input)',
+                  borderColor: searchInput ? 'var(--border-strong)' : 'var(--border-default)',
+                  color: 'var(--text-primary)'
+                }}
               />
               {isSearching && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                  <svg className="animate-spin h-4 w-4 text-blue-500 dark:text-blue-400" viewBox="0 0 24 24" fill="none">
+                  <svg className="animate-spin h-4 w-4 text-indigo-500" viewBox="0 0 24 24" fill="none">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
                   </svg>
                 </div>
               )}
+              {searchInput && !isSearching && (
+                <button
+                  onClick={() => { setSearchInput(''); }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                >
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" strokeWidth={2} stroke="currentColor" fill="none" strokeLinecap="round"/></svg>
+                </button>
+              )}
             </div>
 
-            {/* Sort Dropdown */}
-            <div className="relative flex items-center gap-2 sm:gap-3 min-w-0 sm:min-w-fit">
-              <label className="hidden sm:block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide whitespace-nowrap">
-                Sort
-              </label>
+            {/* Sort Dropdown — Refined, compact */}
+            <div className="relative flex items-center gap-1.5 flex-shrink-0">
+              <svg className="w-3.5 h-3.5" style={{ color: 'var(--text-muted)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+              </svg>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 className="
-                  appearance-none flex-1 sm:flex-none px-3 py-2.5 rounded-lg text-sm sm:text-base
-                  border border-gray-200 dark:border-white/10
-                  bg-white dark:bg-white/[0.03]
-                  text-gray-700 dark:text-gray-300
-                  font-medium
-                  focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40
-                  focus:border-blue-300 dark:focus:border-blue-400/50
-                  transition-all duration-200
-                  cursor-pointer
+                  appearance-none px-3 py-2 rounded-lg text-sm font-medium
+                  border
+                  focus:outline-none focus:ring-2 focus:ring-indigo-500/30
+                  transition-all duration-200 cursor-pointer
                   pr-8
                 "
+                style={{
+                  backgroundColor: 'var(--surface-input)',
+                  borderColor: 'var(--border-default)',
+                  color: 'var(--text-primary)'
+                }}
               >
                 {SORT_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
               </select>
-              {/* Chevron Icon */}
               <svg
-                className="
-                  absolute right-2 sm:right-3 w-4 h-4 text-gray-500 dark:text-gray-400
-                  pointer-events-none
-                "
+                className="absolute right-2 w-3.5 h-3.5 pointer-events-none"
+                style={{ color: 'var(--text-muted)' }}
                 viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
               >
                 <polyline points="6 9 12 15 18 9"/>
               </svg>
             </div>
-
-            {/* Clear Search Button */}
-            {searchInput && (
-              <button
-                onClick={() => { setSearchInput(''); handleSearchQuery(''); loadNotes(); }}
-                className="
-                  px-2.5 sm:px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium
-                  text-gray-600 dark:text-gray-400
-                  hover:text-gray-900 dark:hover:text-gray-100
-                  hover:bg-gray-100 dark:hover:bg-white/[0.05]
-                  border border-gray-200 dark:border-white/[0.08]
-                  transition-all duration-200 whitespace-nowrap
-                "
-              >
-                Clear
-              </button>
-            )}
           </div>
-        </div>
 
-        {/* ─── Filter Chips — Mobile Horizontal Scroll, Desktop Wrap ────────────────────────────── */}
-        <div className="mb-6 flex gap-2 overflow-x-auto pb-2 sm:overflow-visible sm:pb-0 sm:flex-wrap -mx-3 px-3 sm:mx-0 sm:px-0">
-          {FILTER_OPTIONS.map((filter) => (
-            <button
-              key={filter.id}
-              onClick={() => setCurrentFilter(filter.id)}
-              className={`
-                px-3 sm:px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium
-                border transition-all duration-200 whitespace-nowrap flex-shrink-0 sm:flex-shrink
-                ${currentFilter === filter.id
-                  ? 'bg-indigo-600 dark:bg-indigo-500 text-white border-indigo-600 dark:border-indigo-500 shadow-sm'
-                  : 'bg-white dark:bg-white/[0.02] text-gray-700 dark:text-gray-400 border-gray-200 dark:border-white/[0.08] hover:border-gray-300 dark:hover:border-white/[0.12] hover:bg-gray-50 dark:hover:bg-white/[0.05]'
-                }
-              `}
-            >
-              {filter.label}
-            </button>
-          ))}
+          {/* Filter Chips — Compact, quiet, premium */}
+          <div className="flex gap-1.5 overflow-x-auto pb-2 sm:overflow-visible sm:pb-0 sm:flex-wrap -mx-4 px-4 sm:mx-0 sm:px-0">
+            {FILTER_OPTIONS.map((filter) => (
+              <button
+                key={filter.id}
+                onClick={() => setCurrentFilter(filter.id)}
+                className={`
+                  px-3 py-1.5 rounded-lg text-xs font-semibold
+                  border transition-all duration-200 whitespace-nowrap flex-shrink-0 sm:flex-shrink
+                  ${
+                    currentFilter === filter.id
+                      ? 'bg-indigo-600 dark:bg-indigo-500 text-white border-indigo-600 dark:border-indigo-500 shadow-sm hover:shadow-md'
+                      : ''
+                  }
+                `}
+                style={currentFilter === filter.id ? {} : {
+                  backgroundColor: 'transparent',
+                  borderColor: 'var(--border-subtle)',
+                  color: 'var(--text-tertiary)'
+                }}
+                onMouseEnter={(e) => {
+                  if (currentFilter !== filter.id) {
+                    e.currentTarget.style.backgroundColor = 'var(--surface-input)';
+                    e.currentTarget.style.borderColor = 'var(--border-default)';
+                    e.currentTarget.style.color = 'var(--text-secondary)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (currentFilter !== filter.id) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.borderColor = 'var(--border-subtle)';
+                    e.currentTarget.style.color = 'var(--text-tertiary)';
+                  }
+                }}
+              >
+                {filter.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* ─── Note Editor Modal ───────────────────────────────────── */}
@@ -422,32 +472,32 @@ const DashboardPage = () => {
         {isInitialLoading ? (
           <NoteSkeletonGrid count={6} />
         ) : notes.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-5xl mb-4">📝</p>
+          <div className="text-center py-12">
+            <p className="text-5xl mb-3">📝</p>
             {searchInput ? (
               <>
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                <h3 className="text-base font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   No notes found
                 </h3>
-                <p className="text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-slate-600 dark:text-slate-400">
                   Try a different search term
                 </p>
               </>
             ) : (
               <>
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                <h3 className="text-base font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   No notes yet
                 </h3>
-                <p className="text-gray-500 dark:text-gray-400 mb-4">
+                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
                   Create your first note to get started
                 </p>
                 <button
                   onClick={() => { setEditingNote(null); setShowEditor(true); }}
                   className="
-                    px-4 py-2 rounded-lg
-                    bg-blue-600 dark:bg-blue-500
-                    hover:bg-blue-700 dark:hover:bg-blue-600
-                    text-white transition-colors duration-200
+                    px-3 py-1.5 rounded-md text-sm font-semibold
+                    bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800
+                    dark:bg-indigo-500 dark:hover:bg-indigo-600
+                    text-white transition-all duration-150
                   "
                 >
                   + New Note
@@ -456,29 +506,29 @@ const DashboardPage = () => {
             )}
           </div>
         ) : visibleNotes.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-5xl mb-4">✨</p>
-            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+          <div className="text-center py-12">
+            <p className="text-5xl mb-3">✨</p>
+            <h3 className="text-base font-semibold text-slate-700 dark:text-slate-300 mb-1">
               No notes match your filters
             </h3>
-            <p className="text-gray-500 dark:text-gray-400 mb-4">
+            <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
               Try adjusting your search or filter
             </p>
             <button
               onClick={() => { setCurrentFilter('all'); setSearchInput(''); setSortBy('newest'); }}
               className="
-                px-4 py-2 rounded-lg text-sm font-medium
-                bg-gray-100 dark:bg-white/[0.05]
-                text-gray-700 dark:text-gray-300
-                hover:bg-gray-200 dark:hover:bg-white/[0.08]
-                transition-colors duration-200
+                px-3 py-1.5 rounded-md text-sm font-medium
+                border border-slate-300 dark:border-slate-600
+                text-slate-700 dark:text-slate-300
+                hover:bg-slate-50 dark:hover:bg-slate-700
+                transition-all duration-150
               "
             >
               Reset filters
             </button>
           </div>
         ) : (
-          <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 transition-opacity duration-200 ${isSearching ? 'opacity-60' : 'opacity-100'}`}>
+          <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 transition-opacity duration-200 ${isSearching ? 'opacity-60' : 'opacity-100'}`}>
             {visibleNotes.map((note) => (
               <NoteCard
                 key={note._id}
@@ -495,30 +545,32 @@ const DashboardPage = () => {
 
         {/* ─── Pagination ──────────────────────────────────────────── */}
         {pagination.totalPages > 1 && (
-          <div className="flex justify-center gap-2 mt-8">
+          <div className="flex justify-center gap-2 mt-6">
             <button
               onClick={() => setPage((p) => Math.max(p - 1, 1))}
               disabled={page === 1}
               className="
-                px-4 py-2 rounded-lg
-                border border-gray-300 dark:border-gray-700
-                text-gray-700 dark:text-gray-300
-                hover:bg-gray-100 dark:hover:bg-gray-800
-                disabled:opacity-40 transition-colors duration-200
+                px-3 py-1.5 rounded-md text-sm font-medium
+                border border-slate-300 dark:border-slate-600
+                text-slate-700 dark:text-slate-300
+                hover:bg-slate-50 dark:hover:bg-slate-700
+                disabled:opacity-50 disabled:cursor-not-allowed
+                transition-all duration-150
               "
             >← Prev</button>
-            <span className="px-4 py-2 text-gray-600 dark:text-gray-400">
+            <span className="px-3 py-1.5 text-sm font-medium text-slate-600 dark:text-slate-400">
               Page {page} of {pagination.totalPages}
             </span>
             <button
               onClick={() => setPage((p) => Math.min(p + 1, pagination.totalPages))}
               disabled={page === pagination.totalPages}
               className="
-                px-4 py-2 rounded-lg
-                border border-gray-300 dark:border-gray-700
-                text-gray-700 dark:text-gray-300
-                hover:bg-gray-100 dark:hover:bg-gray-800
-                disabled:opacity-40 transition-colors duration-200
+                px-3 py-1.5 rounded-md text-sm font-medium
+                border border-slate-300 dark:border-slate-600
+                text-slate-700 dark:text-slate-300
+                hover:bg-slate-50 dark:hover:bg-slate-700
+                disabled:opacity-50 disabled:cursor-not-allowed
+                transition-all duration-150
               "
             >Next →</button>
           </div>
