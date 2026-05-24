@@ -3,42 +3,52 @@ import { io } from 'socket.io-client';
 
 const useSocket = (userId, { onCreated, onUpdated, onDeleted } = {}) => {
   const socketRef = useRef(null);
+  const handlersRef = useRef({ onCreated, onUpdated, onDeleted });
+
+  useEffect(() => {
+    handlersRef.current = { onCreated, onUpdated, onDeleted };
+  }, [onCreated, onUpdated, onDeleted]);
 
   useEffect(() => {
     if (!userId) return;
 
-    // ✅ Connect to backend Socket.IO server
-    socketRef.current = io(process.env.REACT_APP_API_URL?.replace('/api/v1', '') || 'http://localhost:5000', {
-      transports: ['websocket'],
-      withCredentials: true,
-    });
+    const socket = io(
+      process.env.REACT_APP_API_URL?.replace('/api/v1', '') || 'http://localhost:5000',
+      {
+        transports: ['websocket'],
+        withCredentials: true,
+      }
+    );
 
-    // ✅ Join private room using userId
-    socketRef.current.emit('join', userId);
+    socketRef.current = socket;
 
-    // ✅ Listen for real-time note events
-    socketRef.current.on('note:created', (note) => {
-      // console.log('🔌 note:created', note);
-      onCreated?.(note);
-    });
-
-    socketRef.current.on('note:updated', (note) => {
-      // console.log('🔌 note:updated', note);
-      onUpdated?.(note);
-    });
-
-    socketRef.current.on('note:deleted', ({ id }) => {
-      // console.log('🔌 note:deleted', id);
-      onDeleted?.(id);
-    });
-
-    // ✅ Cleanup on unmount or userId change
-    return () => {
-      socketRef.current?.disconnect();
+    const handleCreated = (note) => {
+      handlersRef.current.onCreated?.(note);
     };
-  }, [userId]); // eslint-disable-line
 
-  return socketRef.current;
+    const handleUpdated = (note) => {
+      handlersRef.current.onUpdated?.(note);
+    };
+
+    const handleDeleted = ({ id }) => {
+      handlersRef.current.onDeleted?.(id);
+    };
+
+    socket.emit('join', userId);
+    socket.on('note:created', handleCreated);
+    socket.on('note:updated', handleUpdated);
+    socket.on('note:deleted', handleDeleted);
+
+    return () => {
+      socket.off('note:created', handleCreated);
+      socket.off('note:updated', handleUpdated);
+      socket.off('note:deleted', handleDeleted);
+      socket.disconnect();
+      socketRef.current = null;
+    };
+  }, [userId]);
+
+  return socketRef;
 };
 
 export default useSocket;

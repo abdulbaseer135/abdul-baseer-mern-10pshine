@@ -1,12 +1,16 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import useAuth from '../../hooks/useAuth';
+import useProfileImage from '../../hooks/useProfileImage';
 import Modal from '../../components/common/Modal/Modal';
 import Navbar from '../../components/common/Navbar/Navbar';
-import { ROUTES } from '../../utils/constants';
 import { formatDate } from '../../utils/helpers';
-import { uploadProfileImageService, removeProfileImageService } from '../../services/profile.service';
+import ProfileAvatarSection from './ProfileAvatarSection';
+import ProfileFormTab from './ProfileFormTab';
+import ChangePasswordTab from './ChangePasswordTab';
+import DangerZoneTab from './DangerZoneTab';
 
 
 const PASSWORD_RULES = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
@@ -32,6 +36,12 @@ const strengthTextColor = {
   Strong: 'text-green-600  dark:text-green-400',
 };
 
+const VALID_IMAGE_TYPES = new Set([
+  'image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml',
+  'image/bmp', 'image/tiff', 'image/x-tiff', 'image/heic', 'image/heif',
+  'image/x-icon', 'image/vnd.microsoft.icon', 'image/avif', 'image/jp2',
+]);
+
 const inputClass = (hasError) => `
   w-full px-4 py-2.5 rounded-xl text-sm
   bg-gray-50 dark:bg-white/[0.04]
@@ -50,7 +60,7 @@ const inputClass = (hasError) => `
 const ProfilePage = () => {
   const navigate = useNavigate();
   const { user, loading, handleFetchProfile, handleUpdateProfile,
-          handleChangePassword, handleDeleteAccount, handleLogout } = useAuth();
+          handleChangePassword, handleDeleteAccount } = useAuth();
 
   const [activeTab,           setActiveTab]          = useState('profile');
   const [deleteModal,         setDeleteModal]        = useState(false);
@@ -58,11 +68,8 @@ const ProfilePage = () => {
   const [showOldPassword,     setShowOldPassword]    = useState(false);
   const [showNewPassword,     setShowNewPassword]    = useState(false);
   const [showConfirmPassword, setShowConfirmPassword]= useState(false);
-  const [imageLoading,        setImageLoading]       = useState(false);
-  const [imageError,          setImageError]         = useState(null);
-  const [imageSuccess,        setImageSuccess]       = useState(false);
-  const [removeImageModal,    setRemoveImageModal]   = useState(false);
-  const fileInputRef = useRef(null);
+
+  const profileImage = useProfileImage(handleFetchProfile);
 
   const {
     register: registerProfile,
@@ -87,6 +94,27 @@ const ProfilePage = () => {
     { key: 'password', label: 'Password',    icon: <LockIcon />  },
     { key: 'danger',   label: 'Danger Zone', icon: <AlertIcon /> },
   ];
+
+  // Sonar: extract nested ternary for tab button styles
+  const getTabButtonClassName = (key) => {
+    if (activeTab !== key) {
+      return 'text-slate-600 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/30 border border-transparent';
+    }
+    if (key === 'danger') {
+      return 'bg-white dark:bg-slate-700/80 text-red-700 dark:text-red-300 shadow-sm dark:shadow-none border border-red-200/60 dark:border-red-700/40';
+    }
+    return 'bg-white dark:bg-slate-700/80 text-indigo-700 dark:text-indigo-300 shadow-sm dark:shadow-none border border-indigo-200/60 dark:border-indigo-700/40';
+  };
+
+  const getTabIconClassName = (key) => {
+    if (activeTab !== key) {
+      return 'text-slate-500 dark:text-slate-500';
+    }
+    if (key === 'danger') {
+      return 'text-red-600 dark:text-red-400';
+    }
+    return 'text-indigo-600 dark:text-indigo-400';
+  };
 
   useEffect(() => { handleFetchProfile(); }, []);
   useEffect(() => {
@@ -114,80 +142,15 @@ const ProfilePage = () => {
   };
 
   // ✅ Profile image upload handler
-  const handleImageUpload = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Validate file size (5MB max)
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxSize) {
-      setImageError(`File size must not exceed 5MB. Your file is ${(file.size / 1024 / 1024).toFixed(2)}MB`);
-      return;
-    }
-
-    // Validate file type - Accept all common image formats
-    const validTypes = [
-      'image/jpeg',
-      'image/png',
-      'image/webp',
-      'image/gif',
-      'image/svg+xml',
-      'image/bmp',
-      'image/tiff',
-      'image/x-tiff',
-      'image/heic',
-      'image/heif',
-      'image/x-icon',
-      'image/vnd.microsoft.icon',
-      'image/avif',
-      'image/jp2',
-    ];
-    if (!validTypes.includes(file.type)) {
-      setImageError('Please upload a valid image file (JPEG, PNG, WebP, GIF, SVG, BMP, TIFF, HEIC, or ICO)');
-      return;
-    }
-
-    setImageLoading(true);
-    setImageError(null);
-    setImageSuccess(false);
-
-    try {
-      const formData = new FormData();
-      formData.append('profileImage', file);
-      await uploadProfileImageService(formData);
-      await handleFetchProfile();
-      setImageSuccess(true);
-      setTimeout(() => setImageSuccess(false), 3000);
-    } catch (err) {
-      setImageError(err.response?.data?.message || 'Failed to upload image');
-    } finally {
-      setImageLoading(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-    }
-  };
+  const handleImageUpload = profileImage.handleImageUpload;
 
   // ✅ Profile image remove handler - Show confirmation modal
   const handleRemoveImage = () => {
-    setRemoveImageModal(true);
+    profileImage.profileImage.setRemoveImageModal(true);
   };
 
   // ✅ Confirm and remove profile image
-  const confirmRemoveImage = async () => {
-    setRemoveImageModal(false);
-    setImageLoading(true);
-    setImageError(null);
-
-    try {
-      await removeProfileImageService();
-      await handleFetchProfile();
-      setImageSuccess(true);
-      setTimeout(() => setImageSuccess(false), 3000);
-    } catch (err) {
-      setImageError(err.response?.data?.message || 'Failed to remove image');
-    } finally {
-      setImageLoading(false);
-    }
-  };
+  const confirmRemoveImage = profileImage.confirmRemoveImage;
 
   return (
     <div className="h-dvh flex flex-col bg-gradient-to-br from-white to-slate-50 dark:from-slate-950 dark:to-slate-900 transition-colors duration-200 overflow-hidden">
@@ -198,6 +161,7 @@ const ProfilePage = () => {
 
           {/* ─── Back to Dashboard Button ──────────────────────── */}
           <button
+            type="button"
             onClick={() => navigate('/dashboard')}
             className="
               flex items-center gap-2 mb-5
@@ -231,125 +195,13 @@ const ProfilePage = () => {
             ">
 
               {/* ─── Avatar + Actions Block (Circular Avatar with Icon Actions) ────────── */}
-              <div className="relative z-10 mb-8 flex flex-col items-center justify-center">
-                
-                {/* Avatar - Circular with Icon Actions Below */}
-                <div className="relative">
-                  {user?.profileImage ? (
-                    <div className="group relative">
-                      <img
-                        src={user.profileImage}
-                        alt={user?.name}
-                        className="
-                          w-32 h-32 sm:w-40 sm:h-40 rounded-full
-                          object-cover shadow-xl dark:shadow-2xl dark:shadow-black/50
-                          ring-4 ring-white dark:ring-slate-700/80
-                          group-hover:shadow-2xl dark:group-hover:shadow-black/60
-                          transition-all duration-200
-                        "
-                        onError={(e) => {
-                          console.error('Image failed to load:', user.profileImage);
-                        }}
-                      />
-                      {/* Edit overlay on hover */}
-                      <div className="
-                        absolute inset-0 rounded-full
-                        opacity-0 group-hover:opacity-100
-                        transition-opacity duration-200
-                        bg-black/50 flex items-center justify-center
-                        cursor-pointer backdrop-blur-sm
-                      "
-                        onClick={() => fileInputRef.current?.click()}
-                      >
-                        <div className="text-center">
-                          <CameraIcon className="w-8 h-8 text-white mx-auto mb-1" />
-                          <p className="text-white text-xs font-semibold tracking-wide">Change</p>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="
-                      w-32 h-32 sm:w-40 sm:h-40 rounded-full p-1.5
-                      bg-gradient-to-br from-indigo-500 via-indigo-600 to-indigo-700
-                      shadow-xl dark:shadow-2xl dark:shadow-black/50
-                      ring-4 ring-white dark:ring-slate-700/80
-                    ">
-                      <div className="
-                        w-full h-full rounded-full
-                        bg-white dark:bg-slate-700
-                        flex items-center justify-center
-                      ">
-                        <span className="text-5xl sm:text-6xl font-bold
-                          text-indigo-600 dark:text-indigo-300">
-                          {user?.name?.charAt(0)?.toUpperCase() || '?'}
-                        </span>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Icon Action Buttons - Below Avatar on Right Side */}
-                  <div className="absolute -bottom-2 -right-2 flex gap-2">
-                    {/* Change Button */}
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={imageLoading}
-                      title={user?.profileImage ? 'Change photo' : 'Upload photo'}
-                      className="
-                        flex items-center justify-center w-10 h-10
-                        rounded-full
-                        bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800
-                        dark:bg-indigo-500 dark:hover:bg-indigo-600
-                        text-white
-                        shadow-lg hover:shadow-xl dark:shadow-black/40
-                        transition-all duration-150
-                        disabled:opacity-50 disabled:cursor-not-allowed
-                        focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500
-                        ring-white dark:ring-slate-800
-                      "
-                    >
-                      {imageLoading ? (
-                        <SpinnerIcon className="w-5 h-5 animate-spin" />
-                      ) : (
-                        <CameraIcon className="w-5 h-5" />
-                      )}
-                    </button>
-
-                    {/* Remove Button */}
-                    {user?.profileImage && (
-                      <button
-                        type="button"
-                        onClick={handleRemoveImage}
-                        disabled={imageLoading}
-                        title="Remove photo"
-                        className="
-                          flex items-center justify-center w-10 h-10
-                          rounded-full
-                          bg-red-500 hover:bg-red-600 active:bg-red-700
-                          dark:bg-red-600 dark:hover:bg-red-700
-                          text-white
-                          shadow-lg hover:shadow-xl dark:shadow-black/40
-                          transition-all duration-150
-                          disabled:opacity-50 disabled:cursor-not-allowed
-                          focus:outline-none focus:ring-2 focus:ring-red-400 dark:focus:ring-red-500
-                          ring-white dark:ring-slate-800
-                        "
-                      >
-                        <TrashIcon className="w-5 h-5" />
-                      </button>
-                    )}
-                  </div>
-
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    disabled={imageLoading}
-                    className="hidden"
-                  />
-                </div>
-              </div>
+            <ProfileAvatarSection
+              user={user}
+              profileImage={profileImage}
+              handleRemoveImage={handleRemoveImage}
+              fileInputRef={profileImage.fileInputRef}
+              handleImageUpload={handleImageUpload}
+            />
 
               {/* ─── Profile Name (Primary Visual Element) ──────────── */}
               <h1 className="
@@ -409,7 +261,7 @@ const ProfilePage = () => {
               </p>
 
               {/* ─── Error Message Toast ────────────────────────────────────── */}
-              {imageError && (
+              {profileImage.imageError && (
                 <div className="
                   mt-6 w-full z-10 max-w-2xl
                   flex items-start gap-3 px-5 py-4 rounded-xl
@@ -420,12 +272,12 @@ const ProfilePage = () => {
                   backdrop-blur-sm animate-in fade-in slide-in-from-top-4 duration-300
                 ">
                   <ErrorIcon className="w-5 h-5 shrink-0 mt-0.5 text-red-600 dark:text-red-300" />
-                  <span className="text-red-800 dark:text-red-100">{imageError}</span>
+                  <span className="text-red-800 dark:text-red-100">{profileImage.imageError}</span>
                 </div>
               )}
 
               {/* ─── Success Message Toast ──────────────────────────────────── */}
-              {imageSuccess && (
+              {profileImage.imageSuccess && (
                 <div className="
                   mt-6 w-full z-10 max-w-2xl
                   flex items-start gap-3 px-5 py-4 rounded-xl
@@ -456,26 +308,11 @@ const ProfilePage = () => {
             {TABS.map(({ key, label, icon }) => (
               <button
                 key={key}
+                type="button"
                 onClick={() => setActiveTab(key)}
-                className={`
-                  flex-1 flex items-center justify-center gap-2 sm:gap-2.5
-                  px-2 sm:px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-semibold
-                  transition-all duration-150 relative
-                  ${activeTab === key
-                    ? key === 'danger'
-                      ? 'bg-white dark:bg-slate-700/80 text-red-700 dark:text-red-300 shadow-sm dark:shadow-none border border-red-200/60 dark:border-red-700/40'
-                      : 'bg-white dark:bg-slate-700/80 text-indigo-700 dark:text-indigo-300 shadow-sm dark:shadow-none border border-indigo-200/60 dark:border-indigo-700/40'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/30 border border-transparent'
-                  }
-                `}
+                className={`flex-1 flex items-center justify-center gap-2 sm:gap-2.5 px-2 sm:px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-150 relative ${getTabButtonClassName(key)}`}
               >
-                <span className={`
-                  text-sm sm:text-base flex items-center justify-center
-                  ${activeTab === key
-                    ? key === 'danger' ? 'text-red-600 dark:text-red-400' : 'text-indigo-600 dark:text-indigo-400'
-                    : 'text-slate-500 dark:text-slate-500'
-                  }
-                `}>
+                <span className={`text-sm sm:text-base flex items-center justify-center ${getTabIconClassName(key)}`}>
                   {icon}
                 </span>
                 <span className="hidden sm:inline">{label}</span>
@@ -485,471 +322,55 @@ const ProfilePage = () => {
 
           {/* ═══ TAB: PROFILE ═══════════════════════════════ */}
           {activeTab === 'profile' && (
-            <div className="
-              bg-white dark:bg-slate-800
-              border border-slate-200 dark:border-slate-700
-              rounded-lg p-6 sm:p-8 shadow-sm dark:shadow-lg dark:shadow-black/20
-            ">
-              <div className="mb-6 pb-4 border-b border-slate-200 dark:border-slate-700/60">
-                <h2 className="text-sm font-semibold text-slate-900 dark:text-white">
-                  Edit Profile
-                </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Update your account information
-                </p>
-              </div>
-
-              <form onSubmit={handleProfileSubmit(onUpdateProfile)} className="space-y-4">
-                {/* Name */}
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-slate-900 dark:text-slate-100">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter your full name"
-                    className={`
-                      w-full px-3 py-2.5 rounded-md text-sm
-                      bg-white dark:bg-slate-700/50
-                      text-slate-900 dark:text-white
-                      placeholder-slate-400 dark:placeholder-slate-500
-                      border transition-all duration-150
-                      focus:outline-none
-                      ${profileErrors.name
-                        ? 'border-red-500 dark:border-red-500 focus:ring-2 focus:ring-red-500/20 dark:focus:ring-red-600/20'
-                        : 'border-slate-300 dark:border-slate-600 focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 dark:focus:ring-indigo-400/20'
-                      }
-                    `}
-                    {...registerProfile('name', {
-                      required: 'Name is required',
-                      minLength: { value: 2, message: 'Minimum 2 characters' },
-                    })}
-                  />
-                  {profileErrors.name && (
-                    <p className="flex items-center gap-1.5 text-xs text-red-600 dark:text-red-300">
-                      <ErrorIcon size={12} /> {profileErrors.name.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* Email */}
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-slate-900 dark:text-slate-100">
-                    Email Address
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="email"
-                      disabled
-                      className="
-                        w-full px-3 py-2.5 rounded-md text-sm
-                        bg-slate-50 dark:bg-slate-900/30
-                        text-slate-600 dark:text-slate-400
-                        border border-slate-200 dark:border-slate-700
-                        cursor-not-allowed
-                      "
-                      value={user?.email || ''}
-                    />
-                  </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Email cannot be changed. Contact support to update.
-                  </p>
-                </div>
-
-                {/* Submit */}
-                <button
-                  type="submit"
-                  className="
-                    w-full py-2.5 px-4 rounded-md text-sm font-semibold
-                    bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800
-                    dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:active:bg-indigo-700
-                    text-white
-                    disabled:opacity-50 disabled:cursor-not-allowed
-                    transition-all duration-150 mt-6
-                  "
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <svg className="inline animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24" fill="none">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-                      </svg>
-                      Saving...
-                    </>
-                  ) : 'Save Changes'}
-                </button>
-              </form>
-            </div>
+            <ProfileFormTab
+              user={user}
+              loading={loading}
+              profileErrors={profileErrors}
+              handleSubmit={handleProfileSubmit}
+              onUpdateProfile={onUpdateProfile}
+              register={registerProfile}
+            />
           )}
 
           {/* ═══ TAB: PASSWORD ═════════════════════════════ */}
           {activeTab === 'password' && (
-            <div className="
-              bg-white dark:bg-slate-800
-              border border-slate-200 dark:border-slate-700
-              rounded-lg p-6 sm:p-8 shadow-sm dark:shadow-lg dark:shadow-black/20
-            ">
-              <div className="mb-6 pb-4 border-b border-slate-200 dark:border-slate-700/50">
-                <h2 className="text-sm font-semibold text-slate-900 dark:text-white">
-                  Change Password
-                </h2>
-                <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
-                  Update your password to keep your account secure
-                </p>
-              </div>
-
-              {passwordSuccess && (
-                <div className="
-                  flex items-center gap-2.5
-                  px-4 py-3 rounded-md mb-5
-                  bg-green-50 dark:bg-green-900/25
-                  border border-green-200 dark:border-green-700/60
-                  text-green-700 dark:text-green-200 text-sm font-medium
-                ">
-                  <CheckIcon size={16} /> Password updated successfully!
-                </div>
-              )}
-
-              <form onSubmit={handlePasswordSubmit(onChangePassword)} className="space-y-3.5">
-                {/* Old Password */}
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-slate-900 dark:text-white">
-                    Current Password
-                  </label>
-                  <div className="relative group">
-                    <input
-                      type={showOldPassword ? 'text' : 'password'}
-                      placeholder="••••••••"
-                      className={`
-                        w-full px-3 py-2.5 pr-10 rounded-md text-sm
-                        bg-white dark:bg-slate-700/40
-                        text-slate-900 dark:text-white
-                        placeholder-slate-400 dark:placeholder-slate-500
-                        border transition-all duration-150
-                        focus:outline-none
-                        ${passwordErrors.oldPassword
-                          ? 'border-red-500 dark:border-red-500 focus:ring-2 focus:ring-red-500/20 dark:focus:ring-red-600/20'
-                          : 'border-slate-300 dark:border-slate-600 focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 dark:focus:ring-indigo-400/20'
-                        }
-                      `}
-                      {...registerPassword('oldPassword', { required: 'Current password is required' })}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowOldPassword(!showOldPassword)}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 h-5 w-5 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors duration-150"
-                      style={{
-                        padding: 0,
-                        margin: 0,
-                        border: 'none',
-                        background: 'transparent',
-                        lineHeight: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        overflow: 'hidden'
-                      }}
-                      title={showOldPassword ? 'Hide password' : 'Show password'}
-                    >
-                      {showOldPassword ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
-                    </button>
-                  </div>
-                  {passwordErrors.oldPassword && (
-                    <p className="flex items-center gap-1 text-xs text-red-600 dark:text-red-300 font-medium">
-                      <span>•</span> {passwordErrors.oldPassword.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* New Password */}
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-slate-900 dark:text-white">
-                    New Password
-                  </label>
-                  <div className="relative group">
-                    <input
-                      type={showNewPassword ? 'text' : 'password'}
-                      placeholder="••••••••"
-                      className={`
-                        w-full px-3 py-2.5 pr-10 rounded-md text-sm
-                        bg-white dark:bg-slate-700/40
-                        text-slate-900 dark:text-white
-                        placeholder-slate-400 dark:placeholder-slate-500
-                        border transition-all duration-150
-                        focus:outline-none
-                        ${passwordErrors.newPassword
-                          ? 'border-red-500 dark:border-red-500 focus:ring-2 focus:ring-red-500/20 dark:focus:ring-red-600/20'
-                          : 'border-slate-300 dark:border-slate-600 focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 dark:focus:ring-indigo-400/20'
-                        }
-                      `}
-                      {...registerPassword('newPassword', {
-                        required: 'New password is required',
-                        pattern: {
-                          value: PASSWORD_RULES,
-                          message: 'Does not meet requirements',
-                        },
-                      })}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowNewPassword(!showNewPassword)}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 h-5 w-5 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors duration-150"
-                      style={{
-                        padding: 0,
-                        margin: 0,
-                        border: 'none',
-                        background: 'transparent',
-                        lineHeight: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        overflow: 'hidden'
-                      }}
-                      title={showNewPassword ? 'Hide password' : 'Show password'}
-                    >
-                      {showNewPassword ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
-                    </button>
-                  </div>
-                  {passwordErrors.newPassword && (
-                    <p className="flex items-center gap-1 text-xs text-red-600 dark:text-red-300 font-medium">
-                      <span>•</span> {passwordErrors.newPassword.message}
-                    </p>
-                  )}
-
-                  {/* Strength Indicator */}
-                  {newPassword.length > 0 && (
-                    <div className="mt-1.5 p-3 rounded-md bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-600">
-                      <div className="flex gap-1 mb-2">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                          <div
-                            key={i}
-                            className={`
-                              h-1 flex-1 rounded-full transition-all duration-300
-                              ${i <= strength.score
-                                ? strength.color
-                                : 'bg-slate-200 dark:bg-slate-600'
-                              }
-                            `}
-                          />
-                        ))}
-                      </div>
-                      {strength.label && (
-                        <p className={`text-xs font-medium ${strengthTextColor[strength.label]}`}>
-                          {strength.label} password
-                        </p>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Password Requirements */}
-                  {newPassword.length > 0 && (
-                    <div className="mt-1.5 p-3 rounded-md bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-600">
-                      <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">
-                        Requirements:
-                      </p>
-                      <ul className="space-y-1.5">
-                        {[
-                          { rule: /.{8,}/, label: '8+ characters' },
-                          { rule: /[A-Z]/, label: 'Uppercase letter' },
-                          { rule: /[a-z]/, label: 'Lowercase letter' },
-                          { rule: /\d/, label: 'Number' },
-                          { rule: /[!@#$%^&*]/, label: 'Special character' },
-                        ].map(({ rule, label }) => (
-                          <li key={label}
-                            className={`flex items-center gap-2 text-xs font-medium transition-colors duration-200
-                              ${rule.test(newPassword)
-                                ? 'text-green-600 dark:text-green-400'
-                                : 'text-slate-500 dark:text-slate-400'
-                              }`}>
-                            <span className="w-4 h-4 flex items-center justify-center">
-                              {rule.test(newPassword) ? (
-                                <CheckIcon size={14} />
-                              ) : (
-                                <span className="w-1.5 h-1.5 bg-current rounded-full" />
-                              )}
-                            </span>
-                            {label}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-
-                {/* Confirm Password */}
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-slate-900 dark:text-white">
-                    Confirm Password
-                  </label>
-                  <div className="relative group">
-                    <input
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      placeholder="••••••••"
-                      className={`
-                        w-full px-3 py-2.5 pr-10 rounded-md text-sm
-                        bg-white dark:bg-slate-700/40
-                        text-slate-900 dark:text-white
-                        placeholder-slate-400 dark:placeholder-slate-500
-                        border transition-all duration-150
-                        focus:outline-none
-                        ${passwordErrors.confirmPassword
-                          ? 'border-red-500 dark:border-red-500 focus:ring-2 focus:ring-red-500/20 dark:focus:ring-red-600/20'
-                          : 'border-slate-300 dark:border-slate-600 focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 dark:focus:ring-indigo-400/20'
-                        }
-                      `}
-                      {...registerPassword('confirmPassword', {
-                        required: 'Please confirm password',
-                        validate: (val) => val === newPassword || 'Passwords do not match',
-                      })}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 h-5 w-5 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors duration-150"
-                      style={{
-                        padding: 0,
-                        margin: 0,
-                        border: 'none',
-                        background: 'transparent',
-                        lineHeight: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        overflow: 'hidden'
-                      }}
-                      title={showConfirmPassword ? 'Hide password' : 'Show password'}
-                    >
-                      {showConfirmPassword ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
-                    </button>
-                  </div>
-                  {passwordErrors.confirmPassword && (
-                    <p className="flex items-center gap-1 text-xs text-red-600 dark:text-red-300 font-medium">
-                      <span>•</span> {passwordErrors.confirmPassword.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* Submit */}
-                <button
-                  type="submit"
-                  className="
-                    w-full py-2.5 px-4 rounded-md text-sm font-semibold
-                    bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800
-                    dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:active:bg-indigo-700
-                    text-white shadow-sm dark:shadow-md dark:shadow-indigo-900/20
-                    disabled:opacity-50 disabled:cursor-not-allowed
-                    transition-all duration-150 mt-5 group
-                  "
-                  disabled={loading}
-                >
-                  <span className="flex items-center justify-center gap-2">
-                    {loading ? (
-                      <>
-                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-                        </svg>
-                        <span>Updating Password...</span>
-                      </>
-                    ) : (
-                      <>
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                        <span>Update Password Securely</span>
-                      </>
-                    )}
-                  </span>
-                </button>
-              </form>
-            </div>
+            <ChangePasswordTab
+              passwordSuccess={passwordSuccess}
+              loading={loading}
+              passwordErrors={passwordErrors}
+              handleSubmit={handlePasswordSubmit}
+              onChangePassword={onChangePassword}
+              register={registerPassword}
+              watch={watch}
+              showOldPassword={showOldPassword}
+              setShowOldPassword={setShowOldPassword}
+              showNewPassword={showNewPassword}
+              setShowNewPassword={setShowNewPassword}
+              showConfirmPassword={showConfirmPassword}
+              setShowConfirmPassword={setShowConfirmPassword}
+              strength={strength}
+              strengthTextColor={strengthTextColor}
+              newPassword={newPassword}
+            />
           )}
 
           {/* ═══ TAB: DANGER ZONE ══════════════════════════ */}
           {activeTab === 'danger' && (
-            <div className="
-              bg-white dark:bg-slate-800
-              border border-slate-200 dark:border-slate-700
-              rounded-lg p-6 sm:p-8 shadow-sm dark:shadow-lg dark:shadow-black/20
-            ">
-              <div className="mb-6 pb-4 border-b border-slate-200 dark:border-slate-700/50">
-                <div className="flex items-start gap-3">
-                  <div className="
-                    flex-shrink-0 w-8 h-8 rounded-full
-                    bg-red-100 dark:bg-red-900/30
-                    flex items-center justify-center
-                    border border-red-200 dark:border-red-700/50
-                  ">
-                    <svg className="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4v2m0 5v-1" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <h2 className="text-sm font-semibold text-red-700 dark:text-red-300">
-                      Danger Zone
-                    </h2>
-                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                      Irreversible actions — proceed with extreme caution
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="
-                  p-4 rounded-lg border-2
-                  bg-red-50/50 dark:bg-red-950/15
-                  border-red-300 dark:border-red-700/60
-                ">
-                  <div className="flex gap-3">
-                    <svg className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                    </svg>
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold text-red-900 dark:text-red-200 mb-1">
-                        Delete Your Account
-                      </p>
-                      <p className="text-xs text-red-800 dark:text-red-300 leading-relaxed">
-                        This will permanently delete your account and all associated data, including all your notes and settings. This action cannot be undone.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setDeleteModal(true)}
-                  className="
-                    w-full px-4 py-3 rounded-md text-sm font-semibold
-                    bg-red-600 hover:bg-red-700 active:bg-red-800
-                    dark:bg-red-700 dark:hover:bg-red-600 dark:active:bg-red-800
-                    text-white shadow-sm dark:shadow-md dark:shadow-red-900/20
-                    border border-red-700 dark:border-red-600
-                    disabled:opacity-50 disabled:cursor-not-allowed
-                    transition-all duration-150
-                    group flex items-center justify-center gap-2
-                  "
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                  <span>Delete Account Permanently</span>
-                </button>
-
-                <p className="text-xs text-slate-600 dark:text-slate-400 text-center mt-2">
-                  You will be asked to confirm this action
-                </p>
-              </div>
-            </div>
+            <DangerZoneTab setDeleteModal={setDeleteModal} />
           )}
 
         </div>
       </main>
 
       {/* ═══ Delete Confirmation Modal ════════════════════ */}
-      <Modal isOpen={deleteModal} title="Delete Account?" onClose={() => setDeleteModal(false)}>
+      <Modal 
+        isOpen={deleteModal} 
+        title="Delete Account?" 
+        onClose={() => setDeleteModal(false)}
+        onConfirm={onDeleteAccount}
+        confirmStyle="danger"
+        confirmText="Delete My Account"
+      >
         <div className="space-y-4">
           <div className="
             p-3 rounded-lg border-l-4 border-l-red-600
@@ -987,40 +408,11 @@ const ProfilePage = () => {
               </ul>
             </div>
           </div>
-
-          <div className="flex gap-3 justify-end pt-2">
-            <button
-              onClick={() => setDeleteModal(false)}
-              className="
-                px-4 py-2.5 rounded-md text-sm font-semibold
-                bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200
-                hover:bg-slate-200 dark:hover:bg-slate-600 transition-all duration-150
-              "
-            >
-              Keep My Account
-            </button>
-            <button
-              onClick={() => { setDeleteModal(false); onDeleteAccount(); }}
-              className="
-                px-4 py-2.5 rounded-md text-sm font-semibold
-                bg-red-600 hover:bg-red-700 active:bg-red-800
-                dark:bg-red-700 dark:hover:bg-red-600 dark:active:bg-red-800
-                text-white border border-red-700 dark:border-red-600
-                shadow-sm dark:shadow-md dark:shadow-red-900/20
-                transition-all duration-150 flex items-center gap-2
-              "
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
-              <span>Delete My Account</span>
-            </button>
-          </div>
         </div>
       </Modal>
 
       {/* ═══ Remove Profile Image Confirmation Modal ════════════════════ */}
-      {removeImageModal && (
+      {profileImage.removeImageModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 dark:bg-black/60 backdrop-blur-sm">
           <div className="
             bg-white dark:bg-slate-800
@@ -1061,8 +453,9 @@ const ProfilePage = () => {
             {/* Buttons */}
             <div className="flex gap-3 sm:gap-4">
               <button
-                onClick={() => setRemoveImageModal(false)}
-                disabled={imageLoading}
+                type="button"
+                onClick={() => profileImage.setRemoveImageModal(false)}
+                disabled={profileImage.imageLoading}
                 className="
                   flex-1 px-4 py-2.5 rounded-lg text-sm font-semibold
                   bg-slate-100 dark:bg-slate-700/60
@@ -1076,8 +469,9 @@ const ProfilePage = () => {
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={confirmRemoveImage}
-                disabled={imageLoading}
+                disabled={profileImage.imageLoading}
                 className="
                   flex-1 flex items-center justify-center gap-2
                   px-4 py-2.5 rounded-lg text-sm font-semibold
@@ -1090,7 +484,7 @@ const ProfilePage = () => {
                   focus:outline-none focus:ring-2 focus:ring-red-400/30
                 "
               >
-                {imageLoading ? (
+                {profileImage.imageLoading ? (
                   <>
                     <SpinnerIcon className="w-4 h-4 animate-spin" />
                     <span>Removing...</span>
@@ -1139,6 +533,7 @@ const AlertIcon = () => (
   </svg>
 );
 
+// Sonar: add PropTypes for className
 const CameraIcon = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1146,7 +541,11 @@ const CameraIcon = ({ className = "w-5 h-5" }) => (
     <circle cx="12" cy="13" r="4"/>
   </svg>
 );
+CameraIcon.propTypes = {
+  className: PropTypes.string,
+};
 
+// Sonar: add PropTypes for className
 const TrashIcon = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1156,7 +555,11 @@ const TrashIcon = ({ className = "w-5 h-5" }) => (
     <line x1="14" y1="11" x2="14" y2="17"/>
   </svg>
 );
+TrashIcon.propTypes = {
+  className: PropTypes.string,
+};
 
+// Sonar: add PropTypes for className
 const CalendarIcon = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1166,7 +569,11 @@ const CalendarIcon = ({ className = "w-5 h-5" }) => (
     <line x1="3" y1="10" x2="21" y2="10"/>
   </svg>
 );
+CalendarIcon.propTypes = {
+  className: PropTypes.string,
+};
 
+// Sonar: add PropTypes for className
 const CheckCircleIcon = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1174,14 +581,22 @@ const CheckCircleIcon = ({ className = "w-5 h-5" }) => (
     <polyline points="22 4 12 14.01 9 11.01"/>
   </svg>
 );
+CheckCircleIcon.propTypes = {
+  className: PropTypes.string,
+};
 
-const CheckIcon = () => (
-  <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+// Sonar: add className prop and PropTypes for CheckIcon
+const CheckIcon = ({ className }) => (
+  <svg className={className} width="11" height="11" viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="20 6 9 17 4 12"/>
   </svg>
 );
+CheckIcon.propTypes = {
+  className: PropTypes.string,
+};
 
+// Sonar: add PropTypes for size
 const ErrorIcon = ({ size = 13 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -1190,6 +605,9 @@ const ErrorIcon = ({ size = 13 }) => (
     <line x1="12" y1="16" x2="12.01" y2="16"/>
   </svg>
 );
+ErrorIcon.propTypes = {
+  size: PropTypes.number,
+};
 
 const EyeIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -1215,6 +633,7 @@ const DotIcon = () => (
   </svg>
 );
 
+// Sonar: add PropTypes for className
 const SpinnerIcon = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none">
     <circle className="opacity-25" cx="12" cy="12" r="10"
@@ -1222,7 +641,11 @@ const SpinnerIcon = ({ className = "w-5 h-5" }) => (
     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
   </svg>
 );
+SpinnerIcon.propTypes = {
+  className: PropTypes.string,
+};
 
+// Sonar: add PropTypes for className
 const ArrowLeftIcon = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1230,5 +653,9 @@ const ArrowLeftIcon = ({ className = "w-5 h-5" }) => (
     <polyline points="12 19 5 12 12 5"/>
   </svg>
 );
+ArrowLeftIcon.propTypes = {
+  className: PropTypes.string,
+};
 
 export default ProfilePage;
+

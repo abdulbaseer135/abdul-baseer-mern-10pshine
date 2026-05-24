@@ -1,8 +1,7 @@
+import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
-import Spinner from '../../components/common/Spinner/Spinner';
-
 
 const LoginPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -85,11 +84,12 @@ const LoginPage = () => {
 
             {/* Email */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold"
+              <label htmlFor="login-email" className="text-xs font-semibold"
                 style={{ color: 'var(--text-primary)' }}>
                 Email
               </label>
               <input
+                id="login-email"
                 type="email"
                 placeholder="you@example.com"
                 className={`
@@ -105,9 +105,7 @@ const LoginPage = () => {
                   backgroundColor: 'var(--surface-input)',
                   borderColor: errors.email ? 'var(--danger-primary)' : 'var(--border-default)',
                   color: 'var(--text-primary)',
-                  ...{
-                    '--tw-ring-color': errors.email ? 'rgba(255, 107, 107, 0.3)' : 'rgba(129, 140, 248, 0.3)'
-                  }
+                  '--tw-ring-color': errors.email ? 'rgba(255, 107, 107, 0.3)' : 'rgba(129, 140, 248, 0.3)',
                 }}
                 onFocus={(e) => {
                   if (!errors.email) {
@@ -122,7 +120,7 @@ const LoginPage = () => {
                 {...register('email', {
                   required: 'Email is required',
                   pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i,
+                    value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i,
                     message: 'Invalid email address',
                   },
                 })}
@@ -138,7 +136,7 @@ const LoginPage = () => {
             {/* Password */}
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold"
+                <label htmlFor="login-password" className="text-xs font-semibold"
                   style={{ color: 'var(--text-primary)' }}>
                   Password
                 </label>
@@ -153,6 +151,7 @@ const LoginPage = () => {
                 </Link>
               </div>
               <input
+                id="login-password"
                 type="password"
                 placeholder="••••••••"
                 className={`
@@ -168,9 +167,7 @@ const LoginPage = () => {
                   backgroundColor: 'var(--surface-input)',
                   borderColor: errors.password ? 'var(--danger-primary)' : 'var(--border-default)',
                   color: 'var(--text-primary)',
-                  ...{
-                    '--tw-ring-color': errors.password ? 'rgba(255, 107, 107, 0.3)' : 'rgba(129, 140, 248, 0.3)'
-                  }
+                  '--tw-ring-color': errors.password ? 'rgba(255, 107, 107, 0.3)' : 'rgba(129, 140, 248, 0.3)',
                 }}
                 onFocus={(e) => {
                   if (!errors.password) {
@@ -211,7 +208,7 @@ const LoginPage = () => {
                 shadow-sm hover:shadow-md
               "
               style={{
-                boxShadow: loading ? 'var(--shadow-sm)' : 'var(--shadow-sm)',
+                boxShadow: 'var(--shadow-sm)',
                 backgroundColor: 'var(--accent-primary)',
                 color: 'white'
               }}
@@ -268,7 +265,7 @@ const LoginPage = () => {
 /* ─── Icons ──────────────────────────────────────────── */
 
 const ErrorIcon = ({ size = 13 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true"
     stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
     className="shrink-0 mt-px">
     <circle cx="12" cy="12" r="10"/>
@@ -277,5 +274,8 @@ const ErrorIcon = ({ size = 13 }) => (
   </svg>
 );
 
+ErrorIcon.propTypes = {
+  size: PropTypes.number,
+};
 
 export default LoginPage;

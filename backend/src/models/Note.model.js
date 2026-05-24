@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
+const TASK_STATUSES = ['todo', 'doing', 'done'];
+const NOTE_CATEGORIES = ['general', 'idea', 'task'];
+
 const noteSchema = new mongoose.Schema(
   {
     title: {
@@ -9,88 +12,112 @@ const noteSchema = new mongoose.Schema(
       trim: true,
       maxlength: [100, 'Title cannot exceed 100 characters'],
     },
+
     content: {
       type: String,
       required: [true, 'Content is required'],
+      trim: true,
     },
+
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: [true, 'User ID is required'],
+      index: true,
     },
 
-    // ─── Note Identity ─────────────────────────────────
-    // noteId: portable/export-safe unique identity
-    // _id: internal database identity (handled by MongoDB)
     noteId: {
       type: String,
       required: true,
-      default: () => uuidv4(),
+      default: uuidv4,
+      immutable: true,
+      trim: true,
     },
 
-    // ─── Note Sharing ──────────────────────────────────
     isPublic: {
       type: Boolean,
       default: false,
     },
+
     shareToken: {
       type: String,
       default: null,
-      // ✅ NO unique/sparse here — index defined below with partialFilterExpression
+      trim: true,
     },
 
-    // ─── Note Features (PR 2) ───────────────────────────
     isPinned: {
       type: Boolean,
       default: false,
     },
+
     category: {
       type: String,
-      enum: ['general', 'idea', 'task'],
+      enum: NOTE_CATEGORIES,
       default: 'general',
+      trim: true,
     },
+
     taskStatus: {
       type: String,
-      enum: ['todo', 'doing', 'done'],
+      enum: TASK_STATUSES,
       default: null,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    versionKey: false,
+  }
 );
 
-// ═════════════════════════════════════════════════════════════════════
-// ✅ MIDDLEWARE: Normalize taskStatus based on category
-// When category is not 'task', clear taskStatus to null
-// When category is 'task' and taskStatus is missing, default to 'todo'
-// ═════════════════════════════════════════════════════════════════════
-noteSchema.pre('save', function() {
-  // If category is not 'task', always clear taskStatus
-  if (this.category !== 'task') {
-    this.taskStatus = null;
-  } else if (this.category === 'task') {
-    // If category IS 'task' but taskStatus is missing/null/invalid
-    if (!this.taskStatus || !['todo', 'doing', 'done'].includes(this.taskStatus)) {
-      this.taskStatus = 'todo';
-    }
+function normalizeTaskStatus(target) {
+  if (!target) return;
+
+  if (target.category !== undefined) {
+    target.category = String(target.category).trim();
   }
+
+  if (target.taskStatus !== undefined && target.taskStatus !== null) {
+    target.taskStatus = String(target.taskStatus).trim();
+  }
+
+  if (target.category !== 'task') {
+    target.taskStatus = null;
+    return;
+  }
+
+  if (!target.taskStatus || !TASK_STATUSES.includes(target.taskStatus)) {
+    target.taskStatus = 'todo';
+  }
+}
+
+noteSchema.pre('save', async function () {
+  normalizeTaskStatus(this);
 });
 
-// ✅ Indexes for performance and uniqueness
+noteSchema.pre('findOneAndUpdate', async function () {
+  const update = this.getUpdate();
+  if (!update) {
+    return;
+  }
 
-// User's notes sorted by creation date
+  const payload = update.$set ? update.$set : update;
+  normalizeTaskStatus(payload);
+
+  if (update.$set) {
+    update.$set = payload;
+  }
+
+  this.setUpdate(update);
+});
+
+// ✅ Compound unique index: noteId must be unique per user, not globally
+noteSchema.index({ userId: 1, noteId: 1 }, { unique: true, sparse: true });
+
+// ✅ Lookup indexes for common queries
 noteSchema.index({ userId: 1, createdAt: -1 });
-
-// ✅ NEW: For efficient pinned/unpinned sorting
 noteSchema.index({ userId: 1, isPinned: -1, updatedAt: -1 });
-
-// ✅ NEW: For category filtering
 noteSchema.index({ userId: 1, category: 1, isPinned: -1, updatedAt: -1 });
 
-// Unique index for noteId (moved from field-level unique to index-level)
-noteSchema.index({ noteId: 1 }, { unique: true });
-
-// Only enforces uniqueness when shareToken is an actual string (not null)
-// sparse: true + partialFilterExpression prevents null values from being indexed
 noteSchema.index(
   { shareToken: 1 },
   {
@@ -101,4 +128,5 @@ noteSchema.index(
 );
 
 const Note = mongoose.model('Note', noteSchema);
+
 module.exports = Note;

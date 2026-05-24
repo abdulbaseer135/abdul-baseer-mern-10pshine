@@ -2,8 +2,8 @@ const asyncHandler = require('../utils/asyncHandler');
 const ApiResponse = require('../utils/ApiResponse');
 const ApiError = require('../utils/ApiError');
 const { updateUser } = require('../dal/users.dal');
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');     // Sonar: prefer node:fs over fs
+const path = require('node:path'); // Sonar: prefer node:path over path
 const logger = require('../config/logger');
 
 /**

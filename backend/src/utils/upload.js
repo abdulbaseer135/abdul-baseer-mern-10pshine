@@ -1,5 +1,5 @@
 const multer = require('multer');
-const path = require('path');
+const path = require('node:path'); // Sonar: prefer node:path import
 const ApiError = require('./ApiError');
 
 // Configure storage
@@ -21,7 +21,7 @@ const fileFilter = (req, file, cb) => {
   const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.tiff', '.tif', '.heic', '.heif', '.ico', '.avif', '.jp2'];
   
   // Check both MIME type and file extension for maximum compatibility
-  const isImageMime = file.mimetype && file.mimetype.toLowerCase().includes('image');
+  const isImageMime = file.mimetype?.toLowerCase().includes('image'); // Sonar: optional chaining
   const ext = path.extname(file.originalname).toLowerCase();
   const isImageExt = allowedExtensions.includes(ext);
   

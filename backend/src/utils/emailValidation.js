@@ -1,4 +1,4 @@
-const dns = require('dns').promises;
+const dns = require('node:dns').promises; // Sonar: prefer node:dns import
 const logger = require('../config/logger');
 
 /**
@@ -7,7 +7,8 @@ const logger = require('../config/logger');
  * @returns {boolean}
  */
 const validateEmailFormat = (email) => {
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
+  // Sonar: remove duplicate ranges in character classes (/i makes matching case-insensitive)
+  const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
   return emailRegex.test(email);
 };
 

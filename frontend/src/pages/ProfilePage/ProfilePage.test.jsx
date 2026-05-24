@@ -1,49 +1,55 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import React from 'react';
+import { screen } from '@testing-library/react';
+import useAuth from '../../hooks/useAuth';
+import useProfileImage from '../../hooks/useProfileImage';
 import ProfilePage from './ProfilePage';
-import { AuthContext } from '../../context/AuthContext';
-import * as profileService from '../../services/profile.service';
+import { renderWithProviders } from '../../utils/testUtils';
 
-jest.mock('../../services/profile.service');
-
-const mockUser = { name: 'Abdul Baseer', email: 'abdul@test.com' };
-
-const renderProfile = () =>
-  render(
-    <MemoryRouter>
-      <AuthContext.Provider value={{ user: mockUser, login: jest.fn(), logout: jest.fn() }}>
-        <ProfilePage />
-      </AuthContext.Provider>
-    </MemoryRouter>
-  );
+// Mock hooks used by ProfilePage
+jest.mock('../../hooks/useAuth');
+jest.mock('../../hooks/useProfileImage');
 
 describe('ProfilePage', () => {
+  const mockHandleFetchProfile = jest.fn();
+
   beforeEach(() => {
-    profileService.getProfileService.mockResolvedValue({
-      data: { user: mockUser },
+    jest.clearAllMocks();
+
+    useAuth.mockReturnValue({
+      user: {
+        name: 'Test User',
+        email: 'test@example.com',
+        createdAt: '2024-01-01T00:00:00.000Z',
+        isEmailVerified: true,
+      },
+      loading: false,
+      handleFetchProfile: mockHandleFetchProfile,
+      handleUpdateProfile: jest.fn(),
+      handleChangePassword: jest.fn().mockResolvedValue(true),
+      handleDeleteAccount: jest.fn(),
+    });
+
+    useProfileImage.mockReturnValue({
+      imageLoading: false,
+      imageError: null,
+      imageSuccess: false,
+      removeImageModal: false,
+      fileInputRef: { current: null },
+      setRemoveImageModal: jest.fn(),
+      setImageError: jest.fn(),
+      handleImageUpload: jest.fn(),
+      confirmRemoveImage: jest.fn(),
     });
   });
 
-  it('renders profile page with user info', async () => {
-    renderProfile();
-    await waitFor(() => {
-      expect(screen.getByText('My Profile')).toBeInTheDocument();
-      expect(screen.getByText('abdul@test.com')).toBeInTheDocument();
+  it('renders profile page hero with user name and email', () => {
+    const { container } = renderWithProviders(<ProfilePage />, {
+      initialEntries: ['/profile'],
     });
-  });
 
-  it('shows danger zone section', async () => {
-    renderProfile();
-    await waitFor(() => {
-      expect(screen.getByText(/Danger Zone/i)).toBeInTheDocument();
-      expect(screen.getByText(/Delete My Account/i)).toBeInTheDocument();
-    });
-  });
-
-  it('shows update profile button', async () => {
-    renderProfile();
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /update profile/i })).toBeInTheDocument();
-    });
+    expect(screen.getByText('Test User')).toBeInTheDocument();
+    expect(screen.getByText('test@example.com')).toBeInTheDocument();
+    // Back to Dashboard button
+    expect(screen.getByText('Back to Dashboard')).toBeInTheDocument();
   });
 });

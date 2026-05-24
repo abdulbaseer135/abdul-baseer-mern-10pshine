@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { verifyOTPService, sendOTPService } from '../../services/auth.service';
 
@@ -125,7 +126,7 @@ const OTPVerificationPage = () => {
             text-gray-900 dark:text-white">
             Verify Your {purpose === 'verify' ? 'Email' : 'Identity'}
           </h1>
-          <p className="text-sm mt-1.5 text-gray-500 dark:text-gray-500">
+          <p className="text-sm mt-1.5 text-gray-600 dark:text-gray-400">
             Enter the 6-digit code sent to<br/>
             <span className="font-medium text-gray-700 dark:text-gray-400">{email}</span>
           </p>
@@ -174,7 +175,7 @@ const OTPVerificationPage = () => {
             <div className="flex justify-center gap-2 sm:gap-3">
               {otp.map((digit, index) => (
                 <input
-                  key={index}
+                  key={`otp-${index}-${digit || 'empty'}`}
                   id={`otp-${index}`}
                   type="text"
                   maxLength="1"
@@ -225,6 +226,7 @@ const OTPVerificationPage = () => {
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Didn't receive the code?{' '}
               <button
+                type="button"
                 onClick={handleResend}
                 disabled={resendLoading || resendCooldown > 0}
                 className="
@@ -261,7 +263,7 @@ const CheckIcon = () => (
 );
 
 const ErrorIcon = ({ size = 13 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true"
     stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
     className="shrink-0 mt-px">
     <circle cx="12" cy="12" r="10"/>
@@ -269,6 +271,10 @@ const ErrorIcon = ({ size = 13 }) => (
     <line x1="12" y1="16" x2="12.01" y2="16"/>
   </svg>
 );
+
+ErrorIcon.propTypes = {
+  size: PropTypes.number,
+};
 
 const SpinnerIcon = () => (
   <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">

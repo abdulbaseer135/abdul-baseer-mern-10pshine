@@ -60,7 +60,7 @@ describe('Users Service', () => {
   // ─── changePassword Tests ────────────────────────────────────────────
 
   it('should change password successfully with correct old password', async () => {
-    await usersService.changePassword(userId, 'pass123', 'newpass456');
+    await usersService.changePassword(userId, 'pass123', 'NewPassword456!');
 
     // verify new password works by logging in
     const user = await usersService.getProfile(userId);
@@ -69,7 +69,7 @@ describe('Users Service', () => {
 
   it('should throw 401 when old password is incorrect', async () => {
     try {
-      await usersService.changePassword(userId, 'wrongpassword', 'newpass456');
+      await usersService.changePassword(userId, 'wrongpassword', 'NewPassword456!');
       expect.fail('Should have thrown');
     } catch (err) {
       expect(err.statusCode).to.equal(401);
@@ -77,10 +77,20 @@ describe('Users Service', () => {
     }
   });
 
+  it('should throw 400 when new password is weak', async () => {
+    try {
+      await usersService.changePassword(userId, 'pass123', 'weak');
+      expect.fail('Should have thrown');
+    } catch (err) {
+      expect(err.statusCode).to.equal(400);
+      expect(err.message).to.include('New password must be at least 8 characters');
+    }
+  });
+
   it('should throw 404 when user does not exist for changePassword', async () => {
     const fakeId = '000000000000000000000000';
     try {
-      await usersService.changePassword(fakeId, 'pass123', 'newpass456');
+      await usersService.changePassword(fakeId, 'pass123', 'NewPassword456!');
       expect.fail('Should have thrown');
     } catch (err) {
       expect(err.statusCode).to.equal(404);

@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 const NoteSkeleton = () => (
   <div className="bg-white rounded-xl border border-gray-200 p-4 animate-pulse">
     <div className="h-4 bg-gray-200 rounded w-3/4 mb-3" />
@@ -16,10 +18,14 @@ const NoteSkeleton = () => (
 
 export const NoteSkeletonGrid = ({ count = 6 }) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    {Array.from({ length: count }).map((_, i) => (
-      <NoteSkeleton key={i} />
+    {Array.from({ length: count }, (_, i) => (
+      <NoteSkeleton key={`note-skeleton-${i}`} />
     ))}
   </div>
 );
+
+NoteSkeletonGrid.propTypes = {
+  count: PropTypes.number,
+};
 
 export default NoteSkeleton;

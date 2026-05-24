@@ -4,10 +4,12 @@ import { createSlice } from '@reduxjs/toolkit';
 // ✅ Read theme before React mounts — syncs with anti-flash script
 const getInitialTheme = () => {
   try {
-    const stored = localStorage.getItem('theme');
+    const stored = globalThis.localStorage?.getItem('theme'); // Sonar: use globalThis
     if (stored) return stored;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  } catch {
+    const prefersDark = globalThis.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
+    return prefersDark ? 'dark' : 'light';
+  } catch (err) {
+    console.error(err); // Sonar: handle caught exception
     return 'light'; // fallback if localStorage blocked
   }
 };

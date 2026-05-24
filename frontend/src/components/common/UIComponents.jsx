@@ -5,7 +5,10 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+
+import { openDialog, closeDialog } from '../../utils/dialogUtils';
 
 // ────────────────────────────────────────────────────────────────────────────
 // BUTTONS
@@ -46,6 +49,15 @@ export const Button = ({
   );
 };
 
+Button.propTypes = {
+  children: PropTypes.node,
+  variant: PropTypes.oneOf(['primary', 'secondary', 'ghost', 'danger', 'success']),
+  size: PropTypes.oneOf(['sm', 'md', 'lg']),
+  icon: PropTypes.elementType,
+  disabled: PropTypes.bool,
+  className: PropTypes.string,
+};
+
 // ────────────────────────────────────────────────────────────────────────────
 // FORM INPUTS
 // ────────────────────────────────────────────────────────────────────────────
@@ -61,13 +73,13 @@ export const TextInput = React.forwardRef(({
   className = '',
   ...props
 }, ref) => {
-  const hasError = error && error.length > 0;
+  const hasError = (error?.length ?? 0) > 0;
   const showSuccess = success && !hasError;
 
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label className={`label-base ${required ? 'label-required' : ''}`}>
+        <label htmlFor={props.id} className={`label-base ${required ? 'label-required' : ''}`}>
           {label}
         </label>
       )}
@@ -77,6 +89,7 @@ export const TextInput = React.forwardRef(({
         )}
         <input
           ref={ref}
+          id={props.id}
           className={`input-base ${Icon ? 'pl-9' : ''} ${hasError ? 'input-error' : ''} ${showSuccess ? 'input-success' : ''} ${className}`}
           disabled={disabled}
           {...props}
@@ -103,6 +116,18 @@ export const TextInput = React.forwardRef(({
 
 TextInput.displayName = 'TextInput';
 
+TextInput.propTypes = {
+  label: PropTypes.string,
+  error: PropTypes.string,
+  helperText: PropTypes.string,
+  required: PropTypes.bool,
+  success: PropTypes.bool,
+  disabled: PropTypes.bool,
+  icon: PropTypes.elementType,
+  className: PropTypes.string,
+  id: PropTypes.string,
+};
+
 export const SearchInput = React.forwardRef(({
   placeholder = 'Search...',
   icon: Icon,
@@ -127,6 +152,13 @@ export const SearchInput = React.forwardRef(({
 
 SearchInput.displayName = 'SearchInput';
 
+SearchInput.propTypes = {
+  placeholder: PropTypes.string,
+  icon: PropTypes.elementType,
+  className: PropTypes.string,
+  id: PropTypes.string,
+};
+
 // ────────────────────────────────────────────────────────────────────────────
 // CATEGORY PILLS / TAGS
 // ────────────────────────────────────────────────────────────────────────────
@@ -149,30 +181,65 @@ export const Pill = ({
     slate: 'pill-slate',
   }[color];
 
-  return (
-    <div
-      className={`pill-base ${colorClass} ${!isActive ? 'pill-inactive' : ''} ${className}`}
-      onClick={onClick}
-      role="button"
-      tabIndex={0}
-      {...props}
-    >
-      {Icon && <Icon size={14} />}
-      <span>{children}</span>
-      {onRemove && (
+  const pillClassName = `pill-base ${colorClass} ${isActive ? '' : 'pill-inactive'} ${className}`;
+
+  // Sonar: accessibility — native <button> (avoid div role="button" when onRemove is present)
+  if (onRemove) {
+    return (
+      <div className={`inline-flex items-center gap-0.5 ${pillClassName}`} {...props}>
+        {onClick ? (
+          <button type="button" className="inline-flex items-center gap-1 flex-1 min-w-0" onClick={onClick}>
+            {Icon && <Icon size={14} />}
+            <span>{children}</span>
+          </button>
+        ) : (
+          <>
+            {Icon && <Icon size={14} />}
+            <span>{children}</span>
+          </>
+        )}
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onRemove();
-          }}
+          type="button"
+          onClick={onRemove}
           className="ml-0.5 hover:text-current opacity-70 hover:opacity-100"
           aria-label={`Remove ${children}`}
         >
           ✕
         </button>
-      )}
+      </div>
+    );
+  }
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        className={pillClassName}
+        onClick={onClick}
+        {...props}
+      >
+        {Icon && <Icon size={14} />}
+        <span>{children}</span>
+      </button>
+    );
+  }
+
+  return (
+    <div className={pillClassName} {...props}>
+      {Icon && <Icon size={14} />}
+      <span>{children}</span>
     </div>
   );
+};
+
+Pill.propTypes = {
+  children: PropTypes.node,
+  color: PropTypes.oneOf(['indigo', 'red', 'green', 'amber', 'slate']),
+  isActive: PropTypes.bool,
+  onRemove: PropTypes.func,
+  icon: PropTypes.elementType,
+  onClick: PropTypes.func,
+  className: PropTypes.string,
 };
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -189,6 +256,7 @@ export const SegmentedControl = ({
     <div className={`segmented-control ${className}`}>
       {options.map((option) => (
         <button
+          type="button"
           key={option.value}
           onClick={() => onChange(option.value)}
           className={`segmented-control-item ${value === option.value ? 'segmented-control-item-active' : ''}`}
@@ -199,6 +267,19 @@ export const SegmentedControl = ({
       ))}
     </div>
   );
+};
+
+SegmentedControl.propTypes = {
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+      icon: PropTypes.elementType,
+    }),
+  ).isRequired,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  className: PropTypes.string,
 };
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -221,6 +302,12 @@ export const Card = ({ children, variant = 'default', className = '', ...props }
   );
 };
 
+Card.propTypes = {
+  children: PropTypes.node,
+  variant: PropTypes.oneOf(['default', 'elevated', 'interactive', 'featured', 'compact']),
+  className: PropTypes.string,
+};
+
 export const Modal = ({
   isOpen,
   onClose,
@@ -230,6 +317,16 @@ export const Modal = ({
   size = 'md', // sm | md | lg
   className = '',
 }) => {
+  const dialogRef = useRef(null);
+
+  // Sonar: accessibility — native <dialog>
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (isOpen && !dialog.open) openDialog(dialog);
+    else if (!isOpen && dialog.open) closeDialog(dialog);
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const sizeStyles = {
@@ -239,27 +336,47 @@ export const Modal = ({
   };
 
   return (
-    <>
-      <div className="modal-overlay" onClick={onClose} />
-      <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
-        <div className={`modal-card ${sizeStyles[size]} pointer-events-auto w-full mx-4 ${className}`}>
-          {title && (
-            <div className="modal-header">
-              <h2 className="modal-title">{title}</h2>
-              <button
-                onClick={onClose}
-                className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 text-lg leading-none"
-              >
-                ✕
-              </button>
-            </div>
-          )}
-          <div className="modal-body">{children}</div>
-          {footer && <div className="modal-footer">{footer}</div>}
-        </div>
+    <dialog
+      ref={dialogRef}
+      className="modal-overlay fixed inset-0 z-50 flex items-center justify-center m-0 p-0 w-full max-w-none max-h-none border-0 bg-transparent"
+      aria-labelledby={title ? 'ui-modal-title' : undefined}
+      onClose={onClose}
+    >
+      <button
+        type="button"
+        className="absolute inset-0 w-full h-full m-0 p-0 border-0 bg-transparent cursor-default"
+        aria-label="Close modal"
+        onClick={onClose}
+      />
+      <div className={`modal-card relative z-10 ${sizeStyles[size]} w-full mx-4 ${className}`}>
+        {title && (
+          <div className="modal-header">
+            <h2 id="ui-modal-title" className="modal-title">{title}</h2>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close modal"
+              className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 text-lg leading-none"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+        <div className="modal-body">{children}</div>
+        {footer && <div className="modal-footer">{footer}</div>}
       </div>
-    </>
+    </dialog>
   );
+};
+
+Modal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  title: PropTypes.string,
+  children: PropTypes.node,
+  footer: PropTypes.node,
+  size: PropTypes.oneOf(['sm', 'md', 'lg']),
+  className: PropTypes.string,
 };
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -281,6 +398,14 @@ export const EmptyState = ({
       {action && <div>{action}</div>}
     </div>
   );
+};
+
+EmptyState.propTypes = {
+  icon: PropTypes.elementType,
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  action: PropTypes.node,
+  className: PropTypes.string,
 };
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -307,11 +432,24 @@ export const HelperText = ({ children, error = false, success = false }) => {
   return <p className="helper-text">{children}</p>;
 };
 
+HelperText.propTypes = {
+  children: PropTypes.node.isRequired,
+  error: PropTypes.bool,
+  success: PropTypes.bool,
+};
+
 export const Label = ({ children, required = false, htmlFor, className = '' }) => (
   <label htmlFor={htmlFor} className={`label-base ${required ? 'label-required' : ''} ${className}`}>
     {children}
   </label>
 );
+
+Label.propTypes = {
+  children: PropTypes.node.isRequired,
+  required: PropTypes.bool,
+  htmlFor: PropTypes.string,
+  className: PropTypes.string,
+};
 
 // ────────────────────────────────────────────────────────────────────────────
 // UTILITY: FORM FIELD WRAPPER (Groups label + input + helper text)
@@ -326,7 +464,7 @@ export const FormField = ({
   success,
   className = '',
 }) => {
-  const hasError = error && error.length > 0;
+  const hasError = (error?.length ?? 0) > 0;
   const showSuccess = success && !hasError;
 
   return (
@@ -338,6 +476,16 @@ export const FormField = ({
       {helperText && !hasError && !showSuccess && <HelperText>{helperText}</HelperText>}
     </div>
   );
+};
+
+FormField.propTypes = {
+  label: PropTypes.string,
+  required: PropTypes.bool,
+  children: PropTypes.node.isRequired,
+  helperText: PropTypes.string,
+  error: PropTypes.string,
+  success: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -358,6 +506,13 @@ export const Badge = ({
   }[variant];
 
   return <span className={`${variantClass} ${className}`}>{children}</span>;
+};
+
+Badge.propTypes = {
+  children: PropTypes.node,
+  variant: PropTypes.oneOf(['accent', 'danger', 'success', 'neutral']),
+  size: PropTypes.oneOf(['sm', 'md', 'lg']),
+  className: PropTypes.string,
 };
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -408,7 +563,9 @@ export const Alert = ({
       </div>
       {onClose && (
         <button
+          type="button"
           onClick={onClose}
+          aria-label="Dismiss alert"
           className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 flex-shrink-0"
         >
           ✕
@@ -416,6 +573,15 @@ export const Alert = ({
       )}
     </div>
   );
+};
+
+Alert.propTypes = {
+  type: PropTypes.oneOf(['info', 'success', 'warning', 'error']),
+  title: PropTypes.string,
+  message: PropTypes.string.isRequired,
+  onClose: PropTypes.func,
+  icon: PropTypes.elementType,
+  className: PropTypes.string,
 };
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -430,3 +596,14 @@ export const Panel = ({ children, nested = false, className = '' }) => {
 export const DangerZone = ({ children, className = '' }) => (
   <div className={`danger-zone ${className}`}>{children}</div>
 );
+
+Panel.propTypes = {
+  children: PropTypes.node,
+  nested: PropTypes.bool,
+  className: PropTypes.string,
+};
+
+DangerZone.propTypes = {
+  children: PropTypes.node,
+  className: PropTypes.string,
+};

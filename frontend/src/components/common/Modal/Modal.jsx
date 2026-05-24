@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
-
+import { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+import { openDialog, closeDialog } from '../../../utils/dialogUtils';
 
 const Modal = ({
   isOpen,
@@ -11,56 +12,59 @@ const Modal = ({
   cancelText   = 'Cancel',
   confirmStyle = 'danger',
 }) => {
+  const dialogRef = useRef(null);
 
-  // ─── Escape key to close ──────────────────────────
+  // Sonar: accessibility — native <dialog>
   useEffect(() => {
-    const handleEsc = (e) => { if (e.key === 'Escape') onClose(); };
-    if (isOpen) document.addEventListener('keydown', handleEsc);
-    return () => document.removeEventListener('keydown', handleEsc);
-  }, [isOpen, onClose]);
+    const dialog = dialogRef.current;
+    if (!dialog) return;
 
-  // ─── Lock body scroll while open ─────────────────
-  useEffect(() => {
-    if (isOpen) document.body.style.overflow = 'hidden';
-    else        document.body.style.overflow = '';
-    return ()  => { document.body.style.overflow = ''; };
+    if (isOpen && !dialog.open) {
+      openDialog(dialog);
+      document.body.style.overflow = 'hidden';
+    } else if (!isOpen && dialog.open) {
+      closeDialog(dialog);
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   if (!isOpen) return null;
 
-
   return (
-    /* ─── Backdrop ──────────────────────────────────── */
-    <div
+    <dialog
+      ref={dialogRef}
       className="
         fixed inset-0 z-50
         flex items-center justify-center
-        px-4
-        bg-black/50 dark:bg-black/70
-        backdrop-blur-sm
+        px-4 m-0 p-0
+        w-full max-w-none max-h-none
+        border-0 bg-transparent
       "
-      onClick={onClose}
+      aria-labelledby="modal-title"
+      aria-describedby="modal-message"
+      onClose={onClose}
     >
-
-      {/* ─── Modal Panel ─────────────────────────────── */}
+      {/* Sonar: accessibility — backdrop close via semantic button, not dialog onClick */}
+      <button
+        type="button"
+        className="absolute inset-0 w-full h-full m-0 p-0 border-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm cursor-default"
+        aria-label="Close modal"
+        onClick={onClose}
+      />
       <div
         className="
-          w-full max-w-md
+          relative z-10 w-full max-w-md
           bg-white dark:bg-[#141414]
           border border-gray-200/60 dark:border-white/[0.07]
           rounded-2xl
           shadow-2xl dark:shadow-black/60
           overflow-hidden
         "
-        onClick={(e) => e.stopPropagation()}
       >
-
-        {/* ─── Header ──────────────────────────────────── */}
-        <div className="
-          flex items-center gap-3
-          px-6 pt-5 pb-4
-        ">
-          {/* Icon — changes based on confirmStyle */}
+        <div className="flex items-center gap-3 px-6 pt-5 pb-4">
           <div className={`
             w-9 h-9 rounded-xl flex items-center justify-center shrink-0
             ${confirmStyle === 'danger'
@@ -71,29 +75,22 @@ const Modal = ({
             {confirmStyle === 'danger' ? <DangerIcon /> : <InfoIcon />}
           </div>
 
-          <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+          <h2 id="modal-title" className="text-base font-semibold text-gray-900 dark:text-gray-100">
             {title}
           </h2>
         </div>
 
-        {/* ─── Divider ─────────────────────────────────── */}
         <div className="h-px bg-gray-100 dark:bg-white/[0.05] mx-6" />
 
-        {/* ─── Body ────────────────────────────────────── */}
         <div className="px-6 py-4">
-          <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+          <p id="modal-message" className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
             {message}
           </p>
         </div>
 
-        {/* ─── Footer ──────────────────────────────────── */}
-        <div className="
-          flex justify-end gap-2.5
-          px-6 pb-5
-        ">
-
-          {/* Cancel */}
+        <div className="flex justify-end gap-2.5 px-6 pb-5">
           <button
+            type="button"
             onClick={onClose}
             className="
               px-4 py-2 rounded-xl text-sm font-medium
@@ -108,8 +105,8 @@ const Modal = ({
             {cancelText}
           </button>
 
-          {/* Confirm */}
           <button
+            type="button"
             onClick={() => { onConfirm(); onClose(); }}
             className={`
               px-4 py-2 rounded-xl text-sm font-semibold
@@ -132,18 +129,25 @@ const Modal = ({
           >
             {confirmText}
           </button>
-
         </div>
       </div>
-    </div>
+    </dialog>
   );
 };
 
-
-/* ─── Icons ──────────────────────────────────────────── */
+Modal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onConfirm: PropTypes.func,
+  title: PropTypes.string,
+  message: PropTypes.string,
+  confirmText: PropTypes.string,
+  cancelText: PropTypes.string,
+  confirmStyle: PropTypes.string,
+};
 
 const DangerIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"
     stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="3 6 5 6 21 6"/>
     <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
@@ -153,13 +157,12 @@ const DangerIcon = () => (
 );
 
 const InfoIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"
     stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="10"/>
     <line x1="12" y1="8"  x2="12"    y2="8"/>
     <line x1="12" y1="12" x2="12"    y2="16"/>
   </svg>
 );
-
 
 export default Modal;

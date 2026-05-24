@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import { fetchProfile } from '../../store/slices/authSlice'; // ✅ two levels up only
+import { fetchProfile } from '../../store/slices/authSlice';
 
 const ProtectedRoute = ({ children }) => {
   const dispatch = useDispatch();
@@ -12,11 +13,15 @@ const ProtectedRoute = ({ children }) => {
     if (token && !user) {
       dispatch(fetchProfile());
     }
-  }, [token]); // eslint-disable-line
+  }, [token, user, dispatch]); // Properly include all dependencies
 
   if (!token) return <Navigate to="/login" replace />;
 
   return children;
+};
+
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default ProtectedRoute;

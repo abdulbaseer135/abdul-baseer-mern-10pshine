@@ -35,7 +35,11 @@ const Navbar = () => {
   const navigate  = useNavigate();
 
   const handleLogout = async () => {
-    try { await logoutService(); } catch (_) {}
+    try {
+      await logoutService();
+    } catch (err) {
+      console.error(err); // Sonar: handle caught exception
+    }
     dispatch(logout());
     navigate('/login');
   };
@@ -49,7 +53,7 @@ const Navbar = () => {
     }}>
 
       {/* ─── Logo — Premium Brand ─────────────────────────────────── */}
-      <Link to="/dashboard" className="flex items-center gap-2 group min-w-0 flex-shrink-0">
+      <Link to="/dashboard" className="flex items-center gap-2 group min-w-0 flex-shrink-0 no-underline">
         <span className="text-xl sm:text-2xl flex-shrink-0 group-hover:scale-110 transition-transform duration-200">📝</span>
         <span className="
           text-base sm:text-lg font-bold tracking-tight
@@ -97,7 +101,7 @@ const Navbar = () => {
           to="/profile"
           className="
             hidden sm:flex items-center gap-3 px-3 py-2 rounded-lg
-            transition-all duration-200 group
+            transition-all duration-200 group no-underline
           "
           style={{ backgroundColor: 'transparent' }}
           onMouseEnter={(e) => {
@@ -141,7 +145,7 @@ const Navbar = () => {
           to="/profile"
           className="
             sm:hidden w-9 h-9 rounded-lg flex items-center justify-center
-            transition-all duration-200
+            transition-all duration-200 no-underline
           "
           style={{ backgroundColor: 'transparent' }}
           onMouseEnter={(e) => {

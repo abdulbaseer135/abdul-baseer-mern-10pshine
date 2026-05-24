@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { resetPasswordService } from '../../services/auth.service';
@@ -107,7 +108,7 @@ const ResetPasswordPage = () => {
             text-gray-900 dark:text-white">
             Reset Password
           </h1>
-          <p className="text-sm mt-1.5 text-gray-500 dark:text-gray-500">
+          <p className="text-sm mt-1.5 text-gray-600 dark:text-gray-400">
             Create a new password for your account
           </p>
         </div>
@@ -153,12 +154,13 @@ const ResetPasswordPage = () => {
 
             {/* ─── New Password ──────────────────────── */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider
-                text-gray-400 dark:text-gray-600">
+              <label htmlFor="reset-new-password" className="text-xs font-semibold uppercase tracking-wider
+                text-gray-600 dark:text-gray-400">
                 New Password
               </label>
               <div className="relative">
                 <input
+                  id="reset-new-password"
                   type={showNewPassword ? 'text' : 'password'}
                   placeholder="Enter new password"
                   className={`${inputClass(!!errors.newPassword)} pr-11`}
@@ -231,12 +233,13 @@ const ResetPasswordPage = () => {
 
             {/* ─── Confirm Password ──────────────────── */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider
-                text-gray-400 dark:text-gray-600">
+              <label htmlFor="reset-confirm-password" className="text-xs font-semibold uppercase tracking-wider
+                text-gray-600 dark:text-gray-400">
                 Confirm Password
               </label>
               <div className="relative">
                 <input
+                  id="reset-confirm-password"
                   type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="Confirm new password"
                   className={`${inputClass(!!errors.confirmPassword)} pr-11`}
@@ -311,7 +314,7 @@ const DotIcon = () => (
 );
 
 const ErrorIcon = ({ size = 13 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true"
     stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
     className="shrink-0 mt-px">
     <circle cx="12" cy="12" r="10"/>
@@ -319,6 +322,10 @@ const ErrorIcon = ({ size = 13 }) => (
     <line x1="12" y1="16" x2="12.01" y2="16"/>
   </svg>
 );
+
+ErrorIcon.propTypes = {
+  size: PropTypes.number,
+};
 
 const EyeIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"

@@ -1,24 +1,246 @@
+import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { CATEGORY_INFO, TASK_STATUS_INFO } from '../../../utils/noteConstants'; // ✅ PR 2
+import { CATEGORY_INFO, TASK_STATUS_INFO } from '../../../utils/noteConstants';
+
+// Sonar: extracted helper functions to reduce cognitive complexity
+
+const formatDate = (dateStr) =>
+  new Date(dateStr).toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric',
+  });
+
+const stripHtml = (html) => html.replaceAll(/<[^>]*>/g, '');
+
+const getShareUrl = (note) => 
+  note.isPublic && note.shareToken
+    ? `${globalThis.location?.origin}/shared/${note.shareToken}`
+    : null;
+
+// Sonar: extracted style getter to avoid repeated inline computations
+const getDefaultButtonStyles = () => ({
+  backgroundColor: 'var(--surface-input)',
+  borderColor: 'var(--border-default)',
+  color: 'var(--text-secondary)',
+});
+
+const getHoverButtonStyles = () => ({
+  backgroundColor: 'var(--surface-hover)',
+  borderColor: 'var(--border-strong)',
+  color: 'var(--text-primary)',
+});
+
+// Sonar: extracted button hover handler to reduce repetitive code
+const applyButtonHoverStyles = (element, hoverStyles) => {
+  Object.assign(element.style, hoverStyles);
+};
+
+const applyButtonDefaultStyles = (element, defaultStyles) => {
+  Object.assign(element.style, defaultStyles);
+};
+
+// Sonar: extracted common button handler logic
+const createButtonHoverHandlers = (defaultStyles, hoverStyles) => ({
+  onMouseEnter: (e) => applyButtonHoverStyles(e.currentTarget, hoverStyles),
+  onMouseLeave: (e) => applyButtonDefaultStyles(e.currentTarget, defaultStyles),
+});
+
+// Sonar: extracted ActionButton subcomponent for standard buttons
+const ActionButton = ({ 
+  onClick, title, ariaLabel, icon: Icon, defaultStyles, hoverStyles 
+}) => (
+  <button
+    type="button"
+    onClick={onClick}
+    title={title}
+    aria-label={ariaLabel}
+    className="p-1.5 rounded-md transition-all duration-200 border hover:shadow-md"
+    style={defaultStyles}
+    {...createButtonHoverHandlers(defaultStyles, hoverStyles)}
+  >
+    <Icon />
+  </button>
+);
+
+ActionButton.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  ariaLabel: PropTypes.string.isRequired,
+  icon: PropTypes.elementType.isRequired,
+  defaultStyles: PropTypes.object.isRequired,
+  hoverStyles: PropTypes.object.isRequired,
+};
 
 const NoteCard = ({ note, onEdit, onDelete, onShare, onView, onPin }) => {
-  const formatDate = (dateStr) =>
-    new Date(dateStr).toLocaleDateString('en-US', {
-      month: 'short', day: 'numeric', year: 'numeric',
-    });
-
-  // ✅ Strip HTML tags to get plain text for preview
-  const stripHtml = (html) => html.replace(/<[^>]*>/g, '');
   const plainTextContent = stripHtml(note.content || '');
-
-  // ✅ Build the public share URL from the note's token
-  const shareUrl = note.isPublic && note.shareToken
-    ? `${window.location.origin}/shared/${note.shareToken}`
-    : null;
+  const shareUrl = getShareUrl(note);
+  
+  const defaultButtonStyles = getDefaultButtonStyles();
+  const hoverButtonStyles = getHoverButtonStyles();
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(shareUrl);
     toast.success('Share link copied to clipboard!');
+  };
+
+  // Sonar: extracted badge rendering to reduce main component complexity
+  const renderCategoryBadge = () => {
+    if (!note.category) return null;
+    return (
+      <span 
+        className={`
+          inline-flex items-center gap-0.5 px-2 py-0.5
+          rounded-sm text-xs font-semibold
+          border transition-all duration-150
+          ${CATEGORY_INFO[note.category]?.color || 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600'}
+        `}
+      >
+        {CATEGORY_INFO[note.category]?.icon} {CATEGORY_INFO[note.category]?.label}
+      </span>
+    );
+  };
+
+  const renderTaskStatusBadge = () => {
+    if (note.category !== 'task' || !note.taskStatus) return null;
+    return (
+      <span 
+        className={`
+          inline-flex items-center gap-0.5 px-2 py-0.5
+          rounded-sm text-xs font-semibold
+          border transition-all duration-150
+          ${TASK_STATUS_INFO[note.taskStatus]?.color || 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600'}
+        `}
+      >
+        {TASK_STATUS_INFO[note.taskStatus]?.icon} {TASK_STATUS_INFO[note.taskStatus]?.label}
+      </span>
+    );
+  };
+
+  const renderPublicBadge = () => {
+    if (!note.isPublic) return null;
+    return (
+      <span 
+        className="
+          inline-flex items-center gap-0.5 px-2 py-0.5
+          rounded-sm text-xs font-semibold
+          border transition-all duration-150
+        "
+        style={{
+          backgroundColor: 'var(--success-primary)',
+          borderColor: 'var(--success-primary)',
+          color: 'white'
+        }}
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+        {'\u00A0'}Public
+      </span>
+    );
+  };
+
+  // Sonar: extracted pin button with special styling logic
+  const renderPinButton = () => {
+    if (!onPin) return null;
+    const pinButtonStyles = note.isPinned
+      ? {
+          backgroundColor: 'rgba(250, 204, 21, 0.15)',
+          borderColor: 'var(--warning-primary)',
+          color: 'var(--warning-primary)',
+        }
+      : defaultButtonStyles;
+    
+    return (
+      <button
+        type="button"
+        onClick={() => onPin(note._id)}
+        title={note.isPinned ? 'Unpin note' : 'Pin note'}
+        aria-label={note.isPinned ? 'Unpin note' : 'Pin note'}
+        className="p-1.5 rounded-md border transition-all duration-200 hover:shadow-md"
+        style={pinButtonStyles}
+        onMouseEnter={(e) => {
+          if (!note.isPinned) {
+            applyButtonHoverStyles(e.currentTarget, hoverButtonStyles);
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!note.isPinned) {
+            applyButtonDefaultStyles(e.currentTarget, defaultButtonStyles);
+          }
+        }}
+      >
+        <PinIcon filled={note.isPinned} />
+      </button>
+    );
+  };
+
+  // Sonar: extracted copy link button with condition guards
+  const renderCopyLinkButton = () => {
+    const isEnabled = note.isPublic && shareUrl;
+    const buttonStyles = isEnabled ? defaultButtonStyles : { ...defaultButtonStyles, opacity: 0.4 };
+    
+    return (
+      <button
+        type="button"
+        onClick={() => isEnabled && handleCopyLink()}
+        disabled={!isEnabled}
+        title={isEnabled ? 'Copy share link' : 'Share note first'}
+        aria-label={isEnabled ? 'Copy share link' : 'Share note first'}
+        className={`p-1.5 rounded-md border transition-all duration-200 hover:shadow-md ${isEnabled ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+        style={buttonStyles}
+        onMouseEnter={(e) => {
+          if (isEnabled) {
+            applyButtonHoverStyles(e.currentTarget, hoverButtonStyles);
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (isEnabled) {
+            applyButtonDefaultStyles(e.currentTarget, defaultButtonStyles);
+          }
+        }}
+      >
+        <LinkIcon />
+      </button>
+    );
+  };
+
+  // Sonar: extracted delete button with danger styling
+  const renderDeleteButton = () => {
+    const deleteStyles = { ...defaultButtonStyles };
+    const deleteHoverStyles = {
+      backgroundColor: 'rgba(255, 107, 107, 0.15)',
+      borderColor: 'var(--danger-primary)',
+      color: 'var(--danger-primary)',
+    };
+    
+    return (
+      <button
+        type="button"
+        onClick={() => onDelete(note._id)}
+        title="Delete note"
+        aria-label="Delete note"
+        className="p-1.5 rounded-md border transition-all duration-200 hover:shadow-md"
+        style={deleteStyles}
+        {...createButtonHoverHandlers(deleteStyles, deleteHoverStyles)}
+      >
+        <TrashIcon />
+      </button>
+    );
+  };
+
+  // Sonar: extracted share toggle button
+  const renderShareButton = () => {
+    if (!onShare) return null;
+    return (
+      <button
+        type="button"
+        onClick={() => onShare(note._id)}
+        title={note.isPublic ? 'Disable sharing' : 'Share note'}
+        aria-label={note.isPublic ? 'Disable sharing' : 'Share note'}
+        className="p-1.5 rounded-md border transition-all duration-200 hover:shadow-md"
+        style={defaultButtonStyles}
+        {...createButtonHoverHandlers(defaultButtonStyles, hoverButtonStyles)}
+      >
+        <ShareIcon />
+      </button>
+    );
   };
 
   return (
@@ -35,15 +257,7 @@ const NoteCard = ({ note, onEdit, onDelete, onShare, onView, onPin }) => {
         backgroundColor: 'var(--surface-elevated)',
         borderColor: note.isPinned ? 'var(--warning-primary)' : 'var(--border-default)',
         borderWidth: note.isPinned ? '2px' : '1px',
-        boxShadow: 'var(--shadow-sm)'
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-        e.currentTarget.style.borderColor = note.isPinned ? 'var(--warning-primary)' : 'var(--border-strong)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-        e.currentTarget.style.borderColor = note.isPinned ? 'var(--warning-primary)' : 'var(--border-default)';
+        boxShadow: 'var(--shadow-sm)',
       }}
     >
 
@@ -91,54 +305,11 @@ const NoteCard = ({ note, onEdit, onDelete, onShare, onView, onPin }) => {
         </p>
       </div>
 
-      {/* ─── Metadata Badges — Compact composition ────────────────────────────── */}
+      {/* ─── Metadata Badges — Extracted to reduce complexity ────────────────────────────── */}
       <div className="mb-2.5 flex items-center gap-1.5 flex-wrap">
-        {/* ✅ Category Badge */}
-        {note.category && (
-          <span 
-            className={`
-              inline-flex items-center gap-0.5 px-2 py-0.5
-              rounded-sm text-xs font-semibold
-              border transition-all duration-150
-              ${CATEGORY_INFO[note.category]?.color || 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600'}
-            `}
-          >
-            {CATEGORY_INFO[note.category]?.icon} {CATEGORY_INFO[note.category]?.label}
-          </span>
-        )}
-
-        {/* ✅ Task Status Badge (show only for task category) */}
-        {note.category === 'task' && note.taskStatus && (
-          <span 
-            className={`
-              inline-flex items-center gap-0.5 px-2 py-0.5
-              rounded-sm text-xs font-semibold
-              border transition-all duration-150
-              ${TASK_STATUS_INFO[note.taskStatus]?.color || 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600'}
-            `}
-          >
-            {TASK_STATUS_INFO[note.taskStatus]?.icon} {TASK_STATUS_INFO[note.taskStatus]?.label}
-          </span>
-        )}
-
-        {/* Sharing indicator */}
-        {note.isPublic && (
-          <span 
-            className="
-              inline-flex items-center gap-0.5 px-2 py-0.5
-              rounded-sm text-xs font-semibold
-              border transition-all duration-150
-            "
-            style={{
-              backgroundColor: 'var(--success-primary)',
-              borderColor: 'var(--success-primary)',
-              color: 'white'
-            }}
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-            Public
-          </span>
-        )}
+        {renderCategoryBadge()}
+        {renderTaskStatusBadge()}
+        {renderPublicBadge()}
       </div>
 
       {/* ─── Divider ────────────────────────────────────── */}
@@ -147,183 +318,40 @@ const NoteCard = ({ note, onEdit, onDelete, onShare, onView, onPin }) => {
         style={{ borderColor: 'var(--border-subtle)' }} 
       />
 
-      {/* ─── Action Buttons — Carefully composed, compact row ──── */}
+      {/* ─── Action Buttons — Extracted renders to reduce complexity ──── */}
       <div className="flex gap-1 justify-start flex-wrap">
         
         {/* View Full Note */}
-        <button
+        <ActionButton
           onClick={() => onView(note)}
           title="View full note"
-          className="
-            p-1.5 rounded-md transition-all duration-200
-            border hover:shadow-md
-          "
-          style={{
-            backgroundColor: 'var(--surface-input)',
-            borderColor: 'var(--border-default)',
-            color: 'var(--text-secondary)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--surface-hover)';
-            e.currentTarget.style.borderColor = 'var(--border-strong)';
-            e.currentTarget.style.color = 'var(--text-primary)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--surface-input)';
-            e.currentTarget.style.borderColor = 'var(--border-default)';
-            e.currentTarget.style.color = 'var(--text-secondary)';
-          }}
-        >
-          <ReadMoreIcon />
-        </button>
+          ariaLabel="View full note"
+          icon={ReadMoreIcon}
+          defaultStyles={defaultButtonStyles}
+          hoverStyles={hoverButtonStyles}
+        />
 
         {/* Edit Note */}
-        <button
+        <ActionButton
           onClick={() => onEdit(note)}
           title="Edit note"
-          className="
-            p-1.5 rounded-md transition-all duration-200
-            border hover:shadow-md
-          "
-          style={{
-            backgroundColor: 'var(--surface-input)',
-            borderColor: 'var(--border-default)',
-            color: 'var(--text-secondary)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--surface-hover)';
-            e.currentTarget.style.borderColor = 'var(--border-strong)';
-            e.currentTarget.style.color = 'var(--text-primary)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--surface-input)';
-            e.currentTarget.style.borderColor = 'var(--border-default)';
-            e.currentTarget.style.color = 'var(--text-secondary)';
-          }}
-        >
-          <EditIcon />
-        </button>
+          ariaLabel="Edit note"
+          icon={EditIcon}
+          defaultStyles={defaultButtonStyles}
+          hoverStyles={hoverButtonStyles}
+        />
 
-        {/* ✅ PIN Toggle Button */}
-        {onPin && (
-          <button
-            onClick={() => onPin(note._id)}
-            title={note.isPinned ? 'Unpin note' : 'Pin note'}
-            className="
-              p-1.5 rounded-md border transition-all duration-200 hover:shadow-md
-            "
-            style={{
-              backgroundColor: note.isPinned ? 'rgba(250, 204, 21, 0.15)' : 'var(--surface-input)',
-              borderColor: note.isPinned ? 'var(--warning-primary)' : 'var(--border-default)',
-              color: note.isPinned ? 'var(--warning-primary)' : 'var(--text-secondary)'
-            }}
-            onMouseEnter={(e) => {
-              if (!note.isPinned) {
-                e.currentTarget.style.backgroundColor = 'var(--surface-hover)';
-                e.currentTarget.style.borderColor = 'var(--border-strong)';
-                e.currentTarget.style.color = 'var(--text-primary)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!note.isPinned) {
-                e.currentTarget.style.backgroundColor = 'var(--surface-input)';
-                e.currentTarget.style.borderColor = 'var(--border-default)';
-                e.currentTarget.style.color = 'var(--text-secondary)';
-              }
-            }}
-          >
-            <PinIcon filled={note.isPinned} />
-          </button>
-        )}
+        {/* Pin Button */}
+        {renderPinButton()}
 
         {/* Delete Note */}
-        <button
-          onClick={() => onDelete(note._id)}
-          title="Delete note"
-          className="
-            p-1.5 rounded-md border transition-all duration-200
-            hover:shadow-md
-          "
-          style={{
-            backgroundColor: 'var(--surface-input)',
-            borderColor: 'var(--border-default)',
-            color: 'var(--text-secondary)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(255, 107, 107, 0.15)';
-            e.currentTarget.style.borderColor = 'var(--danger-primary)';
-            e.currentTarget.style.color = 'var(--danger-primary)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--surface-input)';
-            e.currentTarget.style.borderColor = 'var(--border-default)';
-            e.currentTarget.style.color = 'var(--text-secondary)';
-          }}
-        >
-          <TrashIcon />
-        </button>
+        {renderDeleteButton()}
 
         {/* Share Toggle */}
-        <button
-          onClick={() => onShare(note._id)}
-          title={note.isPublic ? 'Disable sharing' : 'Share note'}
-          className="
-            p-1.5 rounded-md border transition-all duration-200
-            hover:shadow-md
-          "
-          style={{
-            backgroundColor: 'var(--surface-input)',
-            borderColor: 'var(--border-default)',
-            color: 'var(--text-secondary)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--surface-hover)';
-            e.currentTarget.style.borderColor = 'var(--border-strong)';
-            e.currentTarget.style.color = 'var(--text-primary)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--surface-input)';
-            e.currentTarget.style.borderColor = 'var(--border-default)';
-            e.currentTarget.style.color = 'var(--text-secondary)';
-          }}
-        >
-          <ShareIcon />
-        </button>
+        {renderShareButton()}
 
         {/* Copy Share Link */}
-        <button
-          onClick={() => note.isPublic && shareUrl && handleCopyLink()}
-          disabled={!note.isPublic || !shareUrl}
-          title={note.isPublic && shareUrl ? 'Copy share link' : 'Share note first'}
-          className={`
-            p-1.5 rounded-md border transition-all duration-200 hover:shadow-md
-            ${note.isPublic && shareUrl
-              ? 'cursor-pointer'
-              : 'opacity-40 cursor-not-allowed'
-            }
-          `}
-          style={{
-            backgroundColor: 'var(--surface-input)',
-            borderColor: 'var(--border-default)',
-            color: 'var(--text-secondary)'
-          }}
-          onMouseEnter={(e) => {
-            if (note.isPublic && shareUrl) {
-              e.currentTarget.style.backgroundColor = 'var(--surface-hover)';
-              e.currentTarget.style.borderColor = 'var(--border-strong)';
-              e.currentTarget.style.color = 'var(--text-primary)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (note.isPublic && shareUrl) {
-              e.currentTarget.style.backgroundColor = 'var(--surface-input)';
-              e.currentTarget.style.borderColor = 'var(--border-default)';
-              e.currentTarget.style.color = 'var(--text-secondary)';
-            }
-          }}
-        >
-          <LinkIcon />
-        </button>
+        {renderCopyLinkButton()}
       </div>
 
     </div>
@@ -333,8 +361,30 @@ const NoteCard = ({ note, onEdit, onDelete, onShare, onView, onPin }) => {
 
 /* ─── SVG Icons ────────────────────────────────────── */
 
+const noteShape = PropTypes.shape({
+  _id: PropTypes.string.isRequired,
+  title: PropTypes.string,
+  content: PropTypes.string,
+  category: PropTypes.string,
+  taskStatus: PropTypes.string,
+  isPublic: PropTypes.bool,
+  isPinned: PropTypes.bool,
+  shareToken: PropTypes.string,
+  createdAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+  updatedAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+});
+
+NoteCard.propTypes = {
+  note: noteShape.isRequired,
+  onEdit: PropTypes.func,
+  onDelete: PropTypes.func,
+  onShare: PropTypes.func,
+  onView: PropTypes.func,
+  onPin: PropTypes.func,
+};
+
 const EditIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
     <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -342,7 +392,7 @@ const EditIcon = () => (
 );
 
 const TrashIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="3 6 5 6 21 6"/>
     <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
@@ -352,7 +402,7 @@ const TrashIcon = () => (
 );
 
 const ShareIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="18" cy="5" r="3"/>
     <circle cx="6" cy="12" r="3"/>
@@ -363,7 +413,7 @@ const ShareIcon = () => (
 );
 
 const LinkIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
     <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
@@ -371,7 +421,7 @@ const LinkIcon = () => (
 );
 
 const ReadMoreIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
     <circle cx="12" cy="12" r="3"/>
@@ -381,12 +431,12 @@ const ReadMoreIcon = () => (
 // ✅ PR 2: Pin Icon
 const PinIcon = ({ filled = false }) => (
   filled ? (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true">
       <path d="M12 2c-5.33 4-8 6.5-8 9.5 0 3 2.5 5 8 5s8-2 8-5c0-3-2.67-5.5-8-9.5z"/>
       <circle cx="12" cy="19" r="3" fill="currentColor"/>
     </svg>
   ) : (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 2c-5.33 4-8 6.5-8 9.5 0 3 2.5 5 8 5s8-2 8-5c0-3-2.67-5.5-8-9.5z"/>
       <circle cx="12" cy="19" r="3"/>
@@ -394,5 +444,8 @@ const PinIcon = ({ filled = false }) => (
   )
 );
 
+PinIcon.propTypes = {
+  filled: PropTypes.bool,
+};
 
 export default NoteCard;

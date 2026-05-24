@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import {
   getNotesService,
   createNoteService,
@@ -26,30 +27,40 @@ export const NotesProvider = ({ children }) => {
     }
   }, []);
 
-  const createNote = async (data) => {
+  const createNote = useCallback(async (data) => {
     const res = await createNoteService(data);
     setNotes((prev) => [res.data.note || res.data, ...prev]);
     return res;
-  };
+  }, []);
 
-  const updateNote = async (id, data) => {
+  const updateNote = useCallback(async (id, data) => {
     const res = await updateNoteService(id, data);
     setNotes((prev) =>
-      prev.map((n) => (n._id === id ? res.data.note || res.data : n))
+      prev.map((n) => (n._id === id ? res.data.note || res.data : n)),
     );
     return res;
-  };
+  }, []);
 
-  const deleteNote = async (id) => {
+  const deleteNote = useCallback(async (id) => {
     await deleteNoteService(id);
     setNotes((prev) => prev.filter((n) => n._id !== id));
-  };
+  }, []);
+
+  // Sonar: memoize context value
+  const value = useMemo(
+    () => ({ notes, loading, error, fetchNotes, createNote, updateNote, deleteNote }),
+    [notes, loading, error, fetchNotes, createNote, updateNote, deleteNote],
+  );
 
   return (
-    <NotesContext.Provider value={{ notes, loading, error, fetchNotes, createNote, updateNote, deleteNote }}>
+    <NotesContext.Provider value={value}>
       {children}
     </NotesContext.Provider>
   );
+};
+
+NotesProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export const useNotes = () => useContext(NotesContext);

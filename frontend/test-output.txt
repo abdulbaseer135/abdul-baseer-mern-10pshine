@@ -1,0 +1,348 @@
+
+> frontend@1.0.0 test:coverage
+> react-scripts test --coverage --watchAll=false --coverageReporters=lcov text
+
+FAIL src/context/NotesContext.test.jsx
+  ΓùÅ Test suite failed to run
+
+    Cannot find module '../../services/notes.service' from 'src/context/NotesContext.test.jsx'
+
+      4 | import * as notesService from '../../services/notes.service';
+      5 |
+    > 6 | jest.mock('../../services/notes.service');
+        |      ^
+      7 |
+      8 | describe('NotesContext', () => {
+      9 |   const mockNote = {
+
+      at Resolver.resolveModule (node_modules/react-scripts/node_modules/jest-resolve/build/resolver.js:324:11)
+      at Object.mock (src/context/NotesContext.test.jsx:6:6)
+
+PASS src/store/slices/authSlice.test.js
+PASS src/store/slices/themeSlice.test.js
+PASS src/store/slices/notesSlice.test.js
+PASS src/pages/DashboardPage/DashboardPage.test.jsx
+FAIL src/utils/noteSortUtils.test.js
+  ΓùÅ Test suite failed to run
+
+    Cannot find module '../noteSortUtils' from 'src/utils/noteSortUtils.test.js'
+
+    > 1 | import {
+        | ^
+      2 |   SORT_OPTIONS,
+      3 |   sortNotesByOption,
+      4 | } from '../noteSortUtils';
+
+      at Resolver.resolveModule (node_modules/react-scripts/node_modules/jest-resolve/build/resolver.js:324:11)
+      at Object.require (src/utils/noteSortUtils.test.js:1:1)
+
+FAIL src/hooks/useProfileImage.test.js
+  ΓùÅ Test suite failed to run
+
+    Cannot find module '../../services/profile.service' from 'src/hooks/useProfileImage.test.js'
+
+      4 |
+      5 | // Mock the profile service
+    > 6 | jest.mock('../../services/profile.service');
+        |      ^
+      7 |
+      8 | describe('useProfileImage Hook', () => {
+      9 |   const mockOnFetchProfile = jest.fn();
+
+      at Resolver.resolveModule (node_modules/react-scripts/node_modules/jest-resolve/build/resolver.js:324:11)
+      at Object.mock (src/hooks/useProfileImage.test.js:6:6)
+
+FAIL src/context/AuthContext.test.jsx
+  ΓùÅ Test suite failed to run
+
+    Cannot find module '../AuthContext' from 'src/context/AuthContext.test.jsx'
+
+      1 | import React from 'react';
+      2 | import { render, screen, act } from '@testing-library/react';
+    > 3 | import { AuthContext, AuthProvider, useAuth } from '../AuthContext';
+        | ^
+      4 |
+      5 | describe('AuthContext', () => {
+      6 |   const mockUser = {
+
+      at Resolver.resolveModule (node_modules/react-scripts/node_modules/jest-resolve/build/resolver.js:324:11)
+      at Object.require (src/context/AuthContext.test.jsx:3:1)
+
+FAIL src/services/notes.service.test.js
+  ΓùÅ Test suite failed to run
+
+    Cannot find module '../api' from 'src/services/notes.service.test.js'
+
+      10 | import api from '../api';
+      11 |
+    > 12 | jest.mock('../api');
+         |      ^
+      13 |
+      14 | describe('Notes Service', () => {
+      15 |   const mockNote = {
+
+      at Resolver.resolveModule (node_modules/react-scripts/node_modules/jest-resolve/build/resolver.js:324:11)
+      at Object.mock (src/services/notes.service.test.js:12:6)
+
+PASS src/components/common/Modal/Modal.test.jsx
+FAIL src/utils/noteImportExportUtils.test.js
+  ΓùÅ Test suite failed to run
+
+    Cannot find module '../../services/notes.service' from 'src/utils/noteImportExportUtils.test.js'
+
+      4 |
+      5 | jest.mock('react-toastify');
+    > 6 | jest.mock('../../services/notes.service');
+        |      ^
+      7 |
+      8 | describe('Note Import/Export Utilities', () => {
+      9 |   beforeEach(() => {
+
+      at Resolver.resolveModule (node_modules/react-scripts/node_modules/jest-resolve/build/resolver.js:324:11)
+      at Object.mock (src/utils/noteImportExportUtils.test.js:6:6)
+
+PASS src/components/common/Button/Button.test.jsx
+FAIL src/services/api.test.js
+  ΓùÅ Test suite failed to run
+
+    Cannot find module '../api' from 'src/services/api.test.js'
+
+      1 | import axios from 'axios';
+    > 2 | import api from '../api';
+        | ^
+      3 |
+      4 | jest.mock('axios');
+      5 |
+
+      at Resolver.resolveModule (node_modules/react-scripts/node_modules/jest-resolve/build/resolver.js:324:11)
+      at Object.require (src/services/api.test.js:2:1)
+
+PASS src/components/notes/NoteEditor/NoteEditor.test.jsx
+PASS src/components/common/Navbar/Navbar.test.jsx
+PASS src/components/notes/NoteViewer/NoteViewer.test.jsx
+  ΓùÅ Console
+
+    console.error
+      Warning: Failed prop type: The prop `onClose` is marked as required in `NoteViewer`, but its value is `undefined`.
+          at note (X:\PP\abdul-baseer-mern-10pshine\frontend\src\components\notes\NoteViewer\NoteViewer.jsx:5:23)
+
+      14 |
+      15 |   it('renders note title', () => {
+    > 16 |     renderWithProviders(<NoteViewer note={mockNote} />);
+         |                         ^
+      17 |     expect(screen.getByText('Test Note')).toBeInTheDocument();
+      18 |   });
+      19 |
+
+      at printWarning (node_modules/react/cjs/react-jsx-dev-runtime.development.js:87:30)
+      at error (node_modules/react/cjs/react-jsx-dev-runtime.development.js:61:7)
+      at checkPropTypes (node_modules/react/cjs/react-jsx-dev-runtime.development.js:631:11)
+      at validatePropTypes (node_modules/react/cjs/react-jsx-dev-runtime.development.js:1164:7)
+      at jsxWithValidation (node_modules/react/cjs/react-jsx-dev-runtime.development.js:1303:7)
+      at Object.<anonymous> (src/components/notes/NoteViewer/NoteViewer.test.jsx:16:25)
+
+PASS src/components/notes/NoteCard/NoteCard.test.jsx
+PASS src/pages/AuthPage/SignupPage.test.jsx
+  ΓùÅ Console
+
+    console.error
+      Email already exists
+
+      34 |       return true;
+      35 |     } catch (err) {
+    > 36 |       console.error(err); // Sonar: handle caught exception
+         |               ^
+      37 |       toast.error('Something went wrong. Try again.');
+      38 |       return false;
+      39 |     }
+
+      at error (src/hooks/useAuth.js:36:15)
+      at onSubmit (src/pages/AuthPage/SignupPage.jsx:21:21)
+      at error (node_modules/react-hook-form/src/logic/createFormControl.ts:1437:18)
+
+FAIL src/utils/helpers.test.js
+  ΓùÅ Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     ΓÇó If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     ΓÇó If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     ΓÇó To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     ΓÇó If you need a custom transformation specify a "transform" option in your config.
+     ΓÇó If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    SyntaxError: X:\PP\abdul-baseer-mern-10pshine\frontend\src\utils\helpers.test.js: Identifier directly after number. (50:13)
+
+      48 |
+      49 |     it('should return minutes for times less than 60 minutes ago', () => {
+    > 50 |       const 5MinutesAgo = new Date(now.getTime() - 5 * 60000);
+         |              ^
+      51 |       expect(formatRelativeTime(5MinutesAgo.toISOString())).toBe('5m ago');
+      52 |     });
+      53 |
+
+      at constructor (node_modules/@babel/parser/src/parse-error.ts:95:45)
+      at FlowParserMixin.toParseError [as raise] (node_modules/@babel/parser/src/tokenizer/index.ts:1504:19)
+      at FlowParserMixin.raise [as readNumber] (node_modules/@babel/parser/src/tokenizer/index.ts:1301:18)
+      at FlowParserMixin.readNumber (node_modules/@babel/parser/src/tokenizer/index.ts:986:14)
+      at FlowParserMixin.getTokenFromCode (node_modules/@babel/parser/src/plugins/jsx/index.ts:631:13)
+      at FlowParserMixin.getTokenFromCode (node_modules/@babel/parser/src/plugins/flow/index.ts:2427:15)
+      at FlowParserMixin.getTokenFromCode [as nextToken] (node_modules/@babel/parser/src/tokenizer/index.ts:279:10)
+      at FlowParserMixin.nextToken [as next] (node_modules/@babel/parser/src/tokenizer/index.ts:122:10)
+      at FlowParserMixin.next [as parseVarStatement] (node_modules/@babel/parser/src/parser/statement.ts:1250:10)
+      at FlowParserMixin.parseVarStatement [as parseStatementContent] (node_modules/@babel/parser/src/parser/statement.ts:612:21)
+      at FlowParserMixin.parseStatementContent (node_modules/@babel/parser/src/parser/statement.ts:482:17)
+      at FlowParserMixin.parseStatementLike (node_modules/@babel/parser/src/plugins/flow/index.ts:1991:26)
+      at FlowParserMixin.parseStatementLike [as parseStatementListItem] (node_modules/@babel/parser/src/parser/statement.ts:431:17)
+      at FlowParserMixin.parseStatementListItem [as parseBlockOrModuleBlockBody] (node_modules/@babel/parser/src/parser/statement.ts:1444:16)
+      at FlowParserMixin.parseBlockOrModuleBlockBody [as parseBlockBody] (node_modules/@babel/parser/src/parser/statement.ts:1417:10)
+      at FlowParserMixin.parseBlockBody [as parseBlock] (node_modules/@babel/parser/src/parser/statement.ts:1385:10)
+      at FlowParserMixin.parseBlock (node_modules/@babel/parser/src/parser/expression.ts:2621:24)
+      at parseFunctionBody (node_modules/@babel/parser/src/plugins/flow/index.ts:1941:17)
+      at FlowParserMixin.parse [as forwardNoArrowParamsConversionAt] (node_modules/@babel/parser/src/plugins/flow/index.ts:2225:18)
+      at FlowParserMixin.forwardNoArrowParamsConversionAt [as parseFunctionBody] (node_modules/@babel/parser/src/plugins/flow/index.ts:1940:14)
+      at FlowParserMixin.parseFunctionBody [as parseArrowExpression] (node_modules/@babel/parser/src/parser/expression.ts:2562:10)
+      at FlowParserMixin.parseArrowExpression (node_modules/@babel/parser/src/parser/expression.ts:1850:12)
+      at FlowParserMixin.parseParenAndDistinguishExpression (node_modules/@babel/parser/src/plugins/flow/index.ts:3197:20)
+      at FlowParserMixin.parseParenAndDistinguishExpression (node_modules/@babel/parser/src/parser/expression.ts:1170:21)
+      at FlowParserMixin.parseExprAtom (node_modules/@babel/parser/src/plugins/jsx/index.ts:583:22)
+      at FlowParserMixin.parseExprAtom [as parseExprSubscripts] (node_modules/@babel/parser/src/parser/expression.ts:742:23)
+      at FlowParserMixin.parseExprSubscripts [as parseUpdate] (node_modules/@babel/parser/src/parser/expression.ts:721:21)
+      at FlowParserMixin.parseUpdate [as parseMaybeUnary] (node_modules/@babel/parser/src/parser/expression.ts:683:23)
+      at FlowParserMixin.parseMaybeUnary [as parseMaybeUnaryOrPrivate] (node_modules/@babel/parser/src/parser/expression.ts:417:14)
+      at FlowParserMixin.parseMaybeUnaryOrPrivate [as parseExprOps] (node_modules/@babel/parser/src/parser/expression.ts:429:23)
+      at FlowParserMixin.parseExprOps [as parseMaybeConditional] (node_modules/@babel/parser/src/parser/expression.ts:384:23)
+      at FlowParserMixin.parseMaybeConditional (node_modules/@babel/parser/src/parser/expression.ts:301:21)
+      at FlowParserMixin.parseMaybeAssign (node_modules/@babel/parser/src/plugins/flow/index.ts:3098:20)
+      at parseMaybeAssign (node_modules/@babel/parser/src/parser/expression.ts:257:12)
+      at FlowParserMixin.callback [as allowInAnd] (node_modules/@babel/parser/src/parser/expression.ts:3197:12)
+      at FlowParserMixin.allowInAnd [as parseMaybeAssignAllowIn] (node_modules/@babel/parser/src/parser/expression.ts:256:17)
+      at FlowParserMixin.parseMaybeAssignAllowIn [as parseMaybeAssignAllowInOrVoidPattern] (node_modules/@babel/parser/src/parser/expression.ts:3311:17)
+      at FlowParserMixin.parseMaybeAssignAllowInOrVoidPattern [as parseExprListItem] (node_modules/@babel/parser/src/parser/expression.ts:2793:18)
+      at FlowParserMixin.parseExprListItem [as parseCallExpressionArguments] (node_modules/@babel/parser/src/parser/expression.ts:1042:14)
+      at FlowParserMixin.parseCallExpressionArguments [as parseCoverCallAndAsyncArrowHead] (node_modules/@babel/parser/src/parser/expression.ts:922:29)
+      at FlowParserMixin.parseCoverCallAndAsyncArrowHead (node_modules/@babel/parser/src/parser/expression.ts:804:19)
+      at FlowParserMixin.parseSubscript (node_modules/@babel/parser/src/plugins/flow/index.ts:3313:20)
+      at FlowParserMixin.parseSubscript (node_modules/@babel/parser/src/parser/expression.ts:763:19)
+      at FlowParserMixin.parseSubscripts (node_modules/@babel/parser/src/plugins/flow/index.ts:3257:20)
+      at FlowParserMixin.parseSubscripts [as parseExprSubscripts] (node_modules/@babel/parser/src/parser/expression.ts:748:17)
+      at FlowParserMixin.parseExprSubscripts [as parseUpdate] (node_modules/@babel/parser/src/parser/expression.ts:721:21)
+      at FlowParserMixin.parseUpdate [as parseMaybeUnary] (node_modules/@babel/parser/src/parser/expression.ts:683:23)
+      at FlowParserMixin.parseMaybeUnary [as parseMaybeUnaryOrPrivate] (node_modules/@babel/parser/src/parser/expression.ts:417:14)
+      at FlowParserMixin.parseMaybeUnaryOrPrivate [as parseExprOps] (node_modules/@babel/parser/src/parser/expression.ts:429:23)
+      at FlowParserMixin.parseExprOps [as parseMaybeConditional] (node_modules/@babel/parser/src/parser/expression.ts:384:23)
+
+-------------------------------------|---------|----------|---------|---------|-----------------------------------------------------------------------------------------------
+File                                 | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                                                                             
+-------------------------------------|---------|----------|---------|---------|-----------------------------------------------------------------------------------------------
+All files                            |    23.6 |    14.63 |   18.86 |   23.22 |                                                                                               
+ src                                 |       0 |        0 |       0 |       0 |                                                                                               
+  App.jsx                            |       0 |        0 |       0 |       0 | 17-70                                                                                         
+  index.jsx                          |       0 |      100 |     100 |       0 | 8-9                                                                                           
+ src/components/common               |   38.04 |     5.07 |    4.76 |   40.69 |                                                                                               
+  ProtectedRoute.jsx                 |       0 |        0 |       0 |       0 | 7-23                                                                                          
+  UIComponents.jsx                   |    43.2 |      5.3 |    5.55 |   45.45 | 76-79,137,176-227,255-261,290-298,320-338,393,416-432,442,467-470,501-508,530-557,592-593,597 
+ src/components/common/Button        |       0 |        0 |       0 |       0 |                                                                                               
+  Button.jsx                         |       0 |        0 |       0 |       0 |                                                                                               
+ src/components/common/Modal         |   86.95 |     61.9 |   83.33 |      85 |                                                                                               
+  Modal.jsx                          |   86.95 |     61.9 |   83.33 |      85 | 25-26,160                                                                                     
+ src/components/common/Navbar        |   34.28 |       50 |   26.66 |    30.3 |                                                                                               
+  Navbar.jsx                         |   34.28 |       50 |   26.66 |    30.3 | 9,38-44,71-199                                                                                
+ src/components/common/Skeleton      |       0 |        0 |       0 |       0 |                                                                                               
+  NoteSkeleton.jsx                   |       0 |        0 |       0 |       0 | 3-27                                                                                          
+ src/components/common/Spinner       |       0 |      100 |       0 |       0 |                                                                                               
+  Spinner.js                         |       0 |      100 |       0 |       0 | 1-2                                                                                           
+ src/components/dashboard            |       0 |        0 |       0 |       0 |                                                                                               
+  DashboardControls.jsx              |       0 |        0 |       0 |       0 | 4-126                                                                                         
+ src/components/notes/NoteCard       |   69.76 |    34.42 |   55.55 |   66.66 |                                                                                               
+  NoteCard.jsx                       |   69.76 |    34.42 |   55.55 |   66.66 | 34,38,43-44,81-82,88,104,120,142-165,182-195,216,232,323-333,430                              
+ src/components/notes/NoteEditor     |       0 |        0 |       0 |       0 |                                                                                               
+  NoteEditor.jsx                     |       0 |        0 |       0 |       0 | 10-554                                                                                        
+  RichTextEditor.jsx                 |       0 |        0 |       0 |       0 | 7-213                                                                                         
+ src/components/notes/NoteViewer     |     100 |    78.94 |     100 |     100 |                                                                                               
+  NoteViewer.jsx                     |     100 |    78.94 |     100 |     100 | 80-141                                                                                        
+ src/context                         |       0 |        0 |       0 |       0 |                                                                                               
+  AuthContext.jsx                    |       0 |        0 |       0 |       0 | 4-45                                                                                          
+  NotesContext.jsx                   |       0 |        0 |       0 |       0 | 10-66                                                                                         
+ src/hooks                           |    7.14 |        0 |    6.25 |    6.86 |                                                                                               
+  useAuth.js                         |   40.38 |      100 |      40 |      38 | 19-26,43-47,52-57,62-69,74-81,86                                                              
+  useDashboardHandlers.js            |    4.54 |        0 |       0 |    4.54 | 11-50                                                                                         
+  useDeleteModal.js                  |    6.25 |        0 |       0 |    6.66 | 8-29                                                                                          
+  useNoteEditor.js                   |       5 |        0 |       0 |       5 | 8-41                                                                                          
+  useNoteImportExport.js             |    5.88 |        0 |       0 |    5.88 | 5-30                                                                                          
+  useNotes.js                        |       0 |        0 |       0 |       0 | 19-112                                                                                        
+  useProfileImage.js                 |       0 |        0 |       0 |       0 | 4-80                                                                                          
+  useSocket.js                       |       0 |        0 |       0 |       0 | 4-34                                                                                          
+  useSpeechToText.js                 |       0 |        0 |       0 |       0 | 10-160                                                                                        
+  useTheme.js                        |       0 |        0 |       0 |       0 |                                                                                               
+ src/pages/AuthPage                  |   27.81 |    25.86 |      20 |   26.89 |                                                                                               
+  ForgotPasswordPage.jsx             |       0 |        0 |       0 |       0 | 7-210                                                                                         
+  FormComponents.jsx                 |   87.09 |    44.44 |   66.66 |    90.9 | 54-56                                                                                         
+  LoginPage.jsx                      |       0 |        0 |       0 |       0 | 6-277                                                                                         
+  OTPVerificationPage.jsx            |       0 |        0 |       0 |       0 | 6-280                                                                                         
+  PasswordStrengthBar.jsx            |   74.07 |       65 |     100 |   88.88 | 12,20                                                                                         
+  PasswordValidationRequirements.jsx |     100 |       80 |     100 |     100 | 4                                                                                             
+  ResetPasswordPage.jsx              |       0 |        0 |       0 |       0 | 7-348                                                                                         
+  SignupFormInput.jsx                |   76.19 |    79.16 |      50 |   73.68 | 12,54-72                                                                                      
+  SignupPage.jsx                     |     100 |      100 |     100 |     100 |                                                                                               
+ src/pages/DashboardPage             |   12.08 |        0 |       0 |   13.75 |                                                                                               
+  DashboardPage.jsx                  |    2.77 |        0 |       0 |    3.27 | 36-402                                                                                        
+  EmptyNotesState.jsx                |   66.66 |        0 |       0 |   66.66 | 4                                                                                             
+  NoFilterMatchState.jsx             |   66.66 |      100 |       0 |   66.66 | 4                                                                                             
+  NotesGridView.jsx                  |    37.5 |        0 |       0 |    37.5 | 15-22                                                                                         
+  PaginationControls.jsx             |      40 |      100 |       0 |      40 | 4-23                                                                                          
+ src/pages/NotFoundPage              |       0 |      100 |       0 |       0 |                                                                                               
+  NotFoundPage.jsx                   |       0 |      100 |       0 |       0 | 3-4                                                                                           
+ src/pages/NoteEditorPage            |       0 |        0 |       0 |       0 |                                                                                               
+  NoteEditorPage.jsx                 |       0 |        0 |       0 |       0 |                                                                                               
+ src/pages/ProfilePage               |       0 |        0 |       0 |       0 |                                                                                               
+  ChangePasswordTab.jsx              |       0 |        0 |       0 |       0 | 6-204                                                                                         
+  DangerZoneTab.jsx                  |       0 |      100 |       0 |       0 | 3-81                                                                                          
+  PasswordField.jsx                  |       0 |        0 |       0 |       0 | 4-97                                                                                          
+  PasswordRequirements.jsx           |       0 |        0 |       0 |       0 | 1-49                                                                                          
+  PasswordStrengthIndicator.jsx      |       0 |        0 |       0 |       0 | 3-31                                                                                          
+  ProfileAvatarSection.jsx           |       0 |        0 |       0 |       0 | 3-172                                                                                         
+  ProfileFormTab.jsx                 |       0 |        0 |       0 |       0 | 3-123                                                                                         
+  ProfilePage.jsx                    |       0 |        0 |       0 |       0 | 16-656                                                                                        
+ src/pages/SharedNotePage            |       0 |        0 |       0 |       0 |                                                                                               
+  SharedNotePage.jsx                 |       0 |        0 |       0 |       0 | 7-398                                                                                         
+ src/services                        |   24.19 |        0 |       0 |   24.59 |                                                                                               
+  api.js                             |   14.28 |        0 |       0 |   15.38 | 9-24,35-54                                                                                    
+  auth.service.js                    |   35.71 |      100 |       0 |   35.71 | 5-6,10-11,15,21-22,26-27,31,38-39,45-46,51-52,57-58                                           
+  notes.service.js                   |      20 |        0 |       0 |      20 | 5-6,11-12,17-18,23-24,29-30,36-47,54-76,83-84,90-91,97-98                                     
+  profile.service.js                 |   33.33 |      100 |       0 |   33.33 | 4-5,9-10,14-15,19-20,25-26,31-32                                                              
+ src/store                           |       0 |      100 |     100 |       0 |                                                                                               
+  index.js                           |       0 |        0 |       0 |       0 |                                                                                               
+  store.js                           |       0 |      100 |     100 |       0 | 7-17                                                                                          
+ src/store/slices                    |   69.59 |       50 |   68.33 |   68.91 |                                                                                               
+  authSlice.js                       |   52.05 |    21.42 |    42.3 |   50.81 | 7-10,23-26,31-34,39-42,47-50,59,105-129                                                       
+  notesSlice.js                      |   82.71 |     57.5 |   87.09 |   80.28 | 7-11,17-20,26-29,35-39                                                                        
+  themeSlice.js                      |   82.35 |    66.66 |     100 |    87.5 | 12-13                                                                                         
+ src/utils                           |   28.16 |     5.37 |   14.81 |   34.18 |                                                                                               
+  constants.js                       |     100 |       50 |     100 |     100 | 1                                                                                             
+  dialogUtils.js                     |      75 |       50 |     100 |     100 | 3-8                                                                                           
+  helpers.js                         |   11.11 |        0 |       0 |   15.21 | 4-6,14-26,34-38,42-45,49-51,60-67,75-89                                                       
+  noteConstants.js                   |     100 |      100 |     100 |     100 |                                                                                               
+  noteImportExportUtils.js           |   15.38 |        0 |       0 |      16 | 7-14,19-26,31-39                                                                              
+  noteSortUtils.js                   |   27.58 |        0 |       0 |   33.33 | 14-15,19-21,25-27,31-33,37-39,56-57                                                           
+  testUtils.js                       |   83.33 |      100 |   66.66 |   83.33 | 34                                                                                            
+-------------------------------------|---------|----------|---------|---------|-----------------------------------------------------------------------------------------------
+Test Suites: 8 failed, 11 passed, 19 total
+Tests:       130 passed, 130 total
+Snapshots:   0 total
+Time:        9.206 s, estimated 10 s
+Ran all test suites.

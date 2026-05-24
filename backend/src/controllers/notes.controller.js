@@ -1,127 +1,165 @@
 const asyncHandler = require('../utils/asyncHandler');
-const ApiResponse  = require('../utils/ApiResponse');
+const ApiResponse = require('../utils/ApiResponse');
 const notesService = require('../services/notes.service');
-const { getIO }    = require('../config/socket');
-const crypto       = require('crypto'); // ✅ for generating share token
-
+const { getIO } = require('../config/socket');
+const crypto = require('node:crypto');
 
 const createNote = asyncHandler(async (req, res) => {
+  console.log('[DEBUG createNote] userId:', req.user._id.toString(), 'body:', req.body);
+
   const note = await notesService.create(req.user._id, req.body);
+
+  console.log('[DEBUG createNote] SUCCESS - created note mongoId:', note._id.toString(), 'noteId:', note.noteId);
+
   getIO().to(req.user._id.toString()).emit('note:created', note);
   return res.status(201).json(new ApiResponse(201, note, 'Note created successfully'));
 });
 
-
 const getAllNotes = asyncHandler(async (req, res) => {
-  const page   = parseInt(req.query.page)  || 1;
-  const limit  = parseInt(req.query.limit) || 10;
-  const search = req.query.search?.trim()  || '';
+  const page = Number.parseInt(req.query.page, 10) || 1;
+  const limit = Number.parseInt(req.query.limit, 10) || 10;
+  const search = req.query.search?.trim() || '';
+
+  console.log('[DEBUG getAllNotes] userId:', req.user._id.toString(), 'page:', page, 'limit:', limit, 'search:', search);
+
   const result = await notesService.getAll(req.user._id, page, limit, search);
+
+  console.log('[DEBUG getAllNotes] fetched notes count:', result?.notes?.length || 0, 'totalPages:', result?.totalPages);
+
   return res.status(200).json(new ApiResponse(200, result, 'Notes fetched successfully'));
 });
-
 
 const getNoteById = asyncHandler(async (req, res) => {
   const note = await notesService.getOne(req.params.id, req.user._id);
   return res.status(200).json(new ApiResponse(200, note, 'Note fetched successfully'));
 });
 
-
 const updateNote = asyncHandler(async (req, res) => {
+  console.log('[DEBUG updateNote] userId:', req.user._id.toString(), 'noteId:', req.params.id);
+
   const note = await notesService.update(req.params.id, req.user._id, req.body);
   getIO().to(req.user._id.toString()).emit('note:updated', note);
+
   return res.status(200).json(new ApiResponse(200, note, 'Note updated successfully'));
 });
-
 
 const deleteNote = asyncHandler(async (req, res) => {
   await notesService.remove(req.params.id, req.user._id);
   getIO().to(req.user._id.toString()).emit('note:deleted', { id: req.params.id });
+
   return res.status(200).json(new ApiResponse(200, null, 'Note deleted successfully'));
 });
 
-
-// ─── Export ────────────────────────────────────────────────────────────
 const exportNotes = asyncHandler(async (req, res) => {
   const result = await notesService.getAll(req.user._id, 1, 1000, '');
-  const notes  = result.notes ?? result;
+  const notes = result.notes ?? result;
 
-  // ✅ Include noteId in export for portable identity
-  const exportData = notes.map(({ _id, noteId, title, content, createdAt, updatedAt }) => ({
-    _id,           // Include MongoDB _id for reference
-    noteId,        // Include portable noteId for re-import
-    title,
-    content,
-    createdAt,
-    updatedAt,
-  }));
+  const exportData = notes.map(
+    ({
+      _id,
+      noteId,
+      title,
+      content,
+      category,
+      taskStatus,
+      isPinned,
+      isPublic,
+      shareToken,
+      createdAt,
+      updatedAt,
+    }) => ({
+      _id,
+      noteId,
+      title,
+      content,
+      category,
+      taskStatus,
+      isPinned,
+      isPublic,
+      shareToken,
+      createdAt,
+      updatedAt,
+    })
+  );
 
-  const payload = JSON.stringify({ exported_at: new Date(), notes: exportData }, null, 2);
+  const payload = JSON.stringify(
+    { exported_at: new Date(), notes: exportData },
+    null,
+    2
+  );
 
   res.setHeader('Content-Disposition', 'attachment; filename="notes.json"');
   res.setHeader('Content-Type', 'application/json');
   return res.status(200).send(payload);
 });
 
-
-// ─── Import ────────────────────────────────────────────────────────────
 const importNotes = asyncHandler(async (req, res) => {
   const { notes } = req.body;
+  const userId = req.user._id.toString();
+
+  console.log('[DEBUG importNotes] userId:', userId, 'totalNotes to import:', notes?.length || 0);
 
   if (!Array.isArray(notes) || notes.length === 0) {
-    return res.status(400).json(new ApiResponse(400, null, 'Invalid import file — notes array required'));
+    return res
+      .status(400)
+      .json(new ApiResponse(400, null, 'Invalid import file — notes array required'));
   }
 
   const validNotes = notes.filter((n) => n.title?.trim());
-  if (validNotes.length === 0) {
-    return res.status(400).json(new ApiResponse(400, null, 'No valid notes found in import file'));
-  }
 
-  // ═════════════════════════════════════════════════════════════════════
-  // ✅ IMPORT STRATEGY - OPTION B: Skip duplicates and report
-  // Preserve noteId if provided, otherwise generate new one
-  // Do NOT trust incoming userId from uploaded JSON
-  // ═════════════════════════════════════════════════════════════════════
+  if (validNotes.length === 0) {
+    return res
+      .status(400)
+      .json(new ApiResponse(400, null, 'No valid notes found in import file'));
+  }
 
   const importedNotes = [];
   const skippedNotes = [];
 
   for (const n of validNotes) {
     const noteTitle = n.title.trim();
-    let noteToCreate = {
+
+    const noteToCreate = {
       title: noteTitle,
       content: n.content || '',
-      userId: req.user._id,  // ✅ Force userId to authenticated user
+      userId: req.user._id,
+      category: n.category || 'general',
+      taskStatus: n.taskStatus || null,
+      isPinned: n.isPinned || false,
     };
 
-    // If noteId is provided in import file and has valid format, try to preserve it
+    // ✅ Check for duplicate ONLY for current user with same noteId
     if (n.noteId && typeof n.noteId === 'string') {
-      const existingNote = await notesService.getByNoteId(n.noteId);
+      const existingNote = await notesService.getByNoteId(n.noteId, req.user._id);
       if (existingNote) {
-        // ✅ Skip if this noteId already exists for this user
+        console.log('[DEBUG importNotes] SKIP - duplicate noteId for user:', n.noteId);
         skippedNotes.push({
           noteId: n.noteId,
           title: noteTitle,
-          reason: 'Note with this ID already exists',
+          reason: 'Note with this ID already exists for you',
         });
         continue;
       }
-      // ✅ Use the provided noteId (preserve identity)
+
       noteToCreate.noteId = n.noteId;
     }
-    // If no noteId provided, the model will generate one automatically
 
     try {
       const created = await notesService.create(req.user._id, noteToCreate);
+      console.log('[DEBUG importNotes] IMPORTED - noteId:', created.noteId, '_id:', created._id.toString());
       importedNotes.push(created);
-      getIO().to(req.user._id.toString()).emit('note:created', created);
+      getIO().to(userId).emit('note:created', created);
     } catch (error) {
+      console.error('[DEBUG importNotes] FAILED to import note:', error.message);
       skippedNotes.push({
         title: noteTitle,
         reason: error.message || 'Failed to import note',
       });
     }
   }
+
+  const message = `${importedNotes.length} note(s) imported successfully, ${skippedNotes.length} skipped`;
+  console.log('[DEBUG importNotes] COMPLETE:', message);
 
   return res.status(201).json(
     new ApiResponse(
@@ -132,35 +170,33 @@ const importNotes = asyncHandler(async (req, res) => {
         skipped: skippedNotes,
         imported: importedNotes,
       },
-      `${importedNotes.length} note(s) imported, ${skippedNotes.length} skipped`
+      message
     )
   );
 });
 
-
-// ─── Toggle Share ───────────────────────────────────────────────────────
 const toggleShare = asyncHandler(async (req, res) => {
   const note = await notesService.getOne(req.params.id, req.user._id);
 
   if (note.isPublic) {
-    // ✅ Turn OFF sharing — clear token
-    note.isPublic   = false;
+    note.isPublic = false;
     note.shareToken = null;
   } else {
-    // ✅ Turn ON sharing — generate a secure unique token
-    note.isPublic   = true;
+    note.isPublic = true;
     note.shareToken = crypto.randomBytes(32).toString('hex');
   }
 
   await note.save();
 
   return res.status(200).json(
-    new ApiResponse(200, note, note.isPublic ? 'Note sharing enabled' : 'Note sharing disabled')
+    new ApiResponse(
+      200,
+      note,
+      note.isPublic ? 'Note sharing enabled' : 'Note sharing disabled'
+    )
   );
 });
 
-
-// ─── Get Shared Note (public — no auth) ────────────────────────────────
 const getSharedNote = asyncHandler(async (req, res) => {
   const note = await notesService.getByShareToken(req.params.token);
 
@@ -170,25 +206,27 @@ const getSharedNote = asyncHandler(async (req, res) => {
     );
   }
 
-  return res.status(200).json(new ApiResponse(200, note, 'Shared note fetched successfully'));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, note, 'Shared note fetched successfully'));
 });
 
-
-// ─── Toggle Pin (PR 2) ──────────────────────────────────────────────────
 const togglePin = asyncHandler(async (req, res) => {
   const note = await notesService.getOne(req.params.id, req.user._id);
 
-  // Toggle isPinned
   note.isPinned = !note.isPinned;
   await note.save();
 
   getIO().to(req.user._id.toString()).emit('note:updated', note);
 
   return res.status(200).json(
-    new ApiResponse(200, note, note.isPinned ? 'Note pinned successfully' : 'Note unpinned successfully')
+    new ApiResponse(
+      200,
+      note,
+      note.isPinned ? 'Note pinned successfully' : 'Note unpinned successfully'
+    )
   );
 });
-
 
 module.exports = {
   createNote,
@@ -198,7 +236,7 @@ module.exports = {
   deleteNote,
   exportNotes,
   importNotes,
-  toggleShare,   // ✅
-  getSharedNote, // ✅
-  togglePin,     // ✅ PR 2
+  toggleShare,
+  getSharedNote,
+  togglePin,
 };

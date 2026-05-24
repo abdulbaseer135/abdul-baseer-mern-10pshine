@@ -1,0 +1,19 @@
+
+> frontend@1.0.0 test
+> react-scripts test --watchAll=false --testPathPattern=Button
+
+PASS src/components/common/Button/Button.test.jsx
+  Button Component
+    ΓêÜ renders button with text (77 ms)
+    ΓêÜ calls onClick handler when clicked (14 ms)
+    ΓêÜ applies custom className (3 ms)
+    ΓêÜ disables button when disabled prop is true (8 ms)
+    ΓêÜ renders button with primary variant by default (2 ms)
+    ΓêÜ renders button with custom variant (2 ms)
+    ΓêÜ renders button with different sizes (3 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       7 passed, 7 total
+Snapshots:   0 total
+Time:        3.3 s, estimated 5 s
+Ran all test suites matching /Button/i.
