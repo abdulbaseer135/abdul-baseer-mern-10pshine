@@ -1,4 +1,4 @@
-const http = require('http');
+const http = require('node:http'); // Sonar: prefer node:http over http
 const app = require('./app');
 const connectDB = require('./config/db');
 const { PORT } = require('./config/env');

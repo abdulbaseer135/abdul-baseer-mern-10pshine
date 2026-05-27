@@ -1,0 +1,2989 @@
+
+> backend@1.0.0 test
+> mocha --reporter json
+
+Γùç injected env (0) from .env // tip: Γîü auth for agents [www.vestauth.com]
+[15:27:07.132] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1180fa8b49dd2785500538"
+    [35mtitle[39m: "New"
+[15:27:07.147] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1180fa8b49dd2785500538"
+    [35mnoteId[39m: "6a1180fb8b49dd278550053a"
+[15:27:07.148] [32mINFO[39m (13784): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a1180fa8b49dd2785500538"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: ""
+[15:27:07.158] [32mINFO[39m (13784): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a1180fa8b49dd2785500538"
+    [35mcount[39m: 2
+[15:27:07.158] [32mINFO[39m (13784): [36mFetching single note[39m
+    [35muserId[39m: "6a1180fa8b49dd2785500538"
+    [35mnoteId[39m: "6a1180fb8b49dd278550053a"
+[15:27:07.160] [32mINFO[39m (13784): [36mNote fetched successfully[39m
+    [35muserId[39m: "6a1180fa8b49dd2785500538"
+    [35mnoteId[39m: "6a1180fb8b49dd278550053a"
+[15:27:07.160] [32mINFO[39m (13784): [36mUpdating note[39m
+    [35muserId[39m: "6a1180fa8b49dd2785500538"
+    [35mnoteId[39m: "6a1180fb8b49dd278550053a"
+[15:27:07.165] [32mINFO[39m (13784): [36mNote updated successfully[39m
+    [35muserId[39m: "6a1180fa8b49dd2785500538"
+    [35mnoteId[39m: "6a1180fb8b49dd278550053a"
+[15:27:07.165] [32mINFO[39m (13784): [36mDeleting note[39m
+    [35muserId[39m: "6a1180fa8b49dd2785500538"
+    [35mnoteId[39m: "6a1180fb8b49dd278550053a"
+[15:27:07.167] [32mINFO[39m (13784): [36mNote deleted successfully[39m
+    [35muserId[39m: "6a1180fa8b49dd2785500538"
+    [35mnoteId[39m: "6a1180fb8b49dd278550053a"
+[15:27:07.167] [32mINFO[39m (13784): [36mFetching single note[39m
+    [35muserId[39m: "6a1180fa8b49dd2785500538"
+    [35mnoteId[39m: "6a1180fb8b49dd278550053a"
+[15:27:07.168] [33mWARN[39m (13784): [36mNote not found[39m
+    [35muserId[39m: "6a1180fa8b49dd2785500538"
+    [35mnoteId[39m: "6a1180fb8b49dd278550053a"
+[15:27:07.428] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1180fb8b49dd278550053b"
+    [35mtitle[39m: "Note 0"
+[15:27:07.429] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1180fb8b49dd278550053b"
+    [35mnoteId[39m: "6a1180fb8b49dd278550053d"
+[15:27:07.429] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1180fb8b49dd278550053b"
+    [35mtitle[39m: "Note 1"
+[15:27:07.429] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1180fb8b49dd278550053b"
+    [35mnoteId[39m: "6a1180fb8b49dd278550053e"
+[15:27:07.430] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1180fb8b49dd278550053b"
+    [35mtitle[39m: "Note 2"
+[15:27:07.430] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1180fb8b49dd278550053b"
+    [35mnoteId[39m: "6a1180fb8b49dd278550053f"
+[15:27:07.430] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1180fb8b49dd278550053b"
+    [35mtitle[39m: "Note 3"
+[15:27:07.431] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1180fb8b49dd278550053b"
+    [35mnoteId[39m: "6a1180fb8b49dd2785500540"
+[15:27:07.431] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1180fb8b49dd278550053b"
+    [35mtitle[39m: "Note 4"
+[15:27:07.432] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1180fb8b49dd278550053b"
+    [35mnoteId[39m: "6a1180fb8b49dd2785500541"
+[15:27:07.432] [32mINFO[39m (13784): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a1180fb8b49dd278550053b"
+    [35mpage[39m: 1
+    [35mlimit[39m: 3
+    [35msearch[39m: ""
+[15:27:07.436] [32mINFO[39m (13784): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a1180fb8b49dd278550053b"
+    [35mcount[39m: 3
+[15:27:07.437] [32mINFO[39m (13784): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a1180fb8b49dd278550053b"
+    [35mpage[39m: 2
+    [35mlimit[39m: 3
+    [35msearch[39m: ""
+[15:27:07.439] [32mINFO[39m (13784): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a1180fb8b49dd278550053b"
+    [35mcount[39m: 3
+[15:27:07.696] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1180fb8b49dd2785500542"
+    [35mtitle[39m: "JavaScript Basics"
+[15:27:07.697] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1180fb8b49dd2785500542"
+    [35mnoteId[39m: "6a1180fb8b49dd2785500544"
+[15:27:07.697] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1180fb8b49dd2785500542"
+    [35mtitle[39m: "Python Guide"
+[15:27:07.698] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1180fb8b49dd2785500542"
+    [35mnoteId[39m: "6a1180fb8b49dd2785500545"
+[15:27:07.698] [32mINFO[39m (13784): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a1180fb8b49dd2785500542"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: "JavaScript"
+[15:27:07.701] [32mINFO[39m (13784): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a1180fb8b49dd2785500542"
+    [35mcount[39m: 1
+[15:27:08.219] [32mINFO[39m (13784): [36mFetching single note[39m
+    [35muserId[39m: "6a1180fb8b49dd2785500548"
+    [35mnoteId[39m: "6a1180fb8b49dd2785500547"
+[15:27:08.220] [33mWARN[39m (13784): [36mUnauthorized access attempt on note[39m
+    [35muserId[39m: "6a1180fb8b49dd2785500548"
+    [35mnoteId[39m: "6a1180fb8b49dd2785500547"
+[15:27:08.477] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1180fc8b49dd2785500549"
+    [35mtitle[39m: "Import 1"
+    [35mcategory[39m: "general"
+[15:27:08.478] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1180fc8b49dd2785500549"
+    [35mnoteId[39m: "6a1180fc8b49dd278550054b"
+    [35mcategory[39m: "general"
+[15:27:08.478] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1180fc8b49dd2785500549"
+    [35mtitle[39m: "Import 2"
+    [35mcategory[39m: "task"
+[15:27:08.479] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1180fc8b49dd2785500549"
+    [35mnoteId[39m: "6a1180fc8b49dd278550054c"
+    [35mcategory[39m: "task"
+[15:27:08.731] [32mINFO[39m (13784): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a1180fc8b49dd278550054d"
+    [35mpage[39m: 1
+    [35mlimit[39m: 100
+    [35msearch[39m: ""
+[15:27:08.734] [32mINFO[39m (13784): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a1180fc8b49dd278550054d"
+    [35mcount[39m: 1
+[15:27:09.495] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1180fc8b49dd2785500551"
+    [35mtitle[39m: "User1 Note"
+[15:27:09.495] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1180fc8b49dd2785500551"
+    [35mnoteId[39m: "6a1180fd8b49dd2785500553"
+[15:27:09.496] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1180fd8b49dd2785500552"
+    [35mtitle[39m: "User2 Note"
+[15:27:09.496] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1180fd8b49dd2785500552"
+    [35mnoteId[39m: "6a1180fd8b49dd2785500554"
+[15:27:09.496] [32mINFO[39m (13784): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a1180fc8b49dd2785500551"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: ""
+[15:27:09.498] [32mINFO[39m (13784): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a1180fc8b49dd2785500551"
+    [35mcount[39m: 1
+[15:27:09.499] [32mINFO[39m (13784): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a1180fd8b49dd2785500552"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: ""
+[15:27:09.501] [32mINFO[39m (13784): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a1180fd8b49dd2785500552"
+    [35mcount[39m: 1
+[15:27:09.758] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1180fd8b49dd2785500555"
+    [35mtitle[39m: "Original"
+    [35mcategory[39m: "task"
+[15:27:09.759] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1180fd8b49dd2785500555"
+    [35mnoteId[39m: "6a1180fd8b49dd2785500557"
+    [35mcategory[39m: "task"
+[15:27:09.759] [32mINFO[39m (13784): [36mUpdating note[39m
+    [35muserId[39m: "6a1180fd8b49dd2785500555"
+    [35mnoteId[39m: "6a1180fd8b49dd2785500557"
+[15:27:09.761] [32mINFO[39m (13784): [36mNote updated successfully[39m
+    [35muserId[39m: "6a1180fd8b49dd2785500555"
+    [35mnoteId[39m: "6a1180fd8b49dd2785500557"
+[15:27:09.799] [32mINFO[39m (13784): [36mUser registration attempt[39m
+    [35memail[39m: "abdul@test.com"
+[15:27:09.800] [33mWARN[39m (13784): [36mDNS MX lookup failed[39m
+    [35memail[39m: "abdul@test.com"
+    error: "queryMx ECONNREFUSED test.com"
+[15:27:09.800] [33mWARN[39m (13784): [36mDNS validation inconclusive for unknown domain[39m
+    [35memail[39m: "abdul@test.com"
+[15:27:09.800] [33mWARN[39m (13784): [36mRegistration failed ΓÇö invalid domain or cannot receive mail[39m
+    [35memail[39m: "abdul@test.com"
+[15:27:09.803] [32mINFO[39m (13784): [36mUser login attempt[39m
+    [35memail[39m: "abdul@test.com"
+Deleted 0 notes for user 6a1180ff8b49dd2785500562
+[15:27:13.453] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181008b49dd2785500563"
+    [35mtitle[39m: "My Note"
+[15:27:13.454] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181008b49dd2785500563"
+    [35mnoteId[39m: "6a1181018b49dd2785500565"
+[15:27:13.962] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181018b49dd2785500566"
+    [35mtitle[39m: "Title Only"
+[15:27:13.963] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181018b49dd2785500566"
+    [35mnoteId[39m: "6a1181018b49dd2785500568"
+[15:27:14.475] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181018b49dd2785500569"
+    [35mtitle[39m: "Timestamped"
+[15:27:14.476] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181018b49dd2785500569"
+    [35mnoteId[39m: "6a1181028b49dd278550056b"
+[15:27:14.985] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181028b49dd278550056c"
+    [35mtitle[39m: "Note 1"
+[15:27:14.987] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181028b49dd278550056c"
+    [35mnoteId[39m: "6a1181028b49dd278550056e"
+[15:27:14.987] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181028b49dd278550056c"
+    [35mtitle[39m: "Note 2"
+[15:27:14.987] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181028b49dd278550056c"
+    [35mnoteId[39m: "6a1181028b49dd278550056f"
+[15:27:14.987] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181028b49dd278550056c"
+    [35mtitle[39m: "Note 3"
+[15:27:14.988] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181028b49dd278550056c"
+    [35mnoteId[39m: "6a1181028b49dd2785500570"
+[15:27:14.988] [32mINFO[39m (13784): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a1181028b49dd278550056c"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: ""
+[15:27:14.992] [32mINFO[39m (13784): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a1181028b49dd278550056c"
+    [35mcount[39m: 3
+[15:27:15.499] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181028b49dd2785500571"
+    [35mtitle[39m: "Note 0"
+[15:27:15.499] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181028b49dd2785500571"
+    [35mnoteId[39m: "6a1181038b49dd2785500573"
+[15:27:15.500] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181028b49dd2785500571"
+    [35mtitle[39m: "Note 1"
+[15:27:15.500] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181028b49dd2785500571"
+    [35mnoteId[39m: "6a1181038b49dd2785500574"
+[15:27:15.500] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181028b49dd2785500571"
+    [35mtitle[39m: "Note 2"
+[15:27:15.501] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181028b49dd2785500571"
+    [35mnoteId[39m: "6a1181038b49dd2785500575"
+[15:27:15.501] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181028b49dd2785500571"
+    [35mtitle[39m: "Note 3"
+[15:27:15.503] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181028b49dd2785500571"
+    [35mnoteId[39m: "6a1181038b49dd2785500576"
+[15:27:15.503] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181028b49dd2785500571"
+    [35mtitle[39m: "Note 4"
+[15:27:15.504] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181028b49dd2785500571"
+    [35mnoteId[39m: "6a1181038b49dd2785500577"
+[15:27:15.504] [32mINFO[39m (13784): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a1181028b49dd2785500571"
+    [35mpage[39m: 1
+    [35mlimit[39m: 3
+    [35msearch[39m: ""
+[15:27:15.506] [32mINFO[39m (13784): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a1181028b49dd2785500571"
+    [35mcount[39m: 3
+[15:27:16.014] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181038b49dd2785500578"
+    [35mtitle[39m: "Note 0"
+[15:27:16.015] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181038b49dd2785500578"
+    [35mnoteId[39m: "6a1181048b49dd278550057a"
+[15:27:16.015] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181038b49dd2785500578"
+    [35mtitle[39m: "Note 1"
+[15:27:16.016] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181038b49dd2785500578"
+    [35mnoteId[39m: "6a1181048b49dd278550057b"
+[15:27:16.016] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181038b49dd2785500578"
+    [35mtitle[39m: "Note 2"
+[15:27:16.017] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181038b49dd2785500578"
+    [35mnoteId[39m: "6a1181048b49dd278550057c"
+[15:27:16.017] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181038b49dd2785500578"
+    [35mtitle[39m: "Note 3"
+[15:27:16.018] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181038b49dd2785500578"
+    [35mnoteId[39m: "6a1181048b49dd278550057d"
+[15:27:16.018] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181038b49dd2785500578"
+    [35mtitle[39m: "Note 4"
+[15:27:16.019] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181038b49dd2785500578"
+    [35mnoteId[39m: "6a1181048b49dd278550057e"
+[15:27:16.019] [32mINFO[39m (13784): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a1181038b49dd2785500578"
+    [35mpage[39m: 2
+    [35mlimit[39m: 3
+    [35msearch[39m: ""
+[15:27:16.021] [32mINFO[39m (13784): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a1181038b49dd2785500578"
+    [35mcount[39m: 2
+[15:27:16.528] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181048b49dd278550057f"
+    [35mtitle[39m: "My Note"
+[15:27:16.529] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181048b49dd278550057f"
+    [35mnoteId[39m: "6a1181048b49dd2785500581"
+[15:27:16.529] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181048b49dd2785500580"
+    [35mtitle[39m: "Other Note"
+[15:27:16.530] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181048b49dd2785500580"
+    [35mnoteId[39m: "6a1181048b49dd2785500582"
+[15:27:16.530] [32mINFO[39m (13784): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a1181048b49dd278550057f"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: ""
+[15:27:16.532] [32mINFO[39m (13784): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a1181048b49dd278550057f"
+    [35mcount[39m: 1
+[15:27:17.043] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181048b49dd2785500583"
+    [35mtitle[39m: "JavaScript Basics"
+[15:27:17.044] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181048b49dd2785500583"
+    [35mnoteId[39m: "6a1181058b49dd2785500585"
+[15:27:17.044] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181048b49dd2785500583"
+    [35mtitle[39m: "Python Guide"
+[15:27:17.045] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181048b49dd2785500583"
+    [35mnoteId[39m: "6a1181058b49dd2785500586"
+[15:27:17.045] [32mINFO[39m (13784): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a1181048b49dd2785500583"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: "JavaScript"
+[15:27:17.047] [32mINFO[39m (13784): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a1181048b49dd2785500583"
+    [35mcount[39m: 1
+[15:27:17.561] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181058b49dd2785500587"
+    [35mtitle[39m: "Single"
+[15:27:17.562] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181058b49dd2785500587"
+    [35mnoteId[39m: "6a1181058b49dd2785500589"
+[15:27:17.562] [32mINFO[39m (13784): [36mFetching single note[39m
+    [35muserId[39m: "6a1181058b49dd2785500587"
+    [35mnoteId[39m: "6a1181058b49dd2785500589"
+[15:27:17.563] [32mINFO[39m (13784): [36mNote fetched successfully[39m
+    [35muserId[39m: "6a1181058b49dd2785500587"
+    [35mnoteId[39m: "6a1181058b49dd2785500589"
+[15:27:18.073] [32mINFO[39m (13784): [36mFetching single note[39m
+    [35muserId[39m: "6a1181058b49dd278550058a"
+    [35mnoteId[39m: "6a1181068b49dd278550058c"
+[15:27:18.074] [33mWARN[39m (13784): [36mNote not found[39m
+    [35muserId[39m: "6a1181058b49dd278550058a"
+    [35mnoteId[39m: "6a1181068b49dd278550058c"
+[15:27:18.583] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181068b49dd278550058d"
+    [35mtitle[39m: "Mine"
+[15:27:18.584] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181068b49dd278550058d"
+    [35mnoteId[39m: "6a1181068b49dd278550058f"
+[15:27:18.584] [32mINFO[39m (13784): [36mFetching single note[39m
+    [35muserId[39m: "6a1181068b49dd278550058e"
+    [35mnoteId[39m: "6a1181068b49dd278550058f"
+[15:27:18.586] [33mWARN[39m (13784): [36mUnauthorized access attempt on note[39m
+    [35muserId[39m: "6a1181068b49dd278550058e"
+    [35mnoteId[39m: "6a1181068b49dd278550058f"
+[15:27:19.095] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181068b49dd2785500590"
+    [35mtitle[39m: "Original"
+[15:27:19.096] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181068b49dd2785500590"
+    [35mnoteId[39m: "6a1181078b49dd2785500592"
+[15:27:19.096] [32mINFO[39m (13784): [36mUpdating note[39m
+    [35muserId[39m: "6a1181068b49dd2785500590"
+    [35mnoteId[39m: "6a1181078b49dd2785500592"
+[15:27:19.098] [32mINFO[39m (13784): [36mNote updated successfully[39m
+    [35muserId[39m: "6a1181068b49dd2785500590"
+    [35mnoteId[39m: "6a1181078b49dd2785500592"
+[15:27:19.607] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181078b49dd2785500593"
+    [35mtitle[39m: "Original"
+[15:27:19.608] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181078b49dd2785500593"
+    [35mnoteId[39m: "6a1181078b49dd2785500595"
+[15:27:19.608] [32mINFO[39m (13784): [36mUpdating note[39m
+    [35muserId[39m: "6a1181078b49dd2785500593"
+    [35mnoteId[39m: "6a1181078b49dd2785500595"
+[15:27:19.610] [32mINFO[39m (13784): [36mNote updated successfully[39m
+    [35muserId[39m: "6a1181078b49dd2785500593"
+    [35mnoteId[39m: "6a1181078b49dd2785500595"
+[15:27:20.132] [32mINFO[39m (13784): [36mUpdating note[39m
+    [35muserId[39m: "6a1181078b49dd2785500596"
+    [35mnoteId[39m: "6a1181088b49dd2785500598"
+[15:27:20.133] [33mWARN[39m (13784): [36mUpdate failed ΓÇö note not found[39m
+    [35muserId[39m: "6a1181078b49dd2785500596"
+    [35mnoteId[39m: "6a1181088b49dd2785500598"
+[15:27:20.667] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181088b49dd2785500599"
+    [35mtitle[39m: "Mine"
+[15:27:20.669] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181088b49dd2785500599"
+    [35mnoteId[39m: "6a1181088b49dd278550059b"
+[15:27:20.669] [32mINFO[39m (13784): [36mUpdating note[39m
+    [35muserId[39m: "6a1181088b49dd278550059a"
+    [35mnoteId[39m: "6a1181088b49dd278550059b"
+[15:27:20.670] [33mWARN[39m (13784): [36mUnauthorized update attempt on note[39m
+    [35muserId[39m: "6a1181088b49dd278550059a"
+    [35mnoteId[39m: "6a1181088b49dd278550059b"
+[15:27:21.188] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181088b49dd278550059c"
+    [35mtitle[39m: "Original"
+[15:27:21.189] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181088b49dd278550059c"
+    [35mnoteId[39m: "6a1181098b49dd278550059e"
+[15:27:21.301] [32mINFO[39m (13784): [36mUpdating note[39m
+    [35muserId[39m: "6a1181088b49dd278550059c"
+    [35mnoteId[39m: "6a1181098b49dd278550059e"
+[15:27:21.305] [32mINFO[39m (13784): [36mNote updated successfully[39m
+    [35muserId[39m: "6a1181088b49dd278550059c"
+    [35mnoteId[39m: "6a1181098b49dd278550059e"
+[15:27:21.813] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a1181098b49dd278550059f"
+    [35mtitle[39m: "Delete"
+[15:27:21.815] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a1181098b49dd278550059f"
+    [35mnoteId[39m: "6a1181098b49dd27855005a1"
+[15:27:21.815] [32mINFO[39m (13784): [36mDeleting note[39m
+    [35muserId[39m: "6a1181098b49dd278550059f"
+    [35mnoteId[39m: "6a1181098b49dd27855005a1"
+[15:27:21.816] [32mINFO[39m (13784): [36mNote deleted successfully[39m
+    [35muserId[39m: "6a1181098b49dd278550059f"
+    [35mnoteId[39m: "6a1181098b49dd27855005a1"
+[15:27:21.816] [32mINFO[39m (13784): [36mFetching single note[39m
+    [35muserId[39m: "6a1181098b49dd278550059f"
+    [35mnoteId[39m: "6a1181098b49dd27855005a1"
+[15:27:21.817] [33mWARN[39m (13784): [36mNote not found[39m
+    [35muserId[39m: "6a1181098b49dd278550059f"
+    [35mnoteId[39m: "6a1181098b49dd27855005a1"
+[15:27:22.328] [32mINFO[39m (13784): [36mDeleting note[39m
+    [35muserId[39m: "6a1181098b49dd27855005a2"
+    [35mnoteId[39m: "6a11810a8b49dd27855005a4"
+[15:27:22.329] [33mWARN[39m (13784): [36mDelete failed ΓÇö note not found[39m
+    [35muserId[39m: "6a1181098b49dd27855005a2"
+    [35mnoteId[39m: "6a11810a8b49dd27855005a4"
+[15:27:22.844] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a11810a8b49dd27855005a5"
+    [35mtitle[39m: "Mine"
+[15:27:22.845] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a11810a8b49dd27855005a5"
+    [35mnoteId[39m: "6a11810a8b49dd27855005a7"
+[15:27:22.845] [32mINFO[39m (13784): [36mDeleting note[39m
+    [35muserId[39m: "6a11810a8b49dd27855005a6"
+    [35mnoteId[39m: "6a11810a8b49dd27855005a7"
+[15:27:22.846] [33mWARN[39m (13784): [36mUnauthorized delete attempt on note[39m
+    [35muserId[39m: "6a11810a8b49dd27855005a6"
+    [35mnoteId[39m: "6a11810a8b49dd27855005a7"
+[15:27:23.362] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a11810a8b49dd27855005a8"
+    [35mtitle[39m: "React Tutorial"
+[15:27:23.363] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a11810a8b49dd27855005a8"
+    [35mnoteId[39m: "6a11810b8b49dd27855005aa"
+[15:27:23.363] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a11810a8b49dd27855005a8"
+    [35mtitle[39m: "Vue Guide"
+[15:27:23.364] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a11810a8b49dd27855005a8"
+    [35mnoteId[39m: "6a11810b8b49dd27855005ab"
+[15:27:23.364] [32mINFO[39m (13784): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a11810a8b49dd27855005a8"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: "React"
+[15:27:23.368] [32mINFO[39m (13784): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a11810a8b49dd27855005a8"
+    [35mcount[39m: 1
+[15:27:23.888] [32mINFO[39m (13784): [36mCreating new note[39m
+    [35muserId[39m: "6a11810b8b49dd27855005ac"
+    [35mtitle[39m: "JAVASCRIPT"
+[15:27:23.889] [32mINFO[39m (13784): [36mNote created successfully[39m
+    [35muserId[39m: "6a11810b8b49dd27855005ac"
+    [35mnoteId[39m: "6a11810b8b49dd27855005ae"
+[15:27:23.889] [32mINFO[39m (13784): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a11810b8b49dd27855005ac"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: "javascript"
+[15:27:23.891] [32mINFO[39m (13784): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a11810b8b49dd27855005ac"
+    [35mcount[39m: 1
+[15:27:23.891] [32mINFO[39m (13784): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a11810b8b49dd27855005ac"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: "JAVASCRIPT"
+[15:27:23.893] [32mINFO[39m (13784): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a11810b8b49dd27855005ac"
+    [35mcount[39m: 1
+[15:27:23.893] [32mINFO[39m (13784): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a11810b8b49dd27855005ac"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: "JavaScript"
+[15:27:23.895] [32mINFO[39m (13784): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a11810b8b49dd27855005ac"
+    [35mcount[39m: 1
+[15:27:24.599] [32mINFO[39m (13784): [36mFetching user profile[39m
+    [35muserId[39m: "6a11810c8b49dd27855005af"
+[15:27:24.601] [32mINFO[39m (13784): [36mProfile fetched successfully[39m
+    [35muserId[39m: "6a11810c8b49dd27855005af"
+[15:27:24.869] [32mINFO[39m (13784): [36mUpdating user profile[39m
+    [35muserId[39m: "6a11810c8b49dd27855005b0"
+    [35mfields[39m: [
+      "name"
+    ]
+[15:27:24.870] [32mINFO[39m (13784): [36mProfile updated successfully[39m
+    [35muserId[39m: "6a11810c8b49dd27855005b0"
+[15:27:25.132] [32mINFO[39m (13784): [36mUpdating user profile[39m
+    [35muserId[39m: "6a11810c8b49dd27855005b1"
+    [35mfields[39m: [
+      "name",
+      "password"
+    ]
+[15:27:25.133] [32mINFO[39m (13784): [36mProfile updated successfully[39m
+    [35muserId[39m: "6a11810c8b49dd27855005b1"
+[15:27:25.393] [32mINFO[39m (13784): [36mUpdating user profile[39m
+    [35muserId[39m: "6a11810d8b49dd27855005b2"
+    [35mfields[39m: [
+      "name",
+      "email"
+    ]
+[15:27:25.394] [32mINFO[39m (13784): [36mProfile updated successfully[39m
+    [35muserId[39m: "6a11810d8b49dd27855005b2"
+[15:27:25.651] [32mINFO[39m (13784): [36mDeleting user account[39m
+    [35muserId[39m: "6a11810d8b49dd27855005b3"
+Deleted 0 notes for user 6a11810d8b49dd27855005b3
+[15:27:25.654] [32mINFO[39m (13784): [36mUser account deleted successfully[39m
+    [35muserId[39m: "6a11810d8b49dd27855005b3"
+[15:27:25.654] [32mINFO[39m (13784): [36mFetching user profile[39m
+    [35muserId[39m: "6a11810d8b49dd27855005b3"
+[15:27:25.655] [33mWARN[39m (13784): [36mProfile fetch failed ΓÇö user not found[39m
+    [35muserId[39m: "6a11810d8b49dd27855005b3"
+[15:27:25.912] [32mINFO[39m (13784): [36mPassword change attempt[39m
+    [35muserId[39m: "6a11810d8b49dd27855005b4"
+[15:27:26.429] [32mINFO[39m (13784): [36mPassword changed successfully[39m
+    [35muserId[39m: "6a11810d8b49dd27855005b4"
+[15:27:26.429] [32mINFO[39m (13784): [36mFetching user profile[39m
+    [35muserId[39m: "6a11810d8b49dd27855005b4"
+[15:27:26.430] [32mINFO[39m (13784): [36mProfile fetched successfully[39m
+    [35muserId[39m: "6a11810d8b49dd27855005b4"
+[15:27:26.689] [32mINFO[39m (13784): [36mPassword change attempt[39m
+    [35muserId[39m: "6a11810e8b49dd27855005b5"
+[15:27:26.946] [33mWARN[39m (13784): [36mPassword change failed ΓÇö old password incorrect[39m
+    [35muserId[39m: "6a11810e8b49dd27855005b5"
+[15:27:27.204] [32mINFO[39m (13784): [36mPassword change attempt[39m
+    [35muserId[39m: "6a11810e8b49dd27855005b6"
+[15:27:27.204] [33mWARN[39m (13784): [36mPassword change failed ΓÇö weak new password[39m
+    [35muserId[39m: "6a11810e8b49dd27855005b6"
+[15:27:27.468] [32mINFO[39m (13784): [36mPassword change attempt[39m
+    [35muserId[39m: "000000000000000000000000"
+[15:27:27.469] [33mWARN[39m (13784): [36mPassword change failed ΓÇö user not found[39m
+    [35muserId[39m: "000000000000000000000000"
+[15:27:27.724] [32mINFO[39m (13784): [36mFetching user profile[39m
+    [35muserId[39m: "000000000000000000000000"
+[15:27:27.725] [33mWARN[39m (13784): [36mProfile fetch failed ΓÇö user not found[39m
+    [35muserId[39m: "000000000000000000000000"
+[15:27:27.982] [32mINFO[39m (13784): [36mUpdating user profile[39m
+    [35muserId[39m: "000000000000000000000000"
+    [35mfields[39m: [
+      "name"
+    ]
+[15:27:27.984] [33mWARN[39m (13784): [36mProfile update failed ΓÇö user not found[39m
+    [35muserId[39m: "000000000000000000000000"
+[15:27:28.036] [33mWARN[39m (13784): [36mDNS MX lookup failed[39m
+    [35memail[39m: "test@gmail.com"
+    error: "queryMx ECONNREFUSED gmail.com"
+[15:27:28.036] [32mINFO[39m (13784): [36mDNS failed but domain is known valid[39m
+    [35memail[39m: "test@gmail.com"
+    [35mdomain[39m: "gmail.com"
+[15:27:28.042] [33mWARN[39m (13784): [36mDNS MX lookup failed[39m
+    [35memail[39m: "test@yahoo.com"
+    error: "queryMx ECONNREFUSED yahoo.com"
+[15:27:28.042] [32mINFO[39m (13784): [36mDNS failed but domain is known valid[39m
+    [35memail[39m: "test@yahoo.com"
+    [35mdomain[39m: "yahoo.com"
+[15:27:28.047] [33mWARN[39m (13784): [36mDNS MX lookup failed[39m
+    [35memail[39m: "test@hotmail.com"
+    error: "queryMx ECONNREFUSED hotmail.com"
+[15:27:28.047] [32mINFO[39m (13784): [36mDNS failed but domain is known valid[39m
+    [35memail[39m: "test@hotmail.com"
+    [35mdomain[39m: "hotmail.com"
+[15:27:28.053] [33mWARN[39m (13784): [36mDNS MX lookup failed[39m
+    [35memail[39m: "test@invalid-domain-12345.com"
+    error: "queryMx ECONNREFUSED invalid-domain-12345.com"
+[15:27:28.053] [33mWARN[39m (13784): [36mDNS validation inconclusive for unknown domain[39m
+    [35memail[39m: "test@invalid-domain-12345.com"
+{
+  "stats": {
+    "suites": 49,
+    "tests": 131,
+    "passes": 131,
+    "pending": 0,
+    "failures": 0,
+    "start": "2026-05-23T10:27:06.422Z",
+    "end": "2026-05-23T10:27:28.056Z",
+    "duration": 21634
+  },
+  "tests": [
+    {
+      "title": "should create, retrieve, update, and delete notes",
+      "fullTitle": "Notes Routes Integration Tests Notes Service Integration should create, retrieve, update, and delete notes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\integration\\notes.routes.test.js",
+      "duration": 36,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle pagination correctly",
+      "fullTitle": "Notes Routes Integration Tests Notes Service Integration should handle pagination correctly",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\integration\\notes.routes.test.js",
+      "duration": 12,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should search notes by title and content",
+      "fullTitle": "Notes Routes Integration Tests Notes Service Integration should search notes by title and content",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\integration\\notes.routes.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should prevent access to other users notes",
+      "fullTitle": "Notes Routes Integration Tests Notes Service Integration should prevent access to other users notes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\integration\\notes.routes.test.js",
+      "duration": 261,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should handle note import successfully",
+      "fullTitle": "Notes Routes Integration Tests Notes Service Integration should handle note import successfully",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\integration\\notes.routes.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle note export",
+      "fullTitle": "Notes Routes Integration Tests Notes Service Integration should handle note export",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\integration\\notes.routes.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "each user should only see their own notes",
+      "fullTitle": "Notes Routes Integration Tests User Isolation each user should only see their own notes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\integration\\notes.routes.test.js",
+      "duration": 513,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should preserve note metadata on update",
+      "fullTitle": "Notes Routes Integration Tests Data Integrity should preserve note metadata on update",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\integration\\notes.routes.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if service throws",
+      "fullTitle": "Auth Controller signup() should call next with error if service throws",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if service throws",
+      "fullTitle": "Auth Controller loginUser() should call next with error if service throws",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 on logout",
+      "fullTitle": "Auth Controller logout() should return 200 on logout",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 with current user data",
+      "fullTitle": "Auth Controller getMe() should return 200 with current user data",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should format image URLs correctly",
+      "fullTitle": "Auth Controller getMe() should format image URLs correctly",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if email is missing",
+      "fullTitle": "Auth Controller sendOTPCode() should call next with error if email is missing",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if purpose is missing",
+      "fullTitle": "Auth Controller sendOTPCode() should call next with error if purpose is missing",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if required fields are missing",
+      "fullTitle": "Auth Controller verifyOTPHandler() should call next with error if required fields are missing",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if email is missing",
+      "fullTitle": "Auth Controller resetUserPassword() should call next with error if email is missing",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if newPassword is missing",
+      "fullTitle": "Auth Controller resetUserPassword() should call next with error if newPassword is missing",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if service throws",
+      "fullTitle": "Notes Controller createNote() should call next with error if service throws",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 with notes list",
+      "fullTitle": "Notes Controller getAllNotes() should return 200 with notes list",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should use default pagination values",
+      "fullTitle": "Notes Controller getAllNotes() should use default pagination values",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 with note details",
+      "fullTitle": "Notes Controller getNoteById() should return 200 with note details",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if note not found",
+      "fullTitle": "Notes Controller getNoteById() should call next with error if note not found",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if service throws",
+      "fullTitle": "Notes Controller updateNote() should call next with error if service throws",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if note not found",
+      "fullTitle": "Notes Controller deleteNote() should call next with error if note not found",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 with exported notes file",
+      "fullTitle": "Notes Controller exportNotes() should return 200 with exported notes file",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should include correct headers in export",
+      "fullTitle": "Notes Controller exportNotes() should include correct headers in export",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 201 with import results",
+      "fullTitle": "Notes Controller importNotes() should return 201 with import results",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 400 if notes array is empty",
+      "fullTitle": "Notes Controller importNotes() should return 400 if notes array is empty",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 400 if no valid notes in import",
+      "fullTitle": "Notes Controller importNotes() should return 400 if no valid notes in import",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should skip duplicate noteIds and report",
+      "fullTitle": "Notes Controller importNotes() should skip duplicate noteIds and report",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 with user profile data",
+      "fullTitle": "Users Controller getProfile() should return 200 with user profile data",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if service throws",
+      "fullTitle": "Users Controller getProfile() should call next with error if service throws",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 with updated user data",
+      "fullTitle": "Users Controller updateProfile() should return 200 with updated user data",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if service throws",
+      "fullTitle": "Users Controller updateProfile() should call next with error if service throws",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 after successful deletion",
+      "fullTitle": "Users Controller deleteProfile() should return 200 after successful deletion",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if service throws",
+      "fullTitle": "Users Controller deleteProfile() should call next with error if service throws",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 on successful password change",
+      "fullTitle": "Users Controller changePassword() should return 200 on successful password change",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with 401 error when old password is wrong",
+      "fullTitle": "Users Controller changePassword() should call next with 401 error when old password is wrong",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with 404 error when user not found",
+      "fullTitle": "Users Controller changePassword() should call next with 404 error when user not found",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should create a note",
+      "fullTitle": "Notes DAL should create a note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\notes.dal.test.js",
+      "duration": 48,
+      "currentRetry": 0,
+      "speed": "medium",
+      "err": {}
+    },
+    {
+      "title": "should get notes by user",
+      "fullTitle": "Notes DAL should get notes by user",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\notes.dal.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should get note by id",
+      "fullTitle": "Notes DAL should get note by id",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\notes.dal.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should update a note",
+      "fullTitle": "Notes DAL should update a note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\notes.dal.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should delete a note",
+      "fullTitle": "Notes DAL should delete a note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\notes.dal.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should create a new user",
+      "fullTitle": "Users DAL should create a new user",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\users.dal.test.js",
+      "duration": 257,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should find a user by email",
+      "fullTitle": "Users DAL should find a user by email",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\users.dal.test.js",
+      "duration": 257,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should return null for non-existing email",
+      "fullTitle": "Users DAL should return null for non-existing email",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\users.dal.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should find user by id without password",
+      "fullTitle": "Users DAL should find user by id without password",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\users.dal.test.js",
+      "duration": 256,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should update a user",
+      "fullTitle": "Users DAL should update a user",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\users.dal.test.js",
+      "duration": 252,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should delete a user",
+      "fullTitle": "Users DAL should delete a user",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\users.dal.test.js",
+      "duration": 279,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should generate a valid JWT token",
+      "fullTitle": "Auth Service generateToken() should generate a valid JWT token",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should generate different tokens for different userIds",
+      "fullTitle": "Auth Service generateToken() should generate different tokens for different userIds",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should generate tokens with correct expiration",
+      "fullTitle": "Auth Service generateToken() should generate tokens with correct expiration",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should be decodable as valid JWT",
+      "fullTitle": "Auth Service generateToken() should be decodable as valid JWT",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle empty userId",
+      "fullTitle": "Auth Service generateToken() should handle empty userId",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle special characters in userId",
+      "fullTitle": "Auth Service generateToken() should handle special characters in userId",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should generate JWT with three parts",
+      "fullTitle": "Auth Service generateToken() should generate JWT with three parts",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should validate token format is non-empty",
+      "fullTitle": "Auth Service generateToken() should validate token format is non-empty",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle null userId gracefully",
+      "fullTitle": "Auth Service Error Handling for Token Generation should handle null userId gracefully",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle undefined userId gracefully",
+      "fullTitle": "Auth Service Error Handling for Token Generation should handle undefined userId gracefully",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle numeric userId",
+      "fullTitle": "Auth Service Error Handling for Token Generation should handle numeric userId",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should validate token contains userId in payload",
+      "fullTitle": "Auth Service Authentication Validation should validate token contains userId in payload",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should validate token structure",
+      "fullTitle": "Auth Service Authentication Validation should validate token structure",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should create a note with valid data",
+      "fullTitle": "Notes Service create() should create a note with valid data",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should create note with minimal content",
+      "fullTitle": "Notes Service create() should create note with minimal content",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should set createdAt timestamp",
+      "fullTitle": "Notes Service create() should set createdAt timestamp",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should get all notes for a user with pagination",
+      "fullTitle": "Notes Service getAll() should get all notes for a user with pagination",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 7,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return only first page notes",
+      "fullTitle": "Notes Service getAll() should return only first page notes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 8,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return second page notes",
+      "fullTitle": "Notes Service getAll() should return second page notes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 7,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should not return other users notes",
+      "fullTitle": "Notes Service getAll() should not return other users notes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should search notes by title and content",
+      "fullTitle": "Notes Service getAll() should search notes by title and content",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should get a single note by id",
+      "fullTitle": "Notes Service getOne() should get a single note by id",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 404 for non-existing note",
+      "fullTitle": "Notes Service getOne() should throw 404 for non-existing note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 403 when accessing another users note",
+      "fullTitle": "Notes Service getOne() should throw 403 when accessing another users note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should update a note with valid data",
+      "fullTitle": "Notes Service update() should update a note with valid data",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should update only title",
+      "fullTitle": "Notes Service update() should update only title",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 404 for non-existing note",
+      "fullTitle": "Notes Service update() should throw 404 for non-existing note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 403 when updating another users note",
+      "fullTitle": "Notes Service update() should throw 403 when updating another users note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should update updatedAt timestamp",
+      "fullTitle": "Notes Service update() should update updatedAt timestamp",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 117,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should delete a note",
+      "fullTitle": "Notes Service remove() should delete a note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 404 when deleting non-existing note",
+      "fullTitle": "Notes Service remove() should throw 404 when deleting non-existing note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 403 when deleting another users note",
+      "fullTitle": "Notes Service remove() should throw 403 when deleting another users note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should search notes by query",
+      "fullTitle": "Notes Service search() should search notes by query",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 6,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should be case-insensitive",
+      "fullTitle": "Notes Service search() should be case-insensitive",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 7,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should get user profile",
+      "fullTitle": "Users Service should get user profile",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should update user name",
+      "fullTitle": "Users Service should update user name",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should NOT update password through profile update",
+      "fullTitle": "Users Service should NOT update password through profile update",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should NOT update email through profile update",
+      "fullTitle": "Users Service should NOT update email through profile update",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should delete user profile",
+      "fullTitle": "Users Service should delete user profile",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should change password successfully with correct old password",
+      "fullTitle": "Users Service should change password successfully with correct old password",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 518,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should throw 401 when old password is incorrect",
+      "fullTitle": "Users Service should throw 401 when old password is incorrect",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 257,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should throw 400 when new password is weak",
+      "fullTitle": "Users Service should throw 400 when new password is weak",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 404 when user does not exist for changePassword",
+      "fullTitle": "Users Service should throw 404 when user does not exist for changePassword",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 404 when user does not exist for getProfile",
+      "fullTitle": "Users Service should throw 404 when user does not exist for getProfile",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 404 when user does not exist for updateProfile",
+      "fullTitle": "Users Service should throw 404 when user does not exist for updateProfile",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should create an ApiError with statusCode and message",
+      "fullTitle": "ApiError Utility should create an ApiError with statusCode and message",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiError.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should include errors array when provided",
+      "fullTitle": "ApiError Utility should include errors array when provided",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiError.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle stack trace correctly",
+      "fullTitle": "ApiError Utility should handle stack trace correctly",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiError.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should have correct HTTP status codes",
+      "fullTitle": "ApiError Utility should have correct HTTP status codes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiError.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should have success property as false",
+      "fullTitle": "ApiError Utility should have success property as false",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiError.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should preserve error message",
+      "fullTitle": "ApiError Utility should preserve error message",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiError.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should create an ApiResponse with statusCode and data",
+      "fullTitle": "ApiResponse Utility should create an ApiResponse with statusCode and data",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiResponse.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should set success to true for 2xx status codes",
+      "fullTitle": "ApiResponse Utility should set success to true for 2xx status codes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiResponse.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should set success to false for 4xx and 5xx status codes",
+      "fullTitle": "ApiResponse Utility should set success to false for 4xx and 5xx status codes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiResponse.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should use default message when not provided",
+      "fullTitle": "ApiResponse Utility should use default message when not provided",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiResponse.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle null data",
+      "fullTitle": "ApiResponse Utility should handle null data",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiResponse.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle complex data objects",
+      "fullTitle": "ApiResponse Utility should handle complex data objects",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiResponse.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should preserve all properties",
+      "fullTitle": "ApiResponse Utility should preserve all properties",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiResponse.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should execute the provided function",
+      "fullTitle": "asyncHandler Middleware should execute the provided function",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\asyncHandler.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should pass req, res, next to the function",
+      "fullTitle": "asyncHandler Middleware should pass req, res, next to the function",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\asyncHandler.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error when function throws",
+      "fullTitle": "asyncHandler Middleware should call next with error when function throws",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\asyncHandler.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle async errors gracefully",
+      "fullTitle": "asyncHandler Middleware should handle async errors gracefully",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\asyncHandler.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should not call next on successful execution",
+      "fullTitle": "asyncHandler Middleware should not call next on successful execution",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\asyncHandler.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should work with multiple sequential calls",
+      "fullTitle": "asyncHandler Middleware should work with multiple sequential calls",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\asyncHandler.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should validate correct email formats",
+      "fullTitle": "Email Validation Utilities validateEmailFormat should validate correct email formats",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\emailValidation.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should reject invalid email formats",
+      "fullTitle": "Email Validation Utilities validateEmailFormat should reject invalid email formats",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\emailValidation.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should reject null or undefined",
+      "fullTitle": "Email Validation Utilities validateEmailFormat should reject null or undefined",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\emailValidation.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle empty string",
+      "fullTitle": "Email Validation Utilities validateEmailFormat should handle empty string",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\emailValidation.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should validate domains with valid MX records",
+      "fullTitle": "Email Validation Utilities validateEmailDomain should validate domains with valid MX records",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\emailValidation.test.js",
+      "duration": 18,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should reject invalid domains",
+      "fullTitle": "Email Validation Utilities validateEmailDomain should reject invalid domains",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\emailValidation.test.js",
+      "duration": 6,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle malformed emails gracefully",
+      "fullTitle": "Email Validation Utilities validateEmailDomain should handle malformed emails gracefully",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\emailValidation.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should generate a 6-digit OTP",
+      "fullTitle": "OTP Utility generateOTP should generate a 6-digit OTP",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should generate different OTPs on multiple calls",
+      "fullTitle": "OTP Utility generateOTP should generate different OTPs on multiple calls",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should only contain numeric digits",
+      "fullTitle": "OTP Utility generateOTP should only contain numeric digits",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should hash an OTP string",
+      "fullTitle": "OTP Utility hashOTP should hash an OTP string",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should produce consistent hashes for the same OTP",
+      "fullTitle": "OTP Utility hashOTP should produce consistent hashes for the same OTP",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should produce different hashes for different OTPs",
+      "fullTitle": "OTP Utility hashOTP should produce different hashes for different OTPs",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should verify a matching OTP",
+      "fullTitle": "OTP Utility verifyOTP should verify a matching OTP",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should reject a non-matching OTP",
+      "fullTitle": "OTP Utility verifyOTP should reject a non-matching OTP",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle invalid hash format gracefully",
+      "fullTitle": "OTP Utility verifyOTP should handle invalid hash format gracefully",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "passes": [
+    {
+      "title": "should create, retrieve, update, and delete notes",
+      "fullTitle": "Notes Routes Integration Tests Notes Service Integration should create, retrieve, update, and delete notes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\integration\\notes.routes.test.js",
+      "duration": 36,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle pagination correctly",
+      "fullTitle": "Notes Routes Integration Tests Notes Service Integration should handle pagination correctly",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\integration\\notes.routes.test.js",
+      "duration": 12,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should search notes by title and content",
+      "fullTitle": "Notes Routes Integration Tests Notes Service Integration should search notes by title and content",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\integration\\notes.routes.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should prevent access to other users notes",
+      "fullTitle": "Notes Routes Integration Tests Notes Service Integration should prevent access to other users notes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\integration\\notes.routes.test.js",
+      "duration": 261,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should handle note import successfully",
+      "fullTitle": "Notes Routes Integration Tests Notes Service Integration should handle note import successfully",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\integration\\notes.routes.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle note export",
+      "fullTitle": "Notes Routes Integration Tests Notes Service Integration should handle note export",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\integration\\notes.routes.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "each user should only see their own notes",
+      "fullTitle": "Notes Routes Integration Tests User Isolation each user should only see their own notes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\integration\\notes.routes.test.js",
+      "duration": 513,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should preserve note metadata on update",
+      "fullTitle": "Notes Routes Integration Tests Data Integrity should preserve note metadata on update",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\integration\\notes.routes.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if service throws",
+      "fullTitle": "Auth Controller signup() should call next with error if service throws",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if service throws",
+      "fullTitle": "Auth Controller loginUser() should call next with error if service throws",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 on logout",
+      "fullTitle": "Auth Controller logout() should return 200 on logout",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 with current user data",
+      "fullTitle": "Auth Controller getMe() should return 200 with current user data",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should format image URLs correctly",
+      "fullTitle": "Auth Controller getMe() should format image URLs correctly",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if email is missing",
+      "fullTitle": "Auth Controller sendOTPCode() should call next with error if email is missing",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if purpose is missing",
+      "fullTitle": "Auth Controller sendOTPCode() should call next with error if purpose is missing",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if required fields are missing",
+      "fullTitle": "Auth Controller verifyOTPHandler() should call next with error if required fields are missing",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if email is missing",
+      "fullTitle": "Auth Controller resetUserPassword() should call next with error if email is missing",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if newPassword is missing",
+      "fullTitle": "Auth Controller resetUserPassword() should call next with error if newPassword is missing",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\auth.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if service throws",
+      "fullTitle": "Notes Controller createNote() should call next with error if service throws",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 with notes list",
+      "fullTitle": "Notes Controller getAllNotes() should return 200 with notes list",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should use default pagination values",
+      "fullTitle": "Notes Controller getAllNotes() should use default pagination values",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 with note details",
+      "fullTitle": "Notes Controller getNoteById() should return 200 with note details",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if note not found",
+      "fullTitle": "Notes Controller getNoteById() should call next with error if note not found",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if service throws",
+      "fullTitle": "Notes Controller updateNote() should call next with error if service throws",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if note not found",
+      "fullTitle": "Notes Controller deleteNote() should call next with error if note not found",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 with exported notes file",
+      "fullTitle": "Notes Controller exportNotes() should return 200 with exported notes file",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should include correct headers in export",
+      "fullTitle": "Notes Controller exportNotes() should include correct headers in export",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 201 with import results",
+      "fullTitle": "Notes Controller importNotes() should return 201 with import results",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 400 if notes array is empty",
+      "fullTitle": "Notes Controller importNotes() should return 400 if notes array is empty",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 400 if no valid notes in import",
+      "fullTitle": "Notes Controller importNotes() should return 400 if no valid notes in import",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should skip duplicate noteIds and report",
+      "fullTitle": "Notes Controller importNotes() should skip duplicate noteIds and report",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\notes.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 with user profile data",
+      "fullTitle": "Users Controller getProfile() should return 200 with user profile data",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if service throws",
+      "fullTitle": "Users Controller getProfile() should call next with error if service throws",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 with updated user data",
+      "fullTitle": "Users Controller updateProfile() should return 200 with updated user data",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if service throws",
+      "fullTitle": "Users Controller updateProfile() should call next with error if service throws",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 after successful deletion",
+      "fullTitle": "Users Controller deleteProfile() should return 200 after successful deletion",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error if service throws",
+      "fullTitle": "Users Controller deleteProfile() should call next with error if service throws",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return 200 on successful password change",
+      "fullTitle": "Users Controller changePassword() should return 200 on successful password change",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with 401 error when old password is wrong",
+      "fullTitle": "Users Controller changePassword() should call next with 401 error when old password is wrong",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with 404 error when user not found",
+      "fullTitle": "Users Controller changePassword() should call next with 404 error when user not found",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\controllers\\users.controller.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should create a note",
+      "fullTitle": "Notes DAL should create a note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\notes.dal.test.js",
+      "duration": 48,
+      "currentRetry": 0,
+      "speed": "medium",
+      "err": {}
+    },
+    {
+      "title": "should get notes by user",
+      "fullTitle": "Notes DAL should get notes by user",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\notes.dal.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should get note by id",
+      "fullTitle": "Notes DAL should get note by id",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\notes.dal.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should update a note",
+      "fullTitle": "Notes DAL should update a note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\notes.dal.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should delete a note",
+      "fullTitle": "Notes DAL should delete a note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\notes.dal.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should create a new user",
+      "fullTitle": "Users DAL should create a new user",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\users.dal.test.js",
+      "duration": 257,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should find a user by email",
+      "fullTitle": "Users DAL should find a user by email",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\users.dal.test.js",
+      "duration": 257,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should return null for non-existing email",
+      "fullTitle": "Users DAL should return null for non-existing email",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\users.dal.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should find user by id without password",
+      "fullTitle": "Users DAL should find user by id without password",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\users.dal.test.js",
+      "duration": 256,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should update a user",
+      "fullTitle": "Users DAL should update a user",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\users.dal.test.js",
+      "duration": 252,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should delete a user",
+      "fullTitle": "Users DAL should delete a user",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\dal\\users.dal.test.js",
+      "duration": 279,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should generate a valid JWT token",
+      "fullTitle": "Auth Service generateToken() should generate a valid JWT token",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should generate different tokens for different userIds",
+      "fullTitle": "Auth Service generateToken() should generate different tokens for different userIds",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should generate tokens with correct expiration",
+      "fullTitle": "Auth Service generateToken() should generate tokens with correct expiration",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should be decodable as valid JWT",
+      "fullTitle": "Auth Service generateToken() should be decodable as valid JWT",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle empty userId",
+      "fullTitle": "Auth Service generateToken() should handle empty userId",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle special characters in userId",
+      "fullTitle": "Auth Service generateToken() should handle special characters in userId",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should generate JWT with three parts",
+      "fullTitle": "Auth Service generateToken() should generate JWT with three parts",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should validate token format is non-empty",
+      "fullTitle": "Auth Service generateToken() should validate token format is non-empty",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle null userId gracefully",
+      "fullTitle": "Auth Service Error Handling for Token Generation should handle null userId gracefully",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle undefined userId gracefully",
+      "fullTitle": "Auth Service Error Handling for Token Generation should handle undefined userId gracefully",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle numeric userId",
+      "fullTitle": "Auth Service Error Handling for Token Generation should handle numeric userId",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should validate token contains userId in payload",
+      "fullTitle": "Auth Service Authentication Validation should validate token contains userId in payload",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should validate token structure",
+      "fullTitle": "Auth Service Authentication Validation should validate token structure",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\auth.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should create a note with valid data",
+      "fullTitle": "Notes Service create() should create a note with valid data",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should create note with minimal content",
+      "fullTitle": "Notes Service create() should create note with minimal content",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should set createdAt timestamp",
+      "fullTitle": "Notes Service create() should set createdAt timestamp",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should get all notes for a user with pagination",
+      "fullTitle": "Notes Service getAll() should get all notes for a user with pagination",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 7,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return only first page notes",
+      "fullTitle": "Notes Service getAll() should return only first page notes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 8,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should return second page notes",
+      "fullTitle": "Notes Service getAll() should return second page notes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 7,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should not return other users notes",
+      "fullTitle": "Notes Service getAll() should not return other users notes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should search notes by title and content",
+      "fullTitle": "Notes Service getAll() should search notes by title and content",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should get a single note by id",
+      "fullTitle": "Notes Service getOne() should get a single note by id",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 404 for non-existing note",
+      "fullTitle": "Notes Service getOne() should throw 404 for non-existing note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 403 when accessing another users note",
+      "fullTitle": "Notes Service getOne() should throw 403 when accessing another users note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should update a note with valid data",
+      "fullTitle": "Notes Service update() should update a note with valid data",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should update only title",
+      "fullTitle": "Notes Service update() should update only title",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 404 for non-existing note",
+      "fullTitle": "Notes Service update() should throw 404 for non-existing note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 403 when updating another users note",
+      "fullTitle": "Notes Service update() should throw 403 when updating another users note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should update updatedAt timestamp",
+      "fullTitle": "Notes Service update() should update updatedAt timestamp",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 117,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should delete a note",
+      "fullTitle": "Notes Service remove() should delete a note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 404 when deleting non-existing note",
+      "fullTitle": "Notes Service remove() should throw 404 when deleting non-existing note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 403 when deleting another users note",
+      "fullTitle": "Notes Service remove() should throw 403 when deleting another users note",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should search notes by query",
+      "fullTitle": "Notes Service search() should search notes by query",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 6,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should be case-insensitive",
+      "fullTitle": "Notes Service search() should be case-insensitive",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\notes.service.test.js",
+      "duration": 7,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should get user profile",
+      "fullTitle": "Users Service should get user profile",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should update user name",
+      "fullTitle": "Users Service should update user name",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should NOT update password through profile update",
+      "fullTitle": "Users Service should NOT update password through profile update",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should NOT update email through profile update",
+      "fullTitle": "Users Service should NOT update email through profile update",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should delete user profile",
+      "fullTitle": "Users Service should delete user profile",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should change password successfully with correct old password",
+      "fullTitle": "Users Service should change password successfully with correct old password",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 518,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should throw 401 when old password is incorrect",
+      "fullTitle": "Users Service should throw 401 when old password is incorrect",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 257,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "should throw 400 when new password is weak",
+      "fullTitle": "Users Service should throw 400 when new password is weak",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 404 when user does not exist for changePassword",
+      "fullTitle": "Users Service should throw 404 when user does not exist for changePassword",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 404 when user does not exist for getProfile",
+      "fullTitle": "Users Service should throw 404 when user does not exist for getProfile",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should throw 404 when user does not exist for updateProfile",
+      "fullTitle": "Users Service should throw 404 when user does not exist for updateProfile",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\services\\users.service.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should create an ApiError with statusCode and message",
+      "fullTitle": "ApiError Utility should create an ApiError with statusCode and message",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiError.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should include errors array when provided",
+      "fullTitle": "ApiError Utility should include errors array when provided",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiError.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle stack trace correctly",
+      "fullTitle": "ApiError Utility should handle stack trace correctly",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiError.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should have correct HTTP status codes",
+      "fullTitle": "ApiError Utility should have correct HTTP status codes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiError.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should have success property as false",
+      "fullTitle": "ApiError Utility should have success property as false",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiError.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should preserve error message",
+      "fullTitle": "ApiError Utility should preserve error message",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiError.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should create an ApiResponse with statusCode and data",
+      "fullTitle": "ApiResponse Utility should create an ApiResponse with statusCode and data",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiResponse.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should set success to true for 2xx status codes",
+      "fullTitle": "ApiResponse Utility should set success to true for 2xx status codes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiResponse.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should set success to false for 4xx and 5xx status codes",
+      "fullTitle": "ApiResponse Utility should set success to false for 4xx and 5xx status codes",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiResponse.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should use default message when not provided",
+      "fullTitle": "ApiResponse Utility should use default message when not provided",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiResponse.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle null data",
+      "fullTitle": "ApiResponse Utility should handle null data",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiResponse.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle complex data objects",
+      "fullTitle": "ApiResponse Utility should handle complex data objects",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiResponse.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should preserve all properties",
+      "fullTitle": "ApiResponse Utility should preserve all properties",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\ApiResponse.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should execute the provided function",
+      "fullTitle": "asyncHandler Middleware should execute the provided function",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\asyncHandler.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should pass req, res, next to the function",
+      "fullTitle": "asyncHandler Middleware should pass req, res, next to the function",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\asyncHandler.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should call next with error when function throws",
+      "fullTitle": "asyncHandler Middleware should call next with error when function throws",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\asyncHandler.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle async errors gracefully",
+      "fullTitle": "asyncHandler Middleware should handle async errors gracefully",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\asyncHandler.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should not call next on successful execution",
+      "fullTitle": "asyncHandler Middleware should not call next on successful execution",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\asyncHandler.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should work with multiple sequential calls",
+      "fullTitle": "asyncHandler Middleware should work with multiple sequential calls",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\asyncHandler.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should validate correct email formats",
+      "fullTitle": "Email Validation Utilities validateEmailFormat should validate correct email formats",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\emailValidation.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should reject invalid email formats",
+      "fullTitle": "Email Validation Utilities validateEmailFormat should reject invalid email formats",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\emailValidation.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should reject null or undefined",
+      "fullTitle": "Email Validation Utilities validateEmailFormat should reject null or undefined",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\emailValidation.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle empty string",
+      "fullTitle": "Email Validation Utilities validateEmailFormat should handle empty string",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\emailValidation.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should validate domains with valid MX records",
+      "fullTitle": "Email Validation Utilities validateEmailDomain should validate domains with valid MX records",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\emailValidation.test.js",
+      "duration": 18,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should reject invalid domains",
+      "fullTitle": "Email Validation Utilities validateEmailDomain should reject invalid domains",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\emailValidation.test.js",
+      "duration": 6,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle malformed emails gracefully",
+      "fullTitle": "Email Validation Utilities validateEmailDomain should handle malformed emails gracefully",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\emailValidation.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should generate a 6-digit OTP",
+      "fullTitle": "OTP Utility generateOTP should generate a 6-digit OTP",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should generate different OTPs on multiple calls",
+      "fullTitle": "OTP Utility generateOTP should generate different OTPs on multiple calls",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should only contain numeric digits",
+      "fullTitle": "OTP Utility generateOTP should only contain numeric digits",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should hash an OTP string",
+      "fullTitle": "OTP Utility hashOTP should hash an OTP string",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should produce consistent hashes for the same OTP",
+      "fullTitle": "OTP Utility hashOTP should produce consistent hashes for the same OTP",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should produce different hashes for different OTPs",
+      "fullTitle": "OTP Utility hashOTP should produce different hashes for different OTPs",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should verify a matching OTP",
+      "fullTitle": "OTP Utility verifyOTP should verify a matching OTP",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should reject a non-matching OTP",
+      "fullTitle": "OTP Utility verifyOTP should reject a non-matching OTP",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "should handle invalid hash format gracefully",
+      "fullTitle": "OTP Utility verifyOTP should handle invalid hash format gracefully",
+      "file": "X:\\PP\\abdul-baseer-mern-10pshine\\backend\\tests\\unit\\utils\\otp.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    }
+  ]
+}

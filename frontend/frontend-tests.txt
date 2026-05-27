@@ -1,0 +1,12 @@
+
+> frontend@1.0.0 test
+> react-scripts test --watchAll=false --passWithNoTests
+
+PASS src/components/common/Button/Button.test.jsx
+PASS src/pages/AuthPage/SignupPage.test.jsx
+
+Test Suites: 2 passed, 2 total
+Tests:       14 passed, 14 total
+Snapshots:   0 total
+Time:        3.154 s
+Ran all test suites.

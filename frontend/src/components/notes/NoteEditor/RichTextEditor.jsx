@@ -1,4 +1,5 @@
-import { useEffect, useRef, useImperativeHandle, forwardRef, useCallback } from 'react';
+import { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
+import PropTypes from 'prop-types';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -6,10 +7,16 @@ import Placeholder from '@tiptap/extension-placeholder';
 const MenuBar = ({ editor, onVoiceToggle, isVoiceListening, isVoiceSupported, isTitleListening }) => {
   if (!editor) return null;
 
-  // Disable content voice button if title voice is active
   const canUseVoice = !isTitleListening;
 
-  // Toolbar button class
+  // Sonar: extract nested ternary for voice toolbar button styles
+  let voiceButtonClassName = 'text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-500 hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-indigo-50/50 dark:hover:bg-slate-600';
+  if (!canUseVoice) {
+    voiceButtonClassName = 'opacity-40 cursor-not-allowed text-slate-500 dark:text-slate-400';
+  } else if (isVoiceListening) {
+    voiceButtonClassName = 'text-white bg-red-500 border border-red-600 shadow-sm shadow-red-500/30';
+  }
+
   const toolbarBtnClass = (isActive) => `
     px-2 py-1.5 text-xs rounded-md transition-all duration-150 font-medium
     ${isActive 
@@ -94,24 +101,24 @@ const MenuBar = ({ editor, onVoiceToggle, isVoiceListening, isVoiceSupported, is
           disabled={!canUseVoice}
           aria-label={isVoiceListening ? 'Stop voice input' : 'Start voice input'}
           title={isTitleListening ? 'Stop title voice to use content voice' : ''}
-          className={`flex items-center gap-1 px-2 py-1.5 rounded-md text-xs font-medium transition-all duration-150 ${
-            !canUseVoice
-              ? 'opacity-40 cursor-not-allowed text-slate-500 dark:text-slate-400'
-              : isVoiceListening
-              ? 'text-white bg-red-500 border border-red-600 shadow-sm shadow-red-500/30'
-              : 'text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-500 hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-indigo-50/50 dark:hover:bg-slate-600'
-          }`}
+          className={`flex items-center gap-1 px-2 py-1.5 rounded-md text-xs font-medium transition-all duration-150 ${voiceButtonClassName}`}
         >
           {isVoiceListening ? (
             <>
               <span className="flex items-end gap-[2px] h-3">
-                {[0, 0.15, 0.3, 0.15, 0].map((delay, i) => (
+                {[
+                  { delay: 0, height: '40%' },
+                  { delay: 0.15, height: '70%' },
+                  { delay: 0.3, height: '100%' },
+                  { delay: 0.15, height: '70%' },
+                  { delay: 0, height: '40%' },
+                ].map((bar) => (
                   <span
-                    key={i}
+                    key={`voice-bar-${bar.delay}-${bar.height}`}
                     className="w-[2px] bg-white rounded-full animate-soundBar"
                     style={{
-                      animationDelay: `${delay}s`,
-                      height: i === 2 ? '100%' : i % 2 === 0 ? '40%' : '70%',
+                      animationDelay: `${bar.delay}s`,
+                      height: bar.height,
                     }}
                   />
                 ))}
@@ -128,6 +135,18 @@ const MenuBar = ({ editor, onVoiceToggle, isVoiceListening, isVoiceSupported, is
       )}
     </div>
   );
+};
+
+MenuBar.propTypes = {
+  editor: PropTypes.shape({
+    chain: PropTypes.func,
+    isActive: PropTypes.func,
+    can: PropTypes.func,
+  }),
+  onVoiceToggle: PropTypes.func,
+  isVoiceListening: PropTypes.bool,
+  isVoiceSupported: PropTypes.bool,
+  isTitleListening: PropTypes.bool,
 };
 
 const RichTextEditor = forwardRef((props, ref) => {
@@ -190,5 +209,15 @@ const RichTextEditor = forwardRef((props, ref) => {
 });
 
 RichTextEditor.displayName = 'RichTextEditor';
+
+RichTextEditor.propTypes = {
+  content: PropTypes.string,
+  onChange: PropTypes.func,
+  placeholder: PropTypes.string,
+  isTitleListening: PropTypes.bool,
+  onContentVoiceToggle: PropTypes.func,
+  contentVoiceIsListening: PropTypes.bool,
+  contentVoiceIsSupported: PropTypes.bool,
+};
 
 export default RichTextEditor;

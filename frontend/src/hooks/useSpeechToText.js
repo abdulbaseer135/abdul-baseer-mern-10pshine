@@ -17,12 +17,12 @@ const useSpeechToText = () => {
   const restartTimeoutRef = useRef(null)
 
   const isSupported = !!(
-    typeof window !== 'undefined' &&
-    (window.SpeechRecognition || window.webkitSpeechRecognition)
+    typeof globalThis !== 'undefined' &&
+    (globalThis.SpeechRecognition || globalThis.webkitSpeechRecognition)
   )
 
   const createRecognition = useCallback(() => {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition
+    const SR = globalThis.SpeechRecognition || globalThis.webkitSpeechRecognition
     if (!SR) return null
 
     const r = new SR()
@@ -34,7 +34,6 @@ const useSpeechToText = () => {
     r.onstart = () => {
       console.debug('[Voice] Recognition started')
       setIsListening(true)
-      // Clear any pending restart timeout when recognition starts
       if (restartTimeoutRef.current) {
         clearTimeout(restartTimeoutRef.current)
         restartTimeoutRef.current = null
@@ -67,44 +66,33 @@ const useSpeechToText = () => {
 
     r.onerror = (e) => {
       console.warn('[Voice] Error:', e.error)
-      // Don't stop on these errors - they're normal during continuous listening
       if (e.error === 'no-speech') {
         console.debug('[Voice] No speech detected, will restart if still listening')
-        return
-      }
-      if (e.error === 'aborted') {
+      } else if (e.error === 'aborted') {
         console.debug('[Voice] Recognition aborted')
-        return
-      }
-      if (e.error === 'not-allowed') {
+      } else if (e.error === 'not-allowed') {
         setError('Microphone permission denied. Please allow microphone access in your browser settings.')
         setIsListening(false)
         shouldRestartRef.current = false
-        return
-      }
-      if (e.error === 'network') {
+      } else if (e.error === 'network') {
         setError('Network error. Please check your connection.')
-        return
       }
     }
 
-    // ✅ AUTO-RESTART with minimal delay — fixes "stops after specific word length"
     r.onend = () => {
       console.debug('[Voice] Recognition ended, shouldRestart:', shouldRestartRef.current)
-      
+
       if (shouldRestartRef.current) {
-        // Use immediate restart with minimal delay (10ms) to avoid user-noticeable gaps
         restartTimeoutRef.current = setTimeout(() => {
           try {
             console.debug('[Voice] Restarting recognition...')
             r.start()
           } catch (err) {
             console.debug('[Voice] Error restarting:', err.message)
-            // If start fails, retry immediately
             try {
               r.start()
-            } catch (e) {
-              console.warn('[Voice] Failed to restart:', e.message)
+            } catch (retryErr) {
+              console.warn('[Voice] Failed to restart:', retryErr.message)
             }
           }
         }, 10)
@@ -121,18 +109,18 @@ const useSpeechToText = () => {
     if (!recognitionRef.current) {
       recognitionRef.current = createRecognition()
     }
-    
+
     const r = recognitionRef.current
     if (!r) {
       console.warn('[Voice] Recognition not available')
       return
     }
-    
+
     shouldRestartRef.current = true
     setError(null)
     setFinalText('')
     setInterimText('')
-    
+
     try {
       console.debug('[Voice] Starting recognition')
       r.start()
@@ -144,13 +132,12 @@ const useSpeechToText = () => {
   const stopListening = useCallback(() => {
     console.debug('[Voice] Stopping listening')
     shouldRestartRef.current = false
-    
-    // Clear restart timeout
+
     if (restartTimeoutRef.current) {
       clearTimeout(restartTimeoutRef.current)
       restartTimeoutRef.current = null
     }
-    
+
     recognitionRef.current?.stop()
     setIsListening(false)
     setInterimText('')
@@ -160,7 +147,6 @@ const useSpeechToText = () => {
     setFinalText('')
   }, [])
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       shouldRestartRef.current = false

@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+const crypto = require('node:crypto'); // Sonar: prefer node:crypto import
 
 /**
  * Generate a 6-digit OTP code

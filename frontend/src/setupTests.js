@@ -1,4 +1,3 @@
-// import '@testing-library/jest-dom';
 import '@testing-library/jest-dom';
 
 // Silence React Router v6 future flag warnings in all tests

@@ -1,5 +1,16 @@
 {
+  "scripts": {
+    "sonar:backend:coverage": "cd backend && npm test -- --coverage",
+    "sonar:frontend:coverage": "cd frontend && npm test -- --watchAll=false --coverage",
+    "sonar:coverage": "npm run sonar:backend:coverage && npm run sonar:frontend:coverage",
+    "sonar:scan": "sonarqube-scanner",
+    "sonar:analyze": "npm run sonar:coverage && sonarqube-scanner",
+    "sonar:help": "echo Use: npm run sonar:analyze (requires SONAR_TOKEN env var set)"
+  },
   "dependencies": {
     "tailwind-scrollbar": "^4.0.2"
+  },
+  "devDependencies": {
+    "sonarqube-scanner": "^4.3.6"
   }
 }

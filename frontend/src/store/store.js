@@ -14,7 +14,7 @@ const store = configureStore({
 
 
 // ✅ Expose store globally so api.js interceptor can read token from Redux
-window.__REDUX_STORE__ = store;
+globalThis.__REDUX_STORE__ = store; // Sonar: use globalThis
 
 
 export default store;

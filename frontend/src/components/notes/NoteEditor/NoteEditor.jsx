@@ -1,94 +1,93 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import RichTextEditor from './RichTextEditor';
 import useSpeechToText from '../../../hooks/useSpeechToText';
 import { NOTE_CATEGORIES, TASK_STATUSES, CATEGORY_INFO, TASK_STATUS_INFO } from '../../../utils/noteConstants';
-
+import { stripHtmlTags } from '../../../utils/helpers';
+import { openDialog, closeDialog } from '../../../utils/dialogUtils';
 
 const NoteEditor = ({ note, onSave, onClose, loading }) => {
-  const { register, handleSubmit, reset, formState: { errors }, watch } = useForm();
+  const { handleSubmit, reset, formState: { errors } } = useForm();
+  const dialogRef = useRef(null);
   const [content, setContent]           = useState('');
   const [contentError, setContentError] = useState('');
   const [title, setTitle]               = useState('');
-  const [category, setCategory]         = useState('general'); // ✅ PR 2
-  const [taskStatus, setTaskStatus]     = useState('todo');    // ✅ PR 2
-  const richTextEditorRef              = useRef(null);
+  const [category, setCategory]         = useState('general');
+  const [taskStatus, setTaskStatus]     = useState('todo');
+  const richTextEditorRef               = useRef(null);
 
-  // ✅ CONTENT VOICE — separate hook instance
   const contentVoice = useSpeechToText();
-  const previousInterimRef = useRef(''); // Track previous interim to detect new words
-  const previousFinalRef = useRef(''); // Track previous final to detect completion
+  const previousInterimRef = useRef('');
+  const previousFinalRef = useRef('');
 
-  // ✅ TITLE VOICE — separate hook instance (never runs simultaneously)
   const titleVoice = useSpeechToText();
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (dialog && !dialog.open) {
+      openDialog(dialog);
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      if (dialog?.open) closeDialog(dialog);
+      document.body.style.overflow = '';
+    };
+  }, []);
 
   useEffect(() => {
     if (note) {
       reset({ title: note.title });
       setTitle(note.title || '');
       setContent(note.content || '');
-      setCategory(note.category || 'general'); // ✅ PR 2
-      setTaskStatus(note.taskStatus || 'todo'); // ✅ PR 2
+      setCategory(note.category || 'general');
+      setTaskStatus(note.taskStatus || 'todo');
     } else {
       reset({ title: '' });
       setTitle('');
       setContent('');
-      setCategory('general'); // ✅ PR 2
-      setTaskStatus('todo');   // ✅ PR 2
+      setCategory('general');
+      setTaskStatus('todo');
     }
     setContentError('');
   }, [note, reset]);
 
-  // ═══════════════════════════════════════════════════════════════════
-  // TITLE VOICE HANDLERS
-  // ═══════════════════════════════════════════════════════════════════
-
-  // ✅ Handle title FINAL text → commit to title state
   useEffect(() => {
-    if (!titleVoice.finalText) return
+    if (!titleVoice.finalText) return;
 
     setTitle((prev) => {
-      const updated = (prev + titleVoice.finalText).slice(0, 100)
-      return updated
-    })
-    titleVoice.resetFinalText()
-    titleVoice.stopListening() // auto-stop after sentence
-  }, [titleVoice.finalText])
+      const updated = (prev + titleVoice.finalText).slice(0, 100);
+      return updated;
+    });
+    titleVoice.resetFinalText();
+    titleVoice.stopListening();
+  }, [titleVoice.finalText]);
 
-  // ═══════════════════════════════════════════════════════════════════
-  // CONTENT VOICE HANDLERS
-  // ═══════════════════════════════════════════════════════════════════
-
-  // ✅ Handle content INTERIM text → append only NEW words, word-by-word
   useEffect(() => {
     if (!richTextEditorRef.current || !contentVoice.isListening) return;
-    
+
     const editor = richTextEditorRef.current.getEditor?.();
     if (!editor) return;
 
     const currentInterim = contentVoice.interimText;
     const prevInterim = previousInterimRef.current;
 
-    // Only append if interim text is longer than before (new words added)
     if (currentInterim.length > prevInterim.length) {
-      // Find the new part by removing the old part
       const newText = currentInterim.slice(prevInterim.length);
-      
+
       if (newText.trim()) {
         console.debug('[Voice] Appending interim:', newText);
-        // Append WITHOUT formatting for smooth, clean display
         editor
           .chain()
           .focus()
           .insertContent(newText)
           .run();
       }
-      
+
       previousInterimRef.current = currentInterim;
     }
   }, [contentVoice.interimText, contentVoice.isListening]);
 
-  // ✅ Handle content FINAL text → commit with space and reset for next phrase
   useEffect(() => {
     if (!contentVoice.finalText || !richTextEditorRef.current) return;
 
@@ -96,109 +95,108 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
     if (!editor) return;
 
     console.debug('[Voice] Final text:', contentVoice.finalText);
-    
-    // The final text has already been shown as interim, just add a space
+
     editor
       .chain()
       .focus()
       .insertContent(' ')
       .run();
-    
-    // Reset tracking for next phrase
+
     previousInterimRef.current = '';
     previousFinalRef.current = contentVoice.finalText;
     contentVoice.resetFinalText();
     console.debug('[Voice] Ready for next phrase');
   }, [contentVoice.finalText]);
 
-  // ✅ Reset when voice listening stops
   useEffect(() => {
     if (!contentVoice.isListening) {
       previousInterimRef.current = '';
     }
   }, [contentVoice.isListening]);
 
-  // ═══════════════════════════════════════════════════════════════════
-  // VOICE BUTTON HANDLERS
-  // ═══════════════════════════════════════════════════════════════════
-
   const handleTitleVoiceToggle = useCallback(() => {
     if (titleVoice.isListening) {
-      titleVoice.stopListening()
+      titleVoice.stopListening();
     } else {
-      // Stop content voice if running
       if (contentVoice.isListening) {
         if (richTextEditorRef.current?.stopContentVoice) {
-          richTextEditorRef.current.stopContentVoice()
+          richTextEditorRef.current.stopContentVoice();
         }
-        contentVoice.stopListening()
+        contentVoice.stopListening();
       }
-      titleVoice.startListening()
+      titleVoice.startListening();
     }
-  }, [titleVoice.isListening, contentVoice.isListening])
+  }, [titleVoice, contentVoice]);
 
   const handleContentVoiceToggle = useCallback(() => {
     if (contentVoice.isListening) {
-      // Stop listening and reset
-      contentVoice.stopListening()
-      previousInterimRef.current = ''
+      contentVoice.stopListening();
+      previousInterimRef.current = '';
     } else {
-      // Stop title voice if running
       if (titleVoice.isListening) {
-        titleVoice.stopListening()
+        titleVoice.stopListening();
       }
-      previousInterimRef.current = ''
-      contentVoice.startListening()
+      previousInterimRef.current = '';
+      contentVoice.startListening();
     }
-  }, [contentVoice.isListening, titleVoice.isListening])
+  }, [contentVoice, titleVoice]);
 
   const onSubmit = (data) => {
-    const plainText = content.replace(/<[^>]+>/g, '').trim();
-    if (!plainText) { setContentError('Content is required'); return; }
+    const plainText = stripHtmlTags(content).trim();
+    if (!plainText) {
+      setContentError('Content is required');
+      return;
+    }
     setContentError('');
-    
-    // ✅ PR 2: Normalize data
+
     const noteData = {
       title: title || data.title,
       content,
       category,
-      isPinned: note?.isPinned || false, // Preserve existing isPinned
+      isPinned: note?.isPinned || false,
     };
-    
-    // ✅ Only include taskStatus if category is 'task'
+
     if (category === 'task') {
       noteData.taskStatus = taskStatus;
     }
-    
+
     onSave(noteData);
   };
 
+  let saveButtonLabel = 'Create Note';
+  if (note) {
+    saveButtonLabel = 'Update Note';
+  }
 
   return (
-    /* ─── Backdrop ──────────────────────────────────── */
-    <div
+    <dialog
+      ref={dialogRef}
       className="
         fixed inset-0 z-50
         flex items-center justify-center
         px-3 sm:px-4 py-4 sm:py-6
-        bg-black/50 dark:bg-black/70
-        backdrop-blur-sm
+        m-0 p-0 w-full max-w-none max-h-none
+        border-0 bg-transparent
       "
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      aria-labelledby="note-editor-heading"
     >
-
-      {/* ─── Modal Panel ─────────────────────────────── */}
-      <div className="
-        w-full max-w-2xl
-        bg-white dark:bg-slate-800
-        border border-slate-200 dark:border-slate-700
-        rounded-lg sm:rounded-xl shadow-xl dark:shadow-black/40
-        flex flex-col
-        max-h-[92vh] sm:max-h-[90vh]
-        animate-in
-      ">
-
-        {/* ─── Header ──────────────────────────────────── */}
+      <button
+        type="button"
+        className="absolute inset-0 w-full h-full m-0 p-0 border-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm cursor-default"
+        aria-label="Close note editor"
+        onClick={onClose}
+      />
+      <div
+        className="
+          relative z-10 w-full max-w-2xl
+          bg-white dark:bg-slate-800
+          border border-slate-200 dark:border-slate-700
+          rounded-lg sm:rounded-xl shadow-xl dark:shadow-black/40
+          flex flex-col
+          max-h-[92vh] sm:max-h-[90vh]
+          animate-in
+        "
+      >
         <div className="
           flex items-center justify-between
           px-4 sm:px-5 py-3 sm:py-3
@@ -206,7 +204,6 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
           shrink-0
         ">
           <div className="flex items-center gap-2">
-            {/* Icon badge */}
             <div className="
               w-8 h-8 rounded-md flex items-center justify-center text-xs
               bg-indigo-100 dark:bg-indigo-950
@@ -214,13 +211,13 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
             ">
               {note ? <EditIcon /> : <PlusIcon />}
             </div>
-            <h2 className="text-sm font-semibold text-slate-900 dark:text-white">
+            <h2 id="note-editor-heading" className="text-sm font-semibold text-slate-900 dark:text-white">
               {note ? 'Edit Note' : 'New Note'}
             </h2>
           </div>
 
-          {/* Close button */}
           <button
+            type="button"
             onClick={onClose}
             aria-label="Close"
             className="
@@ -236,30 +233,22 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
           </button>
         </div>
 
-        {/* ─── Form Body ───────────────────────────────── */}
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-3 px-4 sm:px-5 py-3 sm:py-4 overflow-y-auto"
         >
-
-          {/* Title field */}
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+            <label htmlFor="note-editor-title" className="text-xs font-semibold text-slate-700 dark:text-slate-300">
               Title
             </label>
 
-            {/* Floating animated label while listening */}
             {titleVoice.isListening && (
               <div className="absolute -top-6 left-0 flex items-center gap-1.5 pt-2">
                 <span className="flex gap-0.5 items-end h-3">
-                  <span className="w-0.5 bg-red-500 rounded-full animate-bar1" 
-                    style={{ height: '40%', animationDelay: '0s' }} />
-                  <span className="w-0.5 bg-red-500 rounded-full animate-bar1" 
-                    style={{ height: '100%', animationDelay: '0.15s' }} />
-                  <span className="w-0.5 bg-red-500 rounded-full animate-bar1" 
-                    style={{ height: '60%', animationDelay: '0.3s' }} />
-                  <span className="w-0.5 bg-red-500 rounded-full animate-bar1" 
-                    style={{ height: '80%', animationDelay: '0.45s' }} />
+                  <span className="w-0.5 bg-red-500 rounded-full animate-bar1" style={{ height: '40%', animationDelay: '0s' }} />
+                  <span className="w-0.5 bg-red-500 rounded-full animate-bar1" style={{ height: '100%', animationDelay: '0.15s' }} />
+                  <span className="w-0.5 bg-red-500 rounded-full animate-bar1" style={{ height: '60%', animationDelay: '0.3s' }} />
+                  <span className="w-0.5 bg-red-500 rounded-full animate-bar1" style={{ height: '80%', animationDelay: '0.45s' }} />
                 </span>
                 <span className="text-xs font-medium text-red-500 tracking-wide">
                   Listening for title...
@@ -267,9 +256,9 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
               </div>
             )}
 
-            {/* Title input with voice mic button */}
             <div className="relative flex items-center group">
               <input
+                id="note-editor-title"
                 type="text"
                 placeholder="Give your note a title..."
                 value={title + titleVoice.interimText}
@@ -295,7 +284,6 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
                 `}
               />
 
-              {/* Voice mic button inside input (modern design) */}
               {titleVoice.isSupported && (
                 <button
                   type="button"
@@ -326,11 +314,10 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
             )}
           </div>
 
-          {/* ✅ PR 2: Category Field */}
-          <div className="flex flex-col gap-1">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+          <fieldset className="flex flex-col gap-1 border-0 p-0 m-0">
+            <legend className="text-xs font-semibold text-slate-700 dark:text-slate-300">
               Category
-            </label>
+            </legend>
             <div className="flex gap-2 flex-wrap">
               {NOTE_CATEGORIES.map((cat) => (
                 <button
@@ -338,7 +325,6 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
                   type="button"
                   onClick={() => {
                     setCategory(cat);
-                    // Clear taskStatus if switching away from task
                     if (cat !== 'task') {
                       setTaskStatus('todo');
                     }
@@ -356,14 +342,13 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
                 </button>
               ))}
             </div>
-          </div>
+          </fieldset>
 
-          {/* ✅ PR 2: Task Status Field (Show only for task category) */}
           {category === 'task' && (
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+            <fieldset className="flex flex-col gap-1 border-0 p-0 m-0">
+              <legend className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                 Task Status
-              </label>
+              </legend>
               <div className="flex gap-2 flex-wrap">
                 {TASK_STATUSES.map((status) => (
                   <button
@@ -383,15 +368,15 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
                   </button>
                 ))}
               </div>
-            </div>
+            </fieldset>
           )}
 
-          {/* Content field */}
-          <div className="flex flex-col gap-1">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+          <fieldset className="flex flex-col gap-1 border-0 p-0 m-0">
+            <legend className="text-xs font-semibold text-slate-700 dark:text-slate-300">
               Content
-            </label>
-            <div className={`
+            </legend>
+            <div
+              className={`
               rounded-md overflow-hidden
               border transition-all duration-150
               ${contentError
@@ -401,13 +386,14 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
               bg-white dark:bg-slate-700
               focus-within:border-indigo-500 dark:focus-within:border-indigo-400
               focus-within:ring-2 focus-within:ring-indigo-500/20 dark:focus-within:ring-indigo-400/20
-            `}>
+            `}
+            >
               <RichTextEditor
                 ref={richTextEditorRef}
                 content={content}
                 onChange={(val) => {
                   setContent(val);
-                  const plain = val.replace(/<[^>]+>/g, '').trim();
+                  const plain = stripHtmlTags(val).trim();
                   if (plain) setContentError('');
                 }}
                 placeholder="Write your note here..."
@@ -423,12 +409,9 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
                 {contentError}
               </p>
             )}
-          </div>
+          </fieldset>
 
-          {/* ─── Footer Buttons ──────────────────────────────── */}
           <div className="flex gap-2 pt-2 pb-1">
-
-            {/* Cancel */}
             <button
               type="button"
               onClick={onClose}
@@ -444,7 +427,6 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
               Cancel
             </button>
 
-            {/* Save / Update */}
             <button
               type="submit"
               disabled={loading}
@@ -460,57 +442,66 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
             >
               {loading ? (
                 <>
-                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10"
-                      stroke="currentColor" strokeWidth="4"/>
-                    <path className="opacity-75" fill="currentColor"
-                      d="M4 12a8 8 0 018-8v8z"/>
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                   </svg>
                   Saving...
                 </>
-              ) : note ? 'Update Note' : 'Create Note'}
+              ) : saveButtonLabel}
             </button>
-
           </div>
         </form>
       </div>
-    </div>
+    </dialog>
   );
 };
 
+const editorNoteShape = PropTypes.shape({
+  title: PropTypes.string,
+  content: PropTypes.string,
+  category: PropTypes.string,
+  taskStatus: PropTypes.string,
+  isPinned: PropTypes.bool,
+});
 
-/* ─── Icons ──────────────────────────────────────────── */
+NoteEditor.propTypes = {
+  note: editorNoteShape,
+  onSave: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
+};
 
 const EditIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"
     stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
-    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
   </svg>
 );
 
 const PlusIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"
     stroke="#6366f1" strokeWidth="2.5" strokeLinecap="round">
-    <line x1="12" y1="5" x2="12" y2="19"/>
-    <line x1="5"  y1="12" x2="19" y2="12"/>
+    <line x1="12" y1="5" x2="12" y2="19" />
+    <line x1="5" y1="12" x2="19" y2="12" />
   </svg>
 );
 
 const CloseIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-    <line x1="18" y1="6"  x2="6"  y2="18"/>
-    <line x1="6"  y1="6"  x2="18" y2="18"/>
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
   </svg>
 );
 
 const ErrorIcon = () => (
-  <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true"
     stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-    <circle cx="12" cy="12" r="10"/>
-    <line x1="12" y1="8" x2="12" y2="12"/>
-    <line x1="12" y1="16" x2="12.01" y2="16"/>
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="8" x2="12" y2="12" />
+    <line x1="12" y1="16" x2="12.01" y2="16" />
   </svg>
 );
 

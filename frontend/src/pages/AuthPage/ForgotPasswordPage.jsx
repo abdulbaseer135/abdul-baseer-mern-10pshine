@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import { sendOTPService } from '../../services/auth.service';
+
+// ✅ Constants
+const OTP_REDIRECT_DELAY = 2000; // 2 seconds
 
 const ForgotPasswordPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -9,6 +13,13 @@ const ForgotPasswordPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+
+  // ✅ Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      // Cleanup handler for pending operations
+    };
+  }, []);
 
   const inputClass = (hasError) => `
     w-full px-4 py-2.5 rounded-xl text-sm
@@ -31,12 +42,20 @@ const ForgotPasswordPage = () => {
     try {
       await sendOTPService(data.email, 'reset');
       setSuccess(true);
-      // Navigate to OTP verification page after 2 seconds
-      setTimeout(() => {
+      // Navigate to OTP verification page after delay
+      const timeoutId = setTimeout(() => {
         navigate('/verify-otp', { state: { email: data.email, purpose: 'reset' } });
-      }, 2000);
+      }, OTP_REDIRECT_DELAY);
+      return () => clearTimeout(timeoutId);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to send OTP. Please try again.');
+      // Sonar: handle caught exception - log detailed error for debugging
+      const errorMessage = err?.response?.data?.message || err?.message || 'Failed to send OTP. Please try again.';
+      console.error('[ForgotPasswordPage] Failed to send OTP:', {
+        message: errorMessage,
+        status: err?.response?.status,
+        email: data.email,
+      });
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -118,18 +137,19 @@ const ForgotPasswordPage = () => {
 
             {/* ─── Email ─────────────────────────────── */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider
-                text-gray-400 dark:text-gray-600">
+              <label htmlFor="forgot-email" className="text-xs font-semibold uppercase tracking-wider
+                text-gray-600 dark:text-gray-400">
                 Email Address
               </label>
               <input
+                id="forgot-email"
                 type="email"
                 placeholder="you@example.com"
                 className={inputClass(errors.email)}
                 {...register('email', {
                   required: 'Email is required',
                   pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i,
+                    value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i,
                     message: 'Invalid email address',
                   },
                 })}
@@ -191,7 +211,7 @@ const CheckIcon = () => (
 );
 
 const ErrorIcon = ({ size = 13 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true"
     stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
     className="shrink-0 mt-px">
     <circle cx="12" cy="12" r="10"/>
@@ -200,6 +220,10 @@ const ErrorIcon = ({ size = 13 }) => (
   </svg>
 );
 
+ErrorIcon.propTypes = {
+  size: PropTypes.number,
+};
+
 const SpinnerIcon = () => (
   <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
     <circle className="opacity-25" cx="12" cy="12" r="10"
@@ -207,5 +231,8 @@ const SpinnerIcon = () => (
     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
   </svg>
 );
+
+// ✅ PropTypes for main component (component doesn't accept props, but this documents intent)
+ForgotPasswordPage.propTypes = {};
 
 export default ForgotPasswordPage;

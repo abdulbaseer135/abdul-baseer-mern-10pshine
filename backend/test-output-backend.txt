@@ -1,0 +1,1085 @@
+
+> backend@1.0.0 test
+> mocha
+
+Γùç injected env (0) from .env // tip: Γîü auth for agents [www.vestauth.com]
+
+
+  Notes Routes Integration Tests
+    Notes Service Integration
+[09:53:09.101] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128434ececa265bd6cdd7d"
+    [35mtitle[39m: "New"
+[09:53:09.116] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128434ececa265bd6cdd7d"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd7f"
+[09:53:09.117] [32mINFO[39m (9220): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a128434ececa265bd6cdd7d"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: ""
+[09:53:09.127] [32mINFO[39m (9220): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a128434ececa265bd6cdd7d"
+    [35mcount[39m: 2
+[09:53:09.127] [32mINFO[39m (9220): [36mFetching single note[39m
+    [35muserId[39m: "6a128434ececa265bd6cdd7d"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd7f"
+[09:53:09.129] [32mINFO[39m (9220): [36mNote fetched successfully[39m
+    [35muserId[39m: "6a128434ececa265bd6cdd7d"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd7f"
+[09:53:09.129] [32mINFO[39m (9220): [36mUpdating note[39m
+    [35muserId[39m: "6a128434ececa265bd6cdd7d"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd7f"
+[09:53:09.134] [32mINFO[39m (9220): [36mNote updated successfully[39m
+    [35muserId[39m: "6a128434ececa265bd6cdd7d"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd7f"
+[09:53:09.134] [32mINFO[39m (9220): [36mDeleting note[39m
+    [35muserId[39m: "6a128434ececa265bd6cdd7d"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd7f"
+[09:53:09.136] [32mINFO[39m (9220): [36mNote deleted successfully[39m
+    [35muserId[39m: "6a128434ececa265bd6cdd7d"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd7f"
+[09:53:09.136] [32mINFO[39m (9220): [36mFetching single note[39m
+    [35muserId[39m: "6a128434ececa265bd6cdd7d"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd7f"
+      Γ£ö should create, retrieve, update, and delete notes
+[09:53:09.136] [33mWARN[39m (9220): [36mNote not found[39m
+    [35muserId[39m: "6a128434ececa265bd6cdd7d"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd7f"
+[09:53:09.396] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd80"
+    [35mtitle[39m: "Note 0"
+[09:53:09.397] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd80"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd82"
+[09:53:09.397] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd80"
+    [35mtitle[39m: "Note 1"
+[09:53:09.397] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd80"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd83"
+[09:53:09.398] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd80"
+    [35mtitle[39m: "Note 2"
+[09:53:09.398] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd80"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd84"
+[09:53:09.398] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd80"
+    [35mtitle[39m: "Note 3"
+[09:53:09.399] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd80"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd85"
+[09:53:09.399] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd80"
+    [35mtitle[39m: "Note 4"
+[09:53:09.400] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd80"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd86"
+[09:53:09.400] [32mINFO[39m (9220): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd80"
+    [35mpage[39m: 1
+    [35mlimit[39m: 3
+    [35msearch[39m: ""
+[09:53:09.403] [32mINFO[39m (9220): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd80"
+    [35mcount[39m: 3
+[09:53:09.404] [32mINFO[39m (9220): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd80"
+    [35mpage[39m: 2
+    [35mlimit[39m: 3
+    [35msearch[39m: ""
+      Γ£ö should handle pagination correctly
+[09:53:09.406] [32mINFO[39m (9220): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd80"
+    [35mcount[39m: 3
+[09:53:09.663] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd87"
+    [35mtitle[39m: "JavaScript Basics"
+[09:53:09.663] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd87"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd89"
+[09:53:09.664] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd87"
+    [35mtitle[39m: "Python Guide"
+[09:53:09.664] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd87"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd8a"
+[09:53:09.664] [32mINFO[39m (9220): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd87"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: "JavaScript"
+      Γ£ö should search notes by title and content
+[09:53:09.667] [32mINFO[39m (9220): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd87"
+    [35mcount[39m: 1
+[09:53:10.180] [32mINFO[39m (9220): [36mFetching single note[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd8d"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd8c"
+      Γ£ö should prevent access to other users notes (255ms)
+[09:53:10.181] [33mWARN[39m (9220): [36mUnauthorized access attempt on note[39m
+    [35muserId[39m: "6a128435ececa265bd6cdd8d"
+    [35mnoteId[39m: "6a128435ececa265bd6cdd8c"
+[09:53:10.443] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128436ececa265bd6cdd8e"
+    [35mtitle[39m: "Import 1"
+    [35mcategory[39m: "general"
+[09:53:10.446] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128436ececa265bd6cdd8e"
+    [35mnoteId[39m: "6a128436ececa265bd6cdd90"
+    [35mcategory[39m: "general"
+[09:53:10.447] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128436ececa265bd6cdd8e"
+    [35mtitle[39m: "Import 2"
+    [35mcategory[39m: "task"
+      Γ£ö should handle note import successfully
+[09:53:10.450] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128436ececa265bd6cdd8e"
+    [35mnoteId[39m: "6a128436ececa265bd6cdd91"
+    [35mcategory[39m: "task"
+[09:53:10.711] [32mINFO[39m (9220): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a128436ececa265bd6cdd92"
+    [35mpage[39m: 1
+    [35mlimit[39m: 100
+    [35msearch[39m: ""
+      Γ£ö should handle note export
+[09:53:10.713] [32mINFO[39m (9220): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a128436ececa265bd6cdd92"
+    [35mcount[39m: 1
+    User Isolation
+[09:53:11.477] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128436ececa265bd6cdd96"
+    [35mtitle[39m: "User1 Note"
+[09:53:11.478] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128436ececa265bd6cdd96"
+    [35mnoteId[39m: "6a128437ececa265bd6cdd98"
+[09:53:11.478] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128437ececa265bd6cdd97"
+    [35mtitle[39m: "User2 Note"
+[09:53:11.478] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128437ececa265bd6cdd97"
+    [35mnoteId[39m: "6a128437ececa265bd6cdd99"
+[09:53:11.478] [32mINFO[39m (9220): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a128436ececa265bd6cdd96"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: ""
+[09:53:11.481] [32mINFO[39m (9220): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a128436ececa265bd6cdd96"
+    [35mcount[39m: 1
+[09:53:11.481] [32mINFO[39m (9220): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a128437ececa265bd6cdd97"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: ""
+      Γ£ö each user should only see their own notes (513ms)
+[09:53:11.482] [32mINFO[39m (9220): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a128437ececa265bd6cdd97"
+    [35mcount[39m: 1
+    Data Integrity
+[09:53:11.739] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128437ececa265bd6cdd9a"
+    [35mtitle[39m: "Original"
+    [35mcategory[39m: "task"
+[09:53:11.740] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128437ececa265bd6cdd9a"
+    [35mnoteId[39m: "6a128437ececa265bd6cdd9c"
+    [35mcategory[39m: "task"
+[09:53:11.740] [32mINFO[39m (9220): [36mUpdating note[39m
+    [35muserId[39m: "6a128437ececa265bd6cdd9a"
+    [35mnoteId[39m: "6a128437ececa265bd6cdd9c"
+      Γ£ö should preserve note metadata on update
+[09:53:11.743] [32mINFO[39m (9220): [36mNote updated successfully[39m
+    [35muserId[39m: "6a128437ececa265bd6cdd9a"
+    [35mnoteId[39m: "6a128437ececa265bd6cdd9c"
+
+  Express App Setup - app.js
+    CORS Configuration
+      1) should allow localhost:3000
+      Γ£ö should allow localhost:3001
+      Γ£ö should allow 127.0.0.1:3000
+      Γ£ö should allow requests without origin header (same-origin)
+      Γ£ö should reject unauthorized origins
+      Γ£ö should have credentials enabled
+    Middleware Setup
+      Γ£ö should disable x-powered-by header
+      Γ£ö should have JSON body parser middleware
+      Γ£ö should have URL-encoded body parser middleware
+      Γ£ö should have request logger middleware
+      Γ£ö should have error handler middleware
+    Static File Serving
+      Γ£ö should serve uploads directory as static files
+      Γ£ö should serve files from /uploads path
+    API Routes
+      Γ£ö should mount /api/v1 routes
+      Γ£ö should have route handling setup
+    Health Check Endpoint
+      Γ£ö should return 200 OK on health check
+      Γ£ö should include ISO timestamp in health check response
+[Health Check] Error sending health status: Test error
+      Γ£ö should handle health check errors gracefully
+    404 Handler
+      Γ£ö should return 404 for undefined routes
+      Γ£ö should include request path in 404 response
+      Γ£ö should include request method in 404 response
+    Error Handler Middleware
+      Γ£ö should be registered as last middleware
+      Γ£ö should handle application errors
+    Request Flow
+      Γ£ö should handle GET requests
+      Γ£ö should handle POST requests with JSON body
+      Γ£ö should handle PUT requests
+      Γ£ö should handle DELETE requests
+      Γ£ö should handle URL-encoded data
+    App Instance
+      2) should export Express app instance
+      Γ£ö should have listen method
+
+  Auth Controller
+    signup()
+[09:53:11.874] [32mINFO[39m (9220): [36mUser registration attempt[39m
+    [35memail[39m: "abdul@test.com"
+      Γ£ö should call next with error if service throws
+    loginUser()
+[09:53:11.875] [33mWARN[39m (9220): [36mDNS MX lookup failed[39m
+    [35memail[39m: "abdul@test.com"
+    error: "queryMx ECONNREFUSED test.com"
+[09:53:11.875] [33mWARN[39m (9220): [36mDNS validation inconclusive for unknown domain[39m
+    [35memail[39m: "abdul@test.com"
+[09:53:11.875] [33mWARN[39m (9220): [36mRegistration failed ΓÇö invalid domain or cannot receive mail[39m
+    [35memail[39m: "abdul@test.com"
+      Γ£ö should call next with error if service throws
+    logout()
+[09:53:11.877] [32mINFO[39m (9220): [36mUser login attempt[39m
+    [35memail[39m: "abdul@test.com"
+      Γ£ö should return 200 on logout
+    getMe()
+      Γ£ö should return 200 with current user data
+      Γ£ö should format image URLs correctly
+    sendOTPCode()
+      Γ£ö should call next with error if email is missing
+      Γ£ö should call next with error if purpose is missing
+    verifyOTPHandler()
+      Γ£ö should call next with error if required fields are missing
+    resetUserPassword()
+      Γ£ö should call next with error if email is missing
+      Γ£ö should call next with error if newPassword is missing
+
+  Notes Controller
+    createNote()
+      Γ£ö should call next with error if service throws
+    getAllNotes()
+      Γ£ö should return 200 with notes list
+      Γ£ö should use default pagination values
+    getNoteById()
+      Γ£ö should return 200 with note details
+      Γ£ö should call next with error if note not found
+    updateNote()
+      Γ£ö should call next with error if service throws
+    deleteNote()
+      Γ£ö should call next with error if note not found
+    exportNotes()
+      Γ£ö should return 200 with exported notes file
+      Γ£ö should include correct headers in export
+    importNotes()
+      Γ£ö should return 201 with import results
+      Γ£ö should return 400 if notes array is empty
+      Γ£ö should return 400 if no valid notes in import
+      Γ£ö should skip duplicate noteIds and report
+
+  Users Controller
+    getProfile()
+      Γ£ö should return 200 with user profile data
+      Γ£ö should call next with error if service throws
+    updateProfile()
+      Γ£ö should return 200 with updated user data
+      Γ£ö should call next with error if service throws
+    deleteProfile()
+      Γ£ö should return 200 after successful deletion
+      Γ£ö should call next with error if service throws
+    changePassword()
+      Γ£ö should return 200 on successful password change
+      Γ£ö should call next with 401 error when old password is wrong
+      Γ£ö should call next with 404 error when user not found
+
+  Notes DAL
+    Γ£ö should create a note (48ms)
+    Γ£ö should get notes by user
+    Γ£ö should get note by id
+    Γ£ö should update a note
+    Γ£ö should delete a note
+
+  Users DAL
+    Γ£ö should create a new user (262ms)
+    Γ£ö should find a user by email (258ms)
+    Γ£ö should return null for non-existing email
+    Γ£ö should find user by id without password (256ms)
+    Γ£ö should update a user (255ms)
+Deleted 0 notes for user 6a128439ececa265bd6cdda7
+    Γ£ö should delete a user (260ms)
+
+  Email Validation Utilities
+    validateEmailFormat
+      Γ£ö should accept valid email formats
+      Γ£ö should reject invalid email formats
+      Γ£ö should be case-insensitive
+      Γ£ö should accept emails with numbers and special characters
+    validateEmailDomain
+      Γ£ö should return true when MX records exist
+      Γ£ö should return true for known valid domains even if DNS fails
+[09:53:14.162] [33mWARN[39m (9220): [36mDNS MX lookup failed[39m
+    [35memail[39m: "user@gmail.com"
+    error: "DNS lookup failed"
+[09:53:14.162] [32mINFO[39m (9220): [36mDNS failed but domain is known valid[39m
+    [35memail[39m: "user@gmail.com"
+    [35mdomain[39m: "gmail.com"
+      Γ£ö should return true for multiple known valid domains
+[09:53:14.163] [33mWARN[39m (9220): [36mDNS MX lookup failed[39m
+    [35memail[39m: "user@gmail.com"
+    error: "DNS lookup failed"
+      Γ£ö should return false for unknown domain if DNS fails
+[09:53:14.163] [32mINFO[39m (9220): [36mDNS failed but domain is known valid[39m
+    [35memail[39m: "user@gmail.com"
+    [35mdomain[39m: "gmail.com"
+[09:53:14.163] [33mWARN[39m (9220): [36mDNS MX lookup failed[39m
+    [35memail[39m: "test@yahoo.com"
+    error: "DNS lookup failed"
+[09:53:14.163] [32mINFO[39m (9220): [36mDNS failed but domain is known valid[39m
+    [35memail[39m: "test@yahoo.com"
+    [35mdomain[39m: "yahoo.com"
+[09:53:14.163] [33mWARN[39m (9220): [36mDNS MX lookup failed[39m
+    [35memail[39m: "admin@outlook.com"
+    error: "DNS lookup failed"
+[09:53:14.163] [32mINFO[39m (9220): [36mDNS failed but domain is known valid[39m
+    [35memail[39m: "admin@outlook.com"
+    [35mdomain[39m: "outlook.com"
+[09:53:14.163] [33mWARN[39m (9220): [36mDNS MX lookup failed[39m
+    [35memail[39m: "dev@hotmail.com"
+    error: "DNS lookup failed"
+[09:53:14.163] [32mINFO[39m (9220): [36mDNS failed but domain is known valid[39m
+    [35memail[39m: "dev@hotmail.com"
+    [35mdomain[39m: "hotmail.com"
+[09:53:14.163] [33mWARN[39m (9220): [36mDNS MX lookup failed[39m
+    [35memail[39m: "hello@icloud.com"
+    error: "DNS lookup failed"
+[09:53:14.163] [32mINFO[39m (9220): [36mDNS failed but domain is known valid[39m
+    [35memail[39m: "hello@icloud.com"
+    [35mdomain[39m: "icloud.com"
+[09:53:14.163] [33mWARN[39m (9220): [36mDNS MX lookup failed[39m
+    [35memail[39m: "user@unknowndomain123xyz.com"
+    error: "DNS lookup failed"
+[09:53:14.163] [33mWARN[39m (9220): [36mDNS validation inconclusive for unknown domain[39m
+    [35memail[39m: "user@unknowndomain123xyz.com"
+      Γ£ö should return false for invalid email format
+      Γ£ö should return false when MX records array is empty
+      Γ£ö should extract domain correctly for complex emails
+      Γ£ö should be case-insensitive for known domains
+[09:53:14.165] [33mWARN[39m (9220): [36mDNS MX lookup failed[39m
+    [35memail[39m: "user@GMAIL.COM"
+    error: "DNS lookup failed"
+[09:53:14.165] [32mINFO[39m (9220): [36mDNS failed but domain is known valid[39m
+    [35memail[39m: "user@GMAIL.COM"
+    [35mdomain[39m: "gmail.com"
+[09:53:14.165] [33mWARN[39m (9220): [36mDNS MX lookup failed[39m
+    [35memail[39m: "user@Gmail.Com"
+    error: "DNS lookup failed"
+[09:53:14.165] [32mINFO[39m (9220): [36mDNS failed but domain is known valid[39m
+    [35memail[39m: "user@Gmail.Com"
+    [35mdomain[39m: "gmail.com"
+      Γ£ö should handle DNS errors gracefully
+[09:53:14.166] [33mWARN[39m (9220): [36mDNS MX lookup failed[39m
+    [35memail[39m: "user@example.com"
+    error: "Network timeout"
+[09:53:14.166] [33mWARN[39m (9220): [36mDNS validation inconclusive for unknown domain[39m
+    [35memail[39m: "user@example.com"
+      Γ£ö should return true for known valid domains with uppercase
+    Integration: Email validation flow
+[09:53:14.166] [33mWARN[39m (9220): [36mDNS MX lookup failed[39m
+    [35memail[39m: "test@PROTONMAIL.COM"
+    error: "DNS lookup failed"
+[09:53:14.166] [32mINFO[39m (9220): [36mDNS failed but domain is known valid[39m
+    [35memail[39m: "test@PROTONMAIL.COM"
+    [35mdomain[39m: "protonmail.com"
+      Γ£ö should validate format first, then domain
+      Γ£ö should handle valid format but failed domain check
+
+[09:53:14.167] [33mWARN[39m (9220): [36mDNS MX lookup failed[39m
+    [35memail[39m: "user@unknown-domain-xyz.com"
+    error: "DNS failed"
+  Auth Middleware - auth.middleware.js
+    protect() middleware
+[09:53:14.167] [33mWARN[39m (9220): [36mDNS validation inconclusive for unknown domain[39m
+    [35memail[39m: "user@unknown-domain-xyz.com"
+      3) should reject request with no Authorization header
+      4) should reject request with non-Bearer token
+      Γ£ö should extract token from Bearer header
+      Γ£ö should verify JWT token with correct secret
+      5) should handle TokenExpiredError
+      6) should handle JsonWebTokenError
+      7) should handle unknown JWT errors
+      8) should reject token with no id in payload
+      9) should fetch user from database
+      10) should attach user to request object
+      11) should call next() without error on success
+      12) should handle database lookup errors
+      13) should reject request when user not found
+      Γ£ö should log token verification failure with details
+      Γ£ö should log user lookup failure with userId
+      Γ£ö should handle token with extra spaces in Bearer header
+      Γ£ö should be exported as a function
+      Γ£ö should handle asyncHandler wrapper errors
+      Γ£ö should not process requests without headers
+      Γ£ö should verify token only with valid Bearer prefix
+      Γ£ö should log IP address on failed verification
+      Γ£ö should handle userId lookup with proper error context
+    Module Export
+      Γ£ö should export protect function
+      Γ£ö should only export protect method
+
+  OTP Utilities
+    generateOTP
+      Γ£ö should generate a 6-digit OTP
+      Γ£ö should generate OTPs within valid range (100000-999999)
+      Γ£ö should generate different OTPs on multiple calls
+    hashOTP
+      Γ£ö should return a 64-character hex string (SHA-256)
+      Γ£ö should hash the same OTP consistently
+      Γ£ö should produce different hashes for different OTPs
+      Γ£ö should handle empty string
+    verifyOTP
+      Γ£ö should return true when OTP matches hash
+      Γ£ö should return false when OTP does not match
+      Γ£ö should be case-sensitive
+      Γ£ö should return false for incorrect hash
+      Γ£ö should handle empty OTP
+    getOTPExpiry
+      Γ£ö should return a Date object
+      Γ£ö should return a future date (10 minutes from now)
+      Γ£ö should return different expirations for different calls (107ms)
+    Integration: Full OTP flow
+      Γ£ö should generate, hash, and verify OTP successfully
+      Γ£ö should fail verification if OTP is tampered with
+
+  Auth Service
+    generateToken()
+      Γ£ö should generate a valid JWT token
+      Γ£ö should generate different tokens for different userIds
+      Γ£ö should generate tokens with correct expiration
+      Γ£ö should be decodable as valid JWT
+      Γ£ö should handle empty userId
+      Γ£ö should handle special characters in userId
+      Γ£ö should generate JWT with three parts
+      Γ£ö should validate token format is non-empty
+    Error Handling for Token Generation
+      Γ£ö should handle null userId gracefully
+      Γ£ö should handle undefined userId gracefully
+      Γ£ö should handle numeric userId
+    Authentication Validation
+      Γ£ö should validate token contains userId in payload
+      Γ£ö should validate token structure
+
+  Notes Service
+    create()
+[09:53:15.711] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843bececa265bd6cdda8"
+    [35mtitle[39m: "My Note"
+      Γ£ö should create a note with valid data
+[09:53:15.712] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843bececa265bd6cdda8"
+    [35mnoteId[39m: "6a12843bececa265bd6cddaa"
+[09:53:16.226] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843bececa265bd6cddab"
+    [35mtitle[39m: "Title Only"
+      Γ£ö should create note with minimal content
+[09:53:16.226] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843bececa265bd6cddab"
+    [35mnoteId[39m: "6a12843cececa265bd6cddad"
+[09:53:16.734] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843cececa265bd6cddae"
+    [35mtitle[39m: "Timestamped"
+      Γ£ö should set createdAt timestamp
+[09:53:16.735] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843cececa265bd6cddae"
+    [35mnoteId[39m: "6a12843cececa265bd6cddb0"
+    getAll()
+[09:53:17.244] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843cececa265bd6cddb1"
+    [35mtitle[39m: "Note 1"
+[09:53:17.245] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843cececa265bd6cddb1"
+    [35mnoteId[39m: "6a12843dececa265bd6cddb3"
+[09:53:17.245] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843cececa265bd6cddb1"
+    [35mtitle[39m: "Note 2"
+[09:53:17.245] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843cececa265bd6cddb1"
+    [35mnoteId[39m: "6a12843dececa265bd6cddb4"
+[09:53:17.245] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843cececa265bd6cddb1"
+    [35mtitle[39m: "Note 3"
+[09:53:17.246] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843cececa265bd6cddb1"
+    [35mnoteId[39m: "6a12843dececa265bd6cddb5"
+[09:53:17.246] [32mINFO[39m (9220): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a12843cececa265bd6cddb1"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: ""
+      Γ£ö should get all notes for a user with pagination
+[09:53:17.249] [32mINFO[39m (9220): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a12843cececa265bd6cddb1"
+    [35mcount[39m: 3
+[09:53:17.762] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843dececa265bd6cddb6"
+    [35mtitle[39m: "Note 0"
+[09:53:17.763] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843dececa265bd6cddb6"
+    [35mnoteId[39m: "6a12843dececa265bd6cddb8"
+[09:53:17.763] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843dececa265bd6cddb6"
+    [35mtitle[39m: "Note 1"
+[09:53:17.764] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843dececa265bd6cddb6"
+    [35mnoteId[39m: "6a12843dececa265bd6cddb9"
+[09:53:17.764] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843dececa265bd6cddb6"
+    [35mtitle[39m: "Note 2"
+[09:53:17.765] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843dececa265bd6cddb6"
+    [35mnoteId[39m: "6a12843dececa265bd6cddba"
+[09:53:17.765] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843dececa265bd6cddb6"
+    [35mtitle[39m: "Note 3"
+[09:53:17.766] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843dececa265bd6cddb6"
+    [35mnoteId[39m: "6a12843dececa265bd6cddbb"
+[09:53:17.766] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843dececa265bd6cddb6"
+    [35mtitle[39m: "Note 4"
+[09:53:17.766] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843dececa265bd6cddb6"
+    [35mnoteId[39m: "6a12843dececa265bd6cddbc"
+[09:53:17.766] [32mINFO[39m (9220): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a12843dececa265bd6cddb6"
+    [35mpage[39m: 1
+    [35mlimit[39m: 3
+    [35msearch[39m: ""
+      Γ£ö should return only first page notes
+[09:53:17.769] [32mINFO[39m (9220): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a12843dececa265bd6cddb6"
+    [35mcount[39m: 3
+[09:53:18.281] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843dececa265bd6cddbd"
+    [35mtitle[39m: "Note 0"
+[09:53:18.282] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843dececa265bd6cddbd"
+    [35mnoteId[39m: "6a12843eececa265bd6cddbf"
+[09:53:18.282] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843dececa265bd6cddbd"
+    [35mtitle[39m: "Note 1"
+[09:53:18.283] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843dececa265bd6cddbd"
+    [35mnoteId[39m: "6a12843eececa265bd6cddc0"
+[09:53:18.283] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843dececa265bd6cddbd"
+    [35mtitle[39m: "Note 2"
+[09:53:18.284] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843dececa265bd6cddbd"
+    [35mnoteId[39m: "6a12843eececa265bd6cddc1"
+[09:53:18.284] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843dececa265bd6cddbd"
+    [35mtitle[39m: "Note 3"
+[09:53:18.285] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843dececa265bd6cddbd"
+    [35mnoteId[39m: "6a12843eececa265bd6cddc2"
+[09:53:18.285] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843dececa265bd6cddbd"
+    [35mtitle[39m: "Note 4"
+[09:53:18.285] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843dececa265bd6cddbd"
+    [35mnoteId[39m: "6a12843eececa265bd6cddc3"
+[09:53:18.285] [32mINFO[39m (9220): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a12843dececa265bd6cddbd"
+    [35mpage[39m: 2
+    [35mlimit[39m: 3
+    [35msearch[39m: ""
+      Γ£ö should return second page notes
+[09:53:18.287] [32mINFO[39m (9220): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a12843dececa265bd6cddbd"
+    [35mcount[39m: 2
+[09:53:18.819] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843eececa265bd6cddc4"
+    [35mtitle[39m: "My Note"
+[09:53:18.820] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843eececa265bd6cddc4"
+    [35mnoteId[39m: "6a12843eececa265bd6cddc6"
+[09:53:18.820] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843eececa265bd6cddc5"
+    [35mtitle[39m: "Other Note"
+[09:53:18.821] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843eececa265bd6cddc5"
+    [35mnoteId[39m: "6a12843eececa265bd6cddc7"
+[09:53:18.821] [32mINFO[39m (9220): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a12843eececa265bd6cddc4"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: ""
+      Γ£ö should not return other users notes
+[09:53:18.824] [32mINFO[39m (9220): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a12843eececa265bd6cddc4"
+    [35mcount[39m: 1
+[09:53:19.334] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843eececa265bd6cddc8"
+    [35mtitle[39m: "JavaScript Basics"
+[09:53:19.335] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843eececa265bd6cddc8"
+    [35mnoteId[39m: "6a12843fececa265bd6cddca"
+[09:53:19.335] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843eececa265bd6cddc8"
+    [35mtitle[39m: "Python Guide"
+[09:53:19.335] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843eececa265bd6cddc8"
+    [35mnoteId[39m: "6a12843fececa265bd6cddcb"
+[09:53:19.335] [32mINFO[39m (9220): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a12843eececa265bd6cddc8"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: "JavaScript"
+      Γ£ö should search notes by title and content
+[09:53:19.338] [32mINFO[39m (9220): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a12843eececa265bd6cddc8"
+    [35mcount[39m: 1
+    getOne()
+[09:53:19.849] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a12843fececa265bd6cddcc"
+    [35mtitle[39m: "Single"
+[09:53:19.850] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a12843fececa265bd6cddcc"
+    [35mnoteId[39m: "6a12843fececa265bd6cddce"
+[09:53:19.850] [32mINFO[39m (9220): [36mFetching single note[39m
+    [35muserId[39m: "6a12843fececa265bd6cddcc"
+    [35mnoteId[39m: "6a12843fececa265bd6cddce"
+      Γ£ö should get a single note by id
+[09:53:19.851] [32mINFO[39m (9220): [36mNote fetched successfully[39m
+    [35muserId[39m: "6a12843fececa265bd6cddcc"
+    [35mnoteId[39m: "6a12843fececa265bd6cddce"
+[09:53:20.411] [32mINFO[39m (9220): [36mFetching single note[39m
+    [35muserId[39m: "6a12843fececa265bd6cddcf"
+    [35mnoteId[39m: "6a128440ececa265bd6cddd1"
+      Γ£ö should throw 404 for non-existing note
+[09:53:20.413] [33mWARN[39m (9220): [36mNote not found[39m
+    [35muserId[39m: "6a12843fececa265bd6cddcf"
+    [35mnoteId[39m: "6a128440ececa265bd6cddd1"
+[09:53:20.959] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128440ececa265bd6cddd2"
+    [35mtitle[39m: "Mine"
+[09:53:20.961] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128440ececa265bd6cddd2"
+    [35mnoteId[39m: "6a128440ececa265bd6cddd4"
+[09:53:20.961] [32mINFO[39m (9220): [36mFetching single note[39m
+    [35muserId[39m: "6a128440ececa265bd6cddd3"
+    [35mnoteId[39m: "6a128440ececa265bd6cddd4"
+      Γ£ö should throw 403 when accessing another users note
+[09:53:20.962] [33mWARN[39m (9220): [36mUnauthorized access attempt on note[39m
+    [35muserId[39m: "6a128440ececa265bd6cddd3"
+    [35mnoteId[39m: "6a128440ececa265bd6cddd4"
+    update()
+[09:53:21.484] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128440ececa265bd6cddd5"
+    [35mtitle[39m: "Original"
+[09:53:21.485] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128440ececa265bd6cddd5"
+    [35mnoteId[39m: "6a128441ececa265bd6cddd7"
+[09:53:21.485] [32mINFO[39m (9220): [36mUpdating note[39m
+    [35muserId[39m: "6a128440ececa265bd6cddd5"
+    [35mnoteId[39m: "6a128441ececa265bd6cddd7"
+      Γ£ö should update a note with valid data
+[09:53:21.487] [32mINFO[39m (9220): [36mNote updated successfully[39m
+    [35muserId[39m: "6a128440ececa265bd6cddd5"
+    [35mnoteId[39m: "6a128441ececa265bd6cddd7"
+[09:53:22.001] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128441ececa265bd6cddd8"
+    [35mtitle[39m: "Original"
+[09:53:22.002] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128441ececa265bd6cddd8"
+    [35mnoteId[39m: "6a128442ececa265bd6cddda"
+[09:53:22.002] [32mINFO[39m (9220): [36mUpdating note[39m
+    [35muserId[39m: "6a128441ececa265bd6cddd8"
+    [35mnoteId[39m: "6a128442ececa265bd6cddda"
+      Γ£ö should update only title
+[09:53:22.004] [32mINFO[39m (9220): [36mNote updated successfully[39m
+    [35muserId[39m: "6a128441ececa265bd6cddd8"
+    [35mnoteId[39m: "6a128442ececa265bd6cddda"
+[09:53:22.519] [32mINFO[39m (9220): [36mUpdating note[39m
+    [35muserId[39m: "6a128442ececa265bd6cdddb"
+    [35mnoteId[39m: "6a128442ececa265bd6cdddd"
+      Γ£ö should throw 404 for non-existing note
+[09:53:22.520] [33mWARN[39m (9220): [36mUpdate failed ΓÇö note not found[39m
+    [35muserId[39m: "6a128442ececa265bd6cdddb"
+    [35mnoteId[39m: "6a128442ececa265bd6cdddd"
+[09:53:23.033] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128442ececa265bd6cddde"
+    [35mtitle[39m: "Mine"
+[09:53:23.034] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128442ececa265bd6cddde"
+    [35mnoteId[39m: "6a128443ececa265bd6cdde0"
+[09:53:23.034] [32mINFO[39m (9220): [36mUpdating note[39m
+    [35muserId[39m: "6a128442ececa265bd6cdddf"
+    [35mnoteId[39m: "6a128443ececa265bd6cdde0"
+      Γ£ö should throw 403 when updating another users note
+[09:53:23.035] [33mWARN[39m (9220): [36mUnauthorized update attempt on note[39m
+    [35muserId[39m: "6a128442ececa265bd6cdddf"
+    [35mnoteId[39m: "6a128443ececa265bd6cdde0"
+[09:53:23.548] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128443ececa265bd6cdde1"
+    [35mtitle[39m: "Original"
+[09:53:23.549] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128443ececa265bd6cdde1"
+    [35mnoteId[39m: "6a128443ececa265bd6cdde3"
+[09:53:23.653] [32mINFO[39m (9220): [36mUpdating note[39m
+    [35muserId[39m: "6a128443ececa265bd6cdde1"
+    [35mnoteId[39m: "6a128443ececa265bd6cdde3"
+      Γ£ö should update updatedAt timestamp (108ms)
+[09:53:23.656] [32mINFO[39m (9220): [36mNote updated successfully[39m
+    [35muserId[39m: "6a128443ececa265bd6cdde1"
+    [35mnoteId[39m: "6a128443ececa265bd6cdde3"
+    remove()
+[09:53:24.186] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128443ececa265bd6cdde4"
+    [35mtitle[39m: "Delete"
+[09:53:24.187] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128443ececa265bd6cdde4"
+    [35mnoteId[39m: "6a128444ececa265bd6cdde6"
+[09:53:24.187] [32mINFO[39m (9220): [36mDeleting note[39m
+    [35muserId[39m: "6a128443ececa265bd6cdde4"
+    [35mnoteId[39m: "6a128444ececa265bd6cdde6"
+[09:53:24.189] [32mINFO[39m (9220): [36mNote deleted successfully[39m
+    [35muserId[39m: "6a128443ececa265bd6cdde4"
+    [35mnoteId[39m: "6a128444ececa265bd6cdde6"
+[09:53:24.189] [32mINFO[39m (9220): [36mFetching single note[39m
+    [35muserId[39m: "6a128443ececa265bd6cdde4"
+    [35mnoteId[39m: "6a128444ececa265bd6cdde6"
+      Γ£ö should delete a note
+[09:53:24.190] [33mWARN[39m (9220): [36mNote not found[39m
+    [35muserId[39m: "6a128443ececa265bd6cdde4"
+    [35mnoteId[39m: "6a128444ececa265bd6cdde6"
+[09:53:24.700] [32mINFO[39m (9220): [36mDeleting note[39m
+    [35muserId[39m: "6a128444ececa265bd6cdde7"
+    [35mnoteId[39m: "6a128444ececa265bd6cdde9"
+      Γ£ö should throw 404 when deleting non-existing note
+[09:53:24.701] [33mWARN[39m (9220): [36mDelete failed ΓÇö note not found[39m
+    [35muserId[39m: "6a128444ececa265bd6cdde7"
+    [35mnoteId[39m: "6a128444ececa265bd6cdde9"
+[09:53:25.225] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128444ececa265bd6cddea"
+    [35mtitle[39m: "Mine"
+[09:53:25.226] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128444ececa265bd6cddea"
+    [35mnoteId[39m: "6a128445ececa265bd6cddec"
+[09:53:25.226] [32mINFO[39m (9220): [36mDeleting note[39m
+    [35muserId[39m: "6a128444ececa265bd6cddeb"
+    [35mnoteId[39m: "6a128445ececa265bd6cddec"
+      Γ£ö should throw 403 when deleting another users note
+[09:53:25.227] [33mWARN[39m (9220): [36mUnauthorized delete attempt on note[39m
+    [35muserId[39m: "6a128444ececa265bd6cddeb"
+    [35mnoteId[39m: "6a128445ececa265bd6cddec"
+    search()
+[09:53:25.754] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128445ececa265bd6cdded"
+    [35mtitle[39m: "React Tutorial"
+[09:53:25.755] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128445ececa265bd6cdded"
+    [35mnoteId[39m: "6a128445ececa265bd6cddef"
+[09:53:25.755] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128445ececa265bd6cdded"
+    [35mtitle[39m: "Vue Guide"
+[09:53:25.756] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128445ececa265bd6cdded"
+    [35mnoteId[39m: "6a128445ececa265bd6cddf0"
+[09:53:25.756] [32mINFO[39m (9220): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a128445ececa265bd6cdded"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: "React"
+      Γ£ö should search notes by query
+[09:53:25.761] [32mINFO[39m (9220): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a128445ececa265bd6cdded"
+    [35mcount[39m: 1
+[09:53:26.285] [32mINFO[39m (9220): [36mCreating new note[39m
+    [35muserId[39m: "6a128445ececa265bd6cddf1"
+    [35mtitle[39m: "JAVASCRIPT"
+[09:53:26.286] [32mINFO[39m (9220): [36mNote created successfully[39m
+    [35muserId[39m: "6a128445ececa265bd6cddf1"
+    [35mnoteId[39m: "6a128446ececa265bd6cddf3"
+[09:53:26.286] [32mINFO[39m (9220): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a128445ececa265bd6cddf1"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: "javascript"
+[09:53:26.289] [32mINFO[39m (9220): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a128445ececa265bd6cddf1"
+    [35mcount[39m: 1
+[09:53:26.289] [32mINFO[39m (9220): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a128445ececa265bd6cddf1"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: "JAVASCRIPT"
+[09:53:26.291] [32mINFO[39m (9220): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a128445ececa265bd6cddf1"
+    [35mcount[39m: 1
+[09:53:26.291] [32mINFO[39m (9220): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a128445ececa265bd6cddf1"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: "JavaScript"
+      Γ£ö should be case-insensitive
+[09:53:26.293] [32mINFO[39m (9220): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a128445ececa265bd6cddf1"
+    [35mcount[39m: 1
+
+  Users Service
+[09:53:26.976] [32mINFO[39m (9220): [36mFetching user profile[39m
+    [35muserId[39m: "6a128446ececa265bd6cddf4"
+    Γ£ö should get user profile
+[09:53:26.977] [32mINFO[39m (9220): [36mProfile fetched successfully[39m
+    [35muserId[39m: "6a128446ececa265bd6cddf4"
+[09:53:27.237] [32mINFO[39m (9220): [36mUpdating user profile[39m
+    [35muserId[39m: "6a128446ececa265bd6cddf5"
+    [35mfields[39m: [
+      "name"
+    ]
+    Γ£ö should update user name
+[09:53:27.238] [32mINFO[39m (9220): [36mProfile updated successfully[39m
+    [35muserId[39m: "6a128446ececa265bd6cddf5"
+[09:53:27.495] [32mINFO[39m (9220): [36mUpdating user profile[39m
+    [35muserId[39m: "6a128447ececa265bd6cddf6"
+    [35mfields[39m: [
+      "name",
+      "password"
+    ]
+    Γ£ö should NOT update password through profile update
+[09:53:27.497] [32mINFO[39m (9220): [36mProfile updated successfully[39m
+    [35muserId[39m: "6a128447ececa265bd6cddf6"
+[09:53:27.753] [32mINFO[39m (9220): [36mUpdating user profile[39m
+    [35muserId[39m: "6a128447ececa265bd6cddf7"
+    [35mfields[39m: [
+      "name",
+      "email"
+    ]
+    Γ£ö should NOT update email through profile update
+[09:53:27.754] [32mINFO[39m (9220): [36mProfile updated successfully[39m
+    [35muserId[39m: "6a128447ececa265bd6cddf7"
+[09:53:28.009] [32mINFO[39m (9220): [36mDeleting user account[39m
+    [35muserId[39m: "6a128447ececa265bd6cddf8"
+Deleted 0 notes for user 6a128447ececa265bd6cddf8
+[09:53:28.012] [32mINFO[39m (9220): [36mUser account deleted successfully[39m
+    [35muserId[39m: "6a128447ececa265bd6cddf8"
+    Γ£ö should delete user profile
+[09:53:28.012] [32mINFO[39m (9220): [36mFetching user profile[39m
+    [35muserId[39m: "6a128447ececa265bd6cddf8"
+[09:53:28.012] [33mWARN[39m (9220): [36mProfile fetch failed ΓÇö user not found[39m
+    [35muserId[39m: "6a128447ececa265bd6cddf8"
+[09:53:28.268] [32mINFO[39m (9220): [36mPassword change attempt[39m
+    [35muserId[39m: "6a128448ececa265bd6cddf9"
+[09:53:28.791] [32mINFO[39m (9220): [36mPassword changed successfully[39m
+    [35muserId[39m: "6a128448ececa265bd6cddf9"
+[09:53:28.791] [32mINFO[39m (9220): [36mFetching user profile[39m
+    [35muserId[39m: "6a128448ececa265bd6cddf9"
+    Γ£ö should change password successfully with correct old password (524ms)
+[09:53:28.792] [32mINFO[39m (9220): [36mProfile fetched successfully[39m
+    [35muserId[39m: "6a128448ececa265bd6cddf9"
+[09:53:29.051] [32mINFO[39m (9220): [36mPassword change attempt[39m
+    [35muserId[39m: "6a128448ececa265bd6cddfa"
+    Γ£ö should throw 401 when old password is incorrect (254ms)
+[09:53:29.305] [33mWARN[39m (9220): [36mPassword change failed ΓÇö old password incorrect[39m
+    [35muserId[39m: "6a128448ececa265bd6cddfa"
+    Γ£ö should throw 400 when new password is weak
+[09:53:29.564] [32mINFO[39m (9220): [36mPassword change attempt[39m
+    [35muserId[39m: "6a128449ececa265bd6cddfb"
+[09:53:29.564] [33mWARN[39m (9220): [36mPassword change failed ΓÇö weak new password[39m
+    [35muserId[39m: "6a128449ececa265bd6cddfb"
+[09:53:29.820] [32mINFO[39m (9220): [36mPassword change attempt[39m
+    [35muserId[39m: "000000000000000000000000"
+    Γ£ö should throw 404 when user does not exist for changePassword
+[09:53:29.821] [33mWARN[39m (9220): [36mPassword change failed ΓÇö user not found[39m
+    [35muserId[39m: "000000000000000000000000"
+[09:53:30.076] [32mINFO[39m (9220): [36mFetching user profile[39m
+    [35muserId[39m: "000000000000000000000000"
+    Γ£ö should throw 404 when user does not exist for getProfile
+[09:53:30.077] [33mWARN[39m (9220): [36mProfile fetch failed ΓÇö user not found[39m
+    [35muserId[39m: "000000000000000000000000"
+[09:53:30.333] [32mINFO[39m (9220): [36mUpdating user profile[39m
+    [35muserId[39m: "000000000000000000000000"
+    [35mfields[39m: [
+      "name"
+    ]
+    Γ£ö should throw 404 when user does not exist for updateProfile
+[09:53:30.334] [33mWARN[39m (9220): [36mProfile update failed ΓÇö user not found[39m
+    [35muserId[39m: "000000000000000000000000"
+
+  ApiError Utility
+    Γ£ö should create an ApiError with statusCode and message
+    Γ£ö should include errors array when provided
+    Γ£ö should handle stack trace correctly
+    Γ£ö should have correct HTTP status codes
+    Γ£ö should have success property as false
+    Γ£ö should preserve error message
+
+  ApiResponse Utility
+    Γ£ö should create an ApiResponse with statusCode and data
+    Γ£ö should set success to true for 2xx status codes
+    Γ£ö should set success to false for 4xx and 5xx status codes
+    Γ£ö should use default message when not provided
+    Γ£ö should handle null data
+    Γ£ö should handle complex data objects
+    Γ£ö should preserve all properties
+
+  asyncHandler Middleware
+    Γ£ö should execute the provided function
+    Γ£ö should pass req, res, next to the function
+    Γ£ö should call next with error when function throws
+    Γ£ö should handle async errors gracefully
+    Γ£ö should not call next on successful execution
+    Γ£ö should work with multiple sequential calls
+
+  Email Validation Utilities
+    validateEmailFormat
+      Γ£ö should validate correct email formats
+      Γ£ö should reject invalid email formats
+      Γ£ö should reject null or undefined
+      Γ£ö should handle empty string
+    validateEmailDomain
+[09:53:30.379] [33mWARN[39m (9220): [36mDNS MX lookup failed[39m
+    [35memail[39m: "test@gmail.com"
+    error: "queryMx ECONNREFUSED gmail.com"
+[09:53:30.379] [32mINFO[39m (9220): [36mDNS failed but domain is known valid[39m
+    [35memail[39m: "test@gmail.com"
+    [35mdomain[39m: "gmail.com"
+[09:53:30.384] [33mWARN[39m (9220): [36mDNS MX lookup failed[39m
+    [35memail[39m: "test@yahoo.com"
+    error: "queryMx ECONNREFUSED yahoo.com"
+[09:53:30.384] [32mINFO[39m (9220): [36mDNS failed but domain is known valid[39m
+    [35memail[39m: "test@yahoo.com"
+    [35mdomain[39m: "yahoo.com"
+      Γ£ö should validate domains with valid MX records
+[09:53:30.390] [33mWARN[39m (9220): [36mDNS MX lookup failed[39m
+    [35memail[39m: "test@hotmail.com"
+    error: "queryMx ECONNREFUSED hotmail.com"
+[09:53:30.390] [32mINFO[39m (9220): [36mDNS failed but domain is known valid[39m
+    [35memail[39m: "test@hotmail.com"
+    [35mdomain[39m: "hotmail.com"
+      Γ£ö should reject invalid domains
+      Γ£ö should handle malformed emails gracefully
+[09:53:30.396] [33mWARN[39m (9220): [36mDNS MX lookup failed[39m
+    [35memail[39m: "test@invalid-domain-12345.com"
+    error: "queryMx ECONNREFUSED invalid-domain-12345.com"
+
+  OTP Utility
+    generateOTP
+      Γ£ö should generate a 6-digit OTP
+[09:53:30.396] [33mWARN[39m (9220): [36mDNS validation inconclusive for unknown domain[39m
+    [35memail[39m: "test@invalid-domain-12345.com"
+      Γ£ö should generate different OTPs on multiple calls
+      Γ£ö should only contain numeric digits
+    hashOTP
+      Γ£ö should hash an OTP string
+      Γ£ö should produce consistent hashes for the same OTP
+      Γ£ö should produce different hashes for different OTPs
+    verifyOTP
+      Γ£ö should verify a matching OTP
+      Γ£ö should reject a non-matching OTP
+      Γ£ö should handle invalid hash format gracefully
+
+
+  205 passing (22s)
+  13 failing
+
+  1) Express App Setup - app.js
+       CORS Configuration
+         should allow localhost:3000:
+     AssertionError: expected [Function app] to be an object
+      at Context.<anonymous> (tests\unit\app.test.js:46:25)
+      at process.processImmediate (node:internal/timers:504:21)
+
+  2) Express App Setup - app.js
+       App Instance
+         should export Express app instance:
+     AssertionError: expected [Function app] to be an object
+      at Context.<anonymous> (tests\unit\app.test.js:294:25)
+      at process.processImmediate (node:internal/timers:504:21)
+
+  3) Auth Middleware - auth.middleware.js
+       protect() middleware
+         should reject request with no Authorization header:
+     AssertionError: expected undefined to equal 401
+      at Context.<anonymous> (tests\unit\middleware\auth.middleware.test.js:50:31)
+
+  4) Auth Middleware - auth.middleware.js
+       protect() middleware
+         should reject request with non-Bearer token:
+     AssertionError: expected undefined to equal 401
+      at Context.<anonymous> (tests\unit\middleware\auth.middleware.test.js:62:31)
+
+  5) Auth Middleware - auth.middleware.js
+       protect() middleware
+         should handle TokenExpiredError:
+     AssertionError: expected undefined to equal 401
+      at Context.<anonymous> (tests\unit\middleware\auth.middleware.test.js:102:34)
+
+  6) Auth Middleware - auth.middleware.js
+       protect() middleware
+         should handle JsonWebTokenError:
+     AssertionError: expected undefined to equal 401
+      at Context.<anonymous> (tests\unit\middleware\auth.middleware.test.js:119:34)
+
+  7) Auth Middleware - auth.middleware.js
+       protect() middleware
+         should handle unknown JWT errors:
+     AssertionError: expected undefined to equal 401
+      at Context.<anonymous> (tests\unit\middleware\auth.middleware.test.js:136:34)
+
+  8) Auth Middleware - auth.middleware.js
+       protect() middleware
+         should reject token with no id in payload:
+     AssertionError: expected undefined to equal 401
+      at Context.<anonymous> (tests\unit\middleware\auth.middleware.test.js:150:34)
+
+  9) Auth Middleware - auth.middleware.js
+       protect() middleware
+         should fetch user from database:
+
+      AssertionError: expected false to be true
+      + expected - actual
+
+      -false
+      +true
+      
+      at Context.<anonymous> (tests\unit\middleware\auth.middleware.test.js:164:52)
+
+  10) Auth Middleware - auth.middleware.js
+       protect() middleware
+         should attach user to request object:
+     AssertionError: expected undefined to deeply equal { _id: 'user123', ΓÇª(2) }
+      at Context.<anonymous> (tests\unit\middleware\auth.middleware.test.js:179:32)
+
+  11) Auth Middleware - auth.middleware.js
+       protect() middleware
+         should call next() without error on success:
+     AssertionError: expected Error: Failed to retrieve user information { ΓÇª(3) } to be undefined
+      at Context.<anonymous> (tests\unit\middleware\auth.middleware.test.js:193:44)
+
+  12) Auth Middleware - auth.middleware.js
+       protect() middleware
+         should handle database lookup errors:
+     AssertionError: expected undefined to equal 500
+      at Context.<anonymous> (tests\unit\middleware\auth.middleware.test.js:208:34)
+
+  13) Auth Middleware - auth.middleware.js
+       protect() middleware
+         should reject request when user not found:
+     AssertionError: expected undefined to equal 401
+      at Context.<anonymous> (tests\unit\middleware\auth.middleware.test.js:225:34)
+
+
+

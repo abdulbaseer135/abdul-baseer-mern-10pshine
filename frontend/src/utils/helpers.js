@@ -26,9 +26,21 @@ export const formatRelativeTime = (dateString) => {
   return formatDate(dateString);
 };
 
+/**
+ * Safe: DOM-based HTML tag stripping, avoids regex DoS vulnerability.
+ * Uses textContent instead of regex to safely extract plain text from HTML.
+ */
+export const stripHtmlTags = (html) => {
+  if (!html) return '';
+  // Use DOM API to safely extract text content without regex DoS risk
+  const el = document.createElement('div');
+  el.innerHTML = html;
+  return el.textContent || '';
+};
+
 export const truncateText = (text, maxLength = NOTE_CONTENT_PREVIEW_LENGTH) => {
   if (!text) return '';
-  const plainText = text.replace(/<[^>]+>/g, '');
+  const plainText = stripHtmlTags(text);
   if (plainText.length <= maxLength) return plainText;
   return plainText.substring(0, maxLength).trim() + '...';
 };

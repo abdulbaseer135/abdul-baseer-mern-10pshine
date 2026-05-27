@@ -1,0 +1,41 @@
+
+> backend@1.0.0 test
+> mocha
+
+Γùç injected env (0) from .env // tip: Γîü auth for agents [www.vestauth.com]
+Γùç injected env (0) from .env // tip: Γîÿ custom filepath { path: '/custom/path/.env' }
+
+ Exception during run: Error: Missing required environment variable: MONGO_URI
+    at X:\PP\abdul-baseer-mern-10pshine\backend\src\config\env.js:7:11
+    at Array.forEach (<anonymous>)
+    at Object.<anonymous> (X:\PP\abdul-baseer-mern-10pshine\backend\src\config\env.js:5:17)
+    at Module._compile (node:internal/modules/cjs/loader:1812:14)
+    at Object..js (node:internal/modules/cjs/loader:1943:10)
+    at Module.load (node:internal/modules/cjs/loader:1533:32)
+    at Module._load (node:internal/modules/cjs/loader:1335:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1556:12)
+    at require (node:internal/modules/helpers:152:16)
+    at Object.<anonymous> (X:\PP\abdul-baseer-mern-10pshine\backend\src\services\auth.service.js:6:40)
+    at Module._compile (node:internal/modules/cjs/loader:1812:14)
+    at Object..js (node:internal/modules/cjs/loader:1943:10)
+    at Module.load (node:internal/modules/cjs/loader:1533:32)
+    at Module._load (node:internal/modules/cjs/loader:1335:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1556:12)
+    at require (node:internal/modules/helpers:152:16)
+    at Object.<anonymous> (X:\PP\abdul-baseer-mern-10pshine\backend\tests\unit\controllers\auth.controller.test.js:3:21)
+    at Module._compile (node:internal/modules/cjs/loader:1812:14)
+    at Object..js (node:internal/modules/cjs/loader:1943:10)
+    at Module.load (node:internal/modules/cjs/loader:1533:32)
+    at Module._load (node:internal/modules/cjs/loader:1335:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at loadCJSModuleWithModuleLoad (node:internal/modules/esm/translators:328:3)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:233:7)
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async formattedImport (X:\PP\abdul-baseer-mern-10pshine\backend\node_modules\mocha\lib\nodejs\esm-utils.js:10:14)
+    at async Object.requireModule [as requireOrImport] (X:\PP\abdul-baseer-mern-10pshine\backend\node_modules\mocha\lib\nodejs\esm-utils.js:102:30)
+    at async exports.loadFilesAsync (X:\PP\abdul-baseer-mern-10pshine\backend\node_modules\mocha\lib\nodejs\esm-utils.js:152:20)
+    at async singleRun (X:\PP\abdul-baseer-mern-10pshine\backend\node_modules\mocha\lib\cli\run-helpers.js:168:3)
+    at async exports.handler (X:\PP\abdul-baseer-mern-10pshine\backend\node_modules\mocha\lib\cli\run.js:379:5)

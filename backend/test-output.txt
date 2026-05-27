@@ -1,0 +1,464 @@
+
+> backend@1.0.0 test
+> mocha
+
+Γùç injected env (0) from .env // tip: Γîÿ custom filepath { path: '/custom/path/.env' }
+
+
+  Notes Routes Integration Tests
+    Notes Service Integration
+[01:09:36.749] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b800eb70014b4bc36528"
+    [35mtitle[39m: "New"
+[01:09:36.752] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b800eb70014b4bc36528"
+    [35mnoteId[39m: "6a10b800eb70014b4bc3652a"
+[01:09:36.753] [32mINFO[39m (15008): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a10b800eb70014b4bc36528"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: ""
+[01:09:36.770] [32mINFO[39m (15008): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a10b800eb70014b4bc36528"
+    [35mcount[39m: 2
+[01:09:36.770] [32mINFO[39m (15008): [36mFetching single note[39m
+    [35muserId[39m: "6a10b800eb70014b4bc36528"
+    [35mnoteId[39m: "6a10b800eb70014b4bc3652a"
+[01:09:36.773] [32mINFO[39m (15008): [36mNote fetched successfully[39m
+    [35muserId[39m: "6a10b800eb70014b4bc36528"
+    [35mnoteId[39m: "6a10b800eb70014b4bc3652a"
+[01:09:36.774] [32mINFO[39m (15008): [36mUpdating note[39m
+    [35muserId[39m: "6a10b800eb70014b4bc36528"
+    [35mnoteId[39m: "6a10b800eb70014b4bc3652a"
+[01:09:36.783] [32mINFO[39m (15008): [36mNote updated successfully[39m
+    [35muserId[39m: "6a10b800eb70014b4bc36528"
+    [35mnoteId[39m: "6a10b800eb70014b4bc3652a"
+[01:09:36.783] [32mINFO[39m (15008): [36mDeleting note[39m
+    [35muserId[39m: "6a10b800eb70014b4bc36528"
+    [35mnoteId[39m: "6a10b800eb70014b4bc3652a"
+[01:09:36.787] [32mINFO[39m (15008): [36mNote deleted successfully[39m
+    [35muserId[39m: "6a10b800eb70014b4bc36528"
+    [35mnoteId[39m: "6a10b800eb70014b4bc3652a"
+[01:09:36.787] [32mINFO[39m (15008): [36mFetching single note[39m
+    [35muserId[39m: "6a10b800eb70014b4bc36528"
+    [35mnoteId[39m: "6a10b800eb70014b4bc3652a"
+      Γ£ö should create, retrieve, update, and delete notes (40ms)
+[01:09:36.788] [33mWARN[39m (15008): [36mNote not found[39m
+    [35muserId[39m: "6a10b800eb70014b4bc36528"
+    [35mnoteId[39m: "6a10b800eb70014b4bc3652a"
+[01:09:37.216] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b800eb70014b4bc3652b"
+    [35mtitle[39m: "Note 0"
+[01:09:37.218] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b800eb70014b4bc3652b"
+    [35mnoteId[39m: "6a10b801eb70014b4bc3652d"
+[01:09:37.218] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b800eb70014b4bc3652b"
+    [35mtitle[39m: "Note 1"
+[01:09:37.219] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b800eb70014b4bc3652b"
+    [35mnoteId[39m: "6a10b801eb70014b4bc3652e"
+[01:09:37.219] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b800eb70014b4bc3652b"
+    [35mtitle[39m: "Note 2"
+[01:09:37.221] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b800eb70014b4bc3652b"
+    [35mnoteId[39m: "6a10b801eb70014b4bc3652f"
+[01:09:37.221] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b800eb70014b4bc3652b"
+    [35mtitle[39m: "Note 3"
+[01:09:37.222] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b800eb70014b4bc3652b"
+    [35mnoteId[39m: "6a10b801eb70014b4bc36530"
+[01:09:37.222] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b800eb70014b4bc3652b"
+    [35mtitle[39m: "Note 4"
+[01:09:37.223] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b800eb70014b4bc3652b"
+    [35mnoteId[39m: "6a10b801eb70014b4bc36531"
+[01:09:37.224] [32mINFO[39m (15008): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a10b800eb70014b4bc3652b"
+    [35mpage[39m: 1
+    [35mlimit[39m: 3
+    [35msearch[39m: ""
+[01:09:37.228] [32mINFO[39m (15008): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a10b800eb70014b4bc3652b"
+    [35mcount[39m: 3
+[01:09:37.229] [32mINFO[39m (15008): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a10b800eb70014b4bc3652b"
+    [35mpage[39m: 2
+    [35mlimit[39m: 3
+    [35msearch[39m: ""
+      Γ£ö should handle pagination correctly
+[01:09:37.234] [32mINFO[39m (15008): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a10b800eb70014b4bc3652b"
+    [35mcount[39m: 3
+[01:09:37.645] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b801eb70014b4bc36532"
+    [35mtitle[39m: "JavaScript Basics"
+[01:09:37.646] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b801eb70014b4bc36532"
+    [35mnoteId[39m: "6a10b801eb70014b4bc36534"
+[01:09:37.646] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b801eb70014b4bc36532"
+    [35mtitle[39m: "Python Guide"
+[01:09:37.649] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b801eb70014b4bc36532"
+    [35mnoteId[39m: "6a10b801eb70014b4bc36535"
+[01:09:37.649] [32mINFO[39m (15008): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a10b801eb70014b4bc36532"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: "JavaScript"
+      Γ£ö should search notes by title and content
+[01:09:37.654] [32mINFO[39m (15008): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a10b801eb70014b4bc36532"
+    [35mcount[39m: 1
+[01:09:38.485] [32mINFO[39m (15008): [36mFetching single note[39m
+    [35muserId[39m: "6a10b802eb70014b4bc36538"
+    [35mnoteId[39m: "6a10b802eb70014b4bc36537"
+      Γ£ö should prevent access to other users notes (404ms)
+[01:09:38.486] [33mWARN[39m (15008): [36mUnauthorized access attempt on note[39m
+    [35muserId[39m: "6a10b802eb70014b4bc36538"
+    [35mnoteId[39m: "6a10b802eb70014b4bc36537"
+[01:09:38.895] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b802eb70014b4bc36539"
+    [35mtitle[39m: "Import 1"
+    [35mcategory[39m: "general"
+[01:09:38.896] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b802eb70014b4bc36539"
+    [35mnoteId[39m: "6a10b802eb70014b4bc3653b"
+    [35mcategory[39m: "general"
+[01:09:38.896] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b802eb70014b4bc36539"
+    [35mtitle[39m: "Import 2"
+    [35mcategory[39m: "task"
+      Γ£ö should handle note import successfully
+[01:09:38.899] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b802eb70014b4bc36539"
+    [35mnoteId[39m: "6a10b802eb70014b4bc3653c"
+    [35mcategory[39m: "task"
+[01:09:39.313] [32mINFO[39m (15008): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a10b802eb70014b4bc3653d"
+    [35mpage[39m: 1
+    [35mlimit[39m: 100
+    [35msearch[39m: ""
+      Γ£ö should handle note export
+[01:09:39.318] [32mINFO[39m (15008): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a10b802eb70014b4bc3653d"
+    [35mcount[39m: 1
+    User Isolation
+[01:09:40.557] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b803eb70014b4bc36541"
+    [35mtitle[39m: "User1 Note"
+[01:09:40.559] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b803eb70014b4bc36541"
+    [35mnoteId[39m: "6a10b804eb70014b4bc36543"
+[01:09:40.559] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b804eb70014b4bc36542"
+    [35mtitle[39m: "User2 Note"
+[01:09:40.560] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b804eb70014b4bc36542"
+    [35mnoteId[39m: "6a10b804eb70014b4bc36544"
+[01:09:40.560] [32mINFO[39m (15008): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a10b803eb70014b4bc36541"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: ""
+[01:09:40.565] [32mINFO[39m (15008): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a10b803eb70014b4bc36541"
+    [35mcount[39m: 1
+[01:09:40.565] [32mINFO[39m (15008): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a10b804eb70014b4bc36542"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: ""
+      Γ£ö each user should only see their own notes (842ms)
+[01:09:40.569] [32mINFO[39m (15008): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a10b804eb70014b4bc36542"
+    [35mcount[39m: 1
+    Data Integrity
+[01:09:40.978] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b804eb70014b4bc36545"
+    [35mtitle[39m: "Original"
+    [35mcategory[39m: "task"
+[01:09:40.980] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b804eb70014b4bc36545"
+    [35mnoteId[39m: "6a10b804eb70014b4bc36547"
+    [35mcategory[39m: "task"
+[01:09:40.980] [32mINFO[39m (15008): [36mUpdating note[39m
+    [35muserId[39m: "6a10b804eb70014b4bc36545"
+    [35mnoteId[39m: "6a10b804eb70014b4bc36547"
+      Γ£ö should preserve note metadata on update
+[01:09:40.984] [32mINFO[39m (15008): [36mNote updated successfully[39m
+    [35muserId[39m: "6a10b804eb70014b4bc36545"
+    [35mnoteId[39m: "6a10b804eb70014b4bc36547"
+
+  Auth Controller
+    signup()
+[01:09:41.053] [32mINFO[39m (15008): [36mUser registration attempt[39m
+    [35memail[39m: "abdul@test.com"
+      Γ£ö should call next with error if service throws
+    loginUser()
+[01:09:41.055] [33mWARN[39m (15008): [36mDNS MX lookup failed[39m
+    [35memail[39m: "abdul@test.com"
+    error: "queryMx ECONNREFUSED test.com"
+[01:09:41.055] [33mWARN[39m (15008): [36mDNS validation inconclusive for unknown domain[39m
+    [35memail[39m: "abdul@test.com"
+[01:09:41.055] [33mWARN[39m (15008): [36mRegistration failed ΓÇö invalid domain or cannot receive mail[39m
+    [35memail[39m: "abdul@test.com"
+      Γ£ö should call next with error if service throws
+    logout()
+[01:09:41.060] [32mINFO[39m (15008): [36mUser login attempt[39m
+    [35memail[39m: "abdul@test.com"
+      Γ£ö should return 200 on logout
+    getMe()
+      Γ£ö should return 200 with current user data
+      Γ£ö should format image URLs correctly
+    sendOTPCode()
+      Γ£ö should call next with error if email is missing
+      Γ£ö should call next with error if purpose is missing
+    verifyOTPHandler()
+      Γ£ö should call next with error if required fields are missing
+    resetUserPassword()
+      Γ£ö should call next with error if email is missing
+      Γ£ö should call next with error if newPassword is missing
+
+  Notes Controller
+    createNote()
+      Γ£ö should call next with error if service throws
+    getAllNotes()
+      Γ£ö should return 200 with notes list
+      Γ£ö should use default pagination values
+    getNoteById()
+      Γ£ö should return 200 with note details
+      Γ£ö should call next with error if note not found
+    updateNote()
+      Γ£ö should call next with error if service throws
+    deleteNote()
+      Γ£ö should call next with error if note not found
+    exportNotes()
+      Γ£ö should return 200 with exported notes file
+      Γ£ö should include correct headers in export
+    importNotes()
+      Γ£ö should return 201 with import results
+      Γ£ö should return 400 if notes array is empty
+      Γ£ö should return 400 if no valid notes in import
+      Γ£ö should skip duplicate noteIds and report
+
+  Users Controller
+    getProfile()
+      Γ£ö should return 200 with user profile data
+      Γ£ö should call next with error if service throws
+    updateProfile()
+      Γ£ö should return 200 with updated user data
+      Γ£ö should call next with error if service throws
+    deleteProfile()
+      Γ£ö should return 200 after successful deletion
+      Γ£ö should call next with error if service throws
+    changePassword()
+      Γ£ö should return 200 on successful password change
+      Γ£ö should call next with 401 error when old password is wrong
+      Γ£ö should call next with 404 error when user not found
+
+  Notes DAL
+    Γ£ö should create a note (62ms)
+    Γ£ö should get notes by user
+    Γ£ö should get note by id
+    Γ£ö should update a note
+    Γ£ö should delete a note
+
+  Users DAL
+    Γ£ö should create a new user (333ms)
+    Γ£ö should find a user by email (311ms)
+    Γ£ö should return null for non-existing email
+    Γ£ö should find user by id without password (307ms)
+    Γ£ö should update a user (303ms)
+Deleted 0 notes for user 6a10b807eb70014b4bc36552
+    Γ£ö should delete a user (323ms)
+
+  Auth Service
+    register()
+      Γ£ö should throw 400 for invalid email format
+[01:09:44.561] [32mINFO[39m (15008): [36mUser registration attempt[39m
+    [35memail[39m: "invalid-email"
+[01:09:44.561] [33mWARN[39m (15008): [36mRegistration failed ΓÇö invalid email format[39m
+    [35memail[39m: "invalid-email"
+[01:09:44.567] [32mINFO[39m (15008): [36mUser registration attempt[39m
+    [35memail[39m: "weak@example.com"
+      1) should throw 400 for weak password
+[01:09:44.576] [33mWARN[39m (15008): [36mDNS MX lookup failed[39m
+    [35memail[39m: "weak@example.com"
+    error: "queryMx ECONNREFUSED example.com"
+[01:09:44.576] [33mWARN[39m (15008): [36mDNS validation inconclusive for unknown domain[39m
+    [35memail[39m: "weak@example.com"
+[01:09:44.576] [33mWARN[39m (15008): [36mRegistration failed ΓÇö invalid domain or cannot receive mail[39m
+    [35memail[39m: "weak@example.com"
+    login()
+[01:09:44.579] [32mINFO[39m (15008): [36mUser login attempt[39m
+    [35memail[39m: "nonexistent@test.com"
+      Γ£ö should throw 401 for non-existent email
+[01:09:44.582] [33mWARN[39m (15008): [36mLogin failed ΓÇö email not found[39m
+    [35memail[39m: "nonexistent@test.com"
+
+  Notes Service
+[01:09:45.413] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b809eb70014b4bc36553"
+    [35mtitle[39m: "My Note"
+    Γ£ö should create a note
+[01:09:45.420] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b809eb70014b4bc36553"
+    [35mnoteId[39m: "6a10b809eb70014b4bc36554"
+[01:09:45.744] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b809eb70014b4bc36555"
+    [35mtitle[39m: "Note 1"
+[01:09:45.745] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b809eb70014b4bc36555"
+    [35mnoteId[39m: "6a10b809eb70014b4bc36556"
+[01:09:45.745] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b809eb70014b4bc36555"
+    [35mtitle[39m: "Note 2"
+[01:09:45.746] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b809eb70014b4bc36555"
+    [35mnoteId[39m: "6a10b809eb70014b4bc36557"
+[01:09:45.746] [32mINFO[39m (15008): [36mFetching all notes for user[39m
+    [35muserId[39m: "6a10b809eb70014b4bc36555"
+    [35mpage[39m: 1
+    [35mlimit[39m: 10
+    [35msearch[39m: ""
+    Γ£ö should get all notes for a user
+[01:09:45.752] [32mINFO[39m (15008): [36mNotes fetched successfully[39m
+    [35muserId[39m: "6a10b809eb70014b4bc36555"
+    [35mcount[39m: 2
+[01:09:46.069] [32mINFO[39m (15008): [36mFetching single note[39m
+    [35muserId[39m: "6a10b809eb70014b4bc36558"
+    [35mnoteId[39m: "6a10b80aeb70014b4bc36559"
+    Γ£ö should throw 404 for non-existing note
+[01:09:46.070] [33mWARN[39m (15008): [36mNote not found[39m
+    [35muserId[39m: "6a10b809eb70014b4bc36558"
+    [35mnoteId[39m: "6a10b80aeb70014b4bc36559"
+[01:09:46.384] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b80aeb70014b4bc3655a"
+    [35mtitle[39m: "Mine"
+[01:09:46.385] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b80aeb70014b4bc3655a"
+    [35mnoteId[39m: "6a10b80aeb70014b4bc3655b"
+[01:09:46.385] [32mINFO[39m (15008): [36mFetching single note[39m
+    [35muserId[39m: "6a10b80aeb70014b4bc3655c"
+    [35mnoteId[39m: "6a10b80aeb70014b4bc3655b"
+    Γ£ö should throw 403 when accessing another users note
+[01:09:46.386] [33mWARN[39m (15008): [36mUnauthorized access attempt on note[39m
+    [35muserId[39m: "6a10b80aeb70014b4bc3655c"
+    [35mnoteId[39m: "6a10b80aeb70014b4bc3655b"
+[01:09:46.696] [32mINFO[39m (15008): [36mCreating new note[39m
+    [35muserId[39m: "6a10b80aeb70014b4bc3655d"
+    [35mtitle[39m: "Delete"
+[01:09:46.698] [32mINFO[39m (15008): [36mNote created successfully[39m
+    [35muserId[39m: "6a10b80aeb70014b4bc3655d"
+    [35mnoteId[39m: "6a10b80aeb70014b4bc3655e"
+[01:09:46.698] [32mINFO[39m (15008): [36mDeleting note[39m
+    [35muserId[39m: "6a10b80aeb70014b4bc3655d"
+    [35mnoteId[39m: "6a10b80aeb70014b4bc3655e"
+[01:09:46.700] [32mINFO[39m (15008): [36mNote deleted successfully[39m
+    [35muserId[39m: "6a10b80aeb70014b4bc3655d"
+    [35mnoteId[39m: "6a10b80aeb70014b4bc3655e"
+[01:09:46.700] [32mINFO[39m (15008): [36mFetching single note[39m
+    [35muserId[39m: "6a10b80aeb70014b4bc3655d"
+    [35mnoteId[39m: "6a10b80aeb70014b4bc3655e"
+    Γ£ö should delete a note
+[01:09:46.701] [33mWARN[39m (15008): [36mNote not found[39m
+    [35muserId[39m: "6a10b80aeb70014b4bc3655d"
+    [35mnoteId[39m: "6a10b80aeb70014b4bc3655e"
+
+  Users Service
+[01:09:47.523] [32mINFO[39m (15008): [36mFetching user profile[39m
+    [35muserId[39m: "6a10b80beb70014b4bc3655f"
+    Γ£ö should get user profile
+[01:09:47.524] [32mINFO[39m (15008): [36mProfile fetched successfully[39m
+    [35muserId[39m: "6a10b80beb70014b4bc3655f"
+[01:09:47.839] [32mINFO[39m (15008): [36mUpdating user profile[39m
+    [35muserId[39m: "6a10b80beb70014b4bc36560"
+    [35mfields[39m: [
+      "name"
+    ]
+    Γ£ö should update user name
+[01:09:47.842] [32mINFO[39m (15008): [36mProfile updated successfully[39m
+    [35muserId[39m: "6a10b80beb70014b4bc36560"
+[01:09:48.158] [32mINFO[39m (15008): [36mUpdating user profile[39m
+    [35muserId[39m: "6a10b80beb70014b4bc36561"
+    [35mfields[39m: [
+      "name",
+      "password"
+    ]
+    Γ£ö should NOT update password through profile update
+[01:09:48.159] [32mINFO[39m (15008): [36mProfile updated successfully[39m
+    [35muserId[39m: "6a10b80beb70014b4bc36561"
+[01:09:48.472] [32mINFO[39m (15008): [36mUpdating user profile[39m
+    [35muserId[39m: "6a10b80ceb70014b4bc36562"
+    [35mfields[39m: [
+      "name",
+      "email"
+    ]
+    Γ£ö should NOT update email through profile update
+[01:09:48.474] [32mINFO[39m (15008): [36mProfile updated successfully[39m
+    [35muserId[39m: "6a10b80ceb70014b4bc36562"
+[01:09:48.792] [32mINFO[39m (15008): [36mDeleting user account[39m
+    [35muserId[39m: "6a10b80ceb70014b4bc36563"
+Deleted 0 notes for user 6a10b80ceb70014b4bc36563
+[01:09:48.796] [32mINFO[39m (15008): [36mUser account deleted successfully[39m
+    [35muserId[39m: "6a10b80ceb70014b4bc36563"
+    Γ£ö should delete user profile
+[01:09:48.796] [32mINFO[39m (15008): [36mFetching user profile[39m
+    [35muserId[39m: "6a10b80ceb70014b4bc36563"
+[01:09:48.797] [33mWARN[39m (15008): [36mProfile fetch failed ΓÇö user not found[39m
+    [35muserId[39m: "6a10b80ceb70014b4bc36563"
+[01:09:49.108] [32mINFO[39m (15008): [36mPassword change attempt[39m
+    [35muserId[39m: "6a10b80ceb70014b4bc36564"
+[01:09:49.742] [32mINFO[39m (15008): [36mPassword changed successfully[39m
+    [35muserId[39m: "6a10b80ceb70014b4bc36564"
+    Γ£ö should change password successfully with correct old password (636ms)
+[01:09:49.742] [32mINFO[39m (15008): [36mFetching user profile[39m
+    [35muserId[39m: "6a10b80ceb70014b4bc36564"
+[01:09:49.743] [32mINFO[39m (15008): [36mProfile fetched successfully[39m
+    [35muserId[39m: "6a10b80ceb70014b4bc36564"
+[01:09:50.060] [32mINFO[39m (15008): [36mPassword change attempt[39m
+    [35muserId[39m: "6a10b80deb70014b4bc36565"
+    Γ£ö should throw 401 when old password is incorrect (321ms)
+[01:09:50.380] [33mWARN[39m (15008): [36mPassword change failed ΓÇö old password incorrect[39m
+    [35muserId[39m: "6a10b80deb70014b4bc36565"
+    Γ£ö should throw 400 when new password is weak
+[01:09:50.682] [32mINFO[39m (15008): [36mPassword change attempt[39m
+    [35muserId[39m: "6a10b80eeb70014b4bc36566"
+[01:09:50.682] [33mWARN[39m (15008): [36mPassword change failed ΓÇö weak new password[39m
+    [35muserId[39m: "6a10b80eeb70014b4bc36566"
+[01:09:51.025] [32mINFO[39m (15008): [36mPassword change attempt[39m
+    [35muserId[39m: "000000000000000000000000"
+    Γ£ö should throw 404 when user does not exist for changePassword
+[01:09:51.026] [33mWARN[39m (15008): [36mPassword change failed ΓÇö user not found[39m
+    [35muserId[39m: "000000000000000000000000"
+[01:09:51.324] [32mINFO[39m (15008): [36mFetching user profile[39m
+    [35muserId[39m: "000000000000000000000000"
+    Γ£ö should throw 404 when user does not exist for getProfile
+[01:09:51.325] [33mWARN[39m (15008): [36mProfile fetch failed ΓÇö user not found[39m
+    [35muserId[39m: "000000000000000000000000"
+[01:09:51.632] [32mINFO[39m (15008): [36mUpdating user profile[39m
+    [35muserId[39m: "000000000000000000000000"
+    [35mfields[39m: [
+      "name"
+    ]
+    Γ£ö should throw 404 when user does not exist for updateProfile
+[01:09:51.633] [33mWARN[39m (15008): [36mProfile update failed ΓÇö user not found[39m
+    [35muserId[39m: "000000000000000000000000"
+
+
+  69 passing (16s)
+  1 failing
+
+  1) Auth Service
+       register()
+         should throw 400 for weak password:
+     AssertionError: expected 'Email domain is invalid or cannot recΓÇª' to include 'Password must be at least 8 characters'
+      at Context.<anonymous> (tests\unit\services\auth.service.test.js:36:32)
+
+
+

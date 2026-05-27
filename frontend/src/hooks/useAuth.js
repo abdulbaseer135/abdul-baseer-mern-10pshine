@@ -16,60 +16,67 @@ const useAuth = () => {
   const { user, token, loading, error } = useSelector((state) => state.auth);
 
   const handleLogin = async (credentials) => {
-    const result = await dispatch(login(credentials));
-    if (login.fulfilled.match(result)) {
+    try {
+      await dispatch(login(credentials)).unwrap();
       toast.success('Welcome back!');
       return true;
-    } else {
+    } catch (err) {
+      console.error(err); // Sonar: handle caught exception
       toast.error('Something went wrong. Try again.');
       return false;
     }
   };
 
   const handleRegister = async (userData) => {
-    const result = await dispatch(register(userData));
-    if (register.fulfilled.match(result)) {
+    try {
+      await dispatch(register(userData)).unwrap();
       toast.success('Account created successfully!');
       return true;
-    } else {
+    } catch (err) {
+      console.error(err); // Sonar: handle caught exception
       toast.error('Something went wrong. Try again.');
       return false;
     }
   };
 
   const handleFetchProfile = async () => {
-    const result = await dispatch(fetchProfile());
-    if (fetchProfile.rejected.match(result)) {
+    try {
+      await dispatch(fetchProfile()).unwrap();
+    } catch (err) {
+      console.error(err); // Sonar: handle caught exception
       toast.error('Something went wrong. Try again.');
     }
   };
 
   const handleUpdateProfile = async (data) => {
-    const result = await dispatch(updateProfile(data));
-    if (updateProfile.fulfilled.match(result)) {
+    try {
+      await dispatch(updateProfile(data)).unwrap();
       toast.success('Profile updated successfully!');
-    } else {
+    } catch (err) {
+      console.error(err); // Sonar: handle caught exception
       toast.error('Something went wrong. Try again.');
     }
   };
 
   const handleChangePassword = async (data) => {
-    const result = await dispatch(changePassword(data));
-    if (changePassword.fulfilled.match(result)) {
+    try {
+      await dispatch(changePassword(data)).unwrap();
       toast.success('Password changed successfully!');
       return true;
-    } else {
+    } catch (err) {
+      console.error(err); // Sonar: handle caught exception
       toast.error('Something went wrong. Try again.');
       return false;
     }
   };
 
   const handleDeleteAccount = async () => {
-    const result = await dispatch(deleteAccount());
-    if (deleteAccount.fulfilled.match(result)) {
+    try {
+      await dispatch(deleteAccount()).unwrap();
       toast.success('Account deleted');
       return true;
-    } else {
+    } catch (err) {
+      console.error(err); // Sonar: handle caught exception
       toast.error('Something went wrong. Try again.');
       return false;
     }
