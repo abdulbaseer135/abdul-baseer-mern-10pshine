@@ -14,17 +14,19 @@ app.disable('etag');
 app.use(cors({
   origin: (origin, callback) => {
     const allowedOrigins = [
-      process.env.FRONTEND_URL || 'http://localhost:3000',
+      ...(process.env.FRONTEND_URL || 'http://localhost:3000').split(',').map((url) => url.trim()),
+      ...(process.env.CLIENT_URL || process.env.FRONTEND_URL || 'http://localhost:3000').split(',').map((url) => url.trim()),
       'http://localhost:3000',
       'http://localhost:3001',
       'http://127.0.0.1:3000',
       'http://127.0.0.1:3001',
-    ];
+      'https://note-book-app-one.vercel.app',
+      'https://abdul-baseer-mern-10pshine-note-boo.vercel.app',
+    ].filter(Boolean);
 
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      // Sonar: log rejected CORS origin for security monitoring
       const error = new Error(`CORS not allowed for origin: ${origin}`);
       error.status = 403;
       console.error('[CORS] Rejected request from unauthorized origin:', origin);
