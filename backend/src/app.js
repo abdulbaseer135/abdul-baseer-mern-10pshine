@@ -13,18 +13,28 @@ app.disable('etag');
 // ✅ CORS — must be before all routes
 app.use(cors({
   origin: (origin, callback) => {
-    const allowedOrigins = [
-      ...(process.env.FRONTEND_URL || 'http://localhost:3000').split(',').map((url) => url.trim()),
-      ...(process.env.CLIENT_URL || process.env.FRONTEND_URL || 'http://localhost:3000').split(',').map((url) => url.trim()),
+    const configuredOrigins = [
+      process.env.FRONTEND_URL,
+      process.env.CLIENT_URL,
       'http://localhost:3000',
       'http://localhost:3001',
       'http://127.0.0.1:3000',
       'http://127.0.0.1:3001',
-      'https://note-book-app-one.vercel.app',
-      'https://abdul-baseer-mern-10pshine-note-boo.vercel.app',
-    ].filter(Boolean);
+    ]
+      .filter(Boolean)
+      .flatMap((value) => value.split(','))
+      .map((value) => value.trim())
+      .filter(Boolean);
 
-    if (!origin || allowedOrigins.includes(origin)) {
+    const isVercelOrigin = (originValue) => {
+      return /^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(originValue);
+    };
+
+    const allowedOrigins = new Set(configuredOrigins);
+
+    const isAllowed = !origin || allowedOrigins.has(origin) || isVercelOrigin(origin);
+
+    if (isAllowed) {
       callback(null, true);
     } else {
       const error = new Error(`CORS not allowed for origin: ${origin}`);
