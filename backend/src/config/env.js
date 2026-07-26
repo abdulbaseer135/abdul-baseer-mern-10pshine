@@ -1,4 +1,7 @@
-require('dotenv').config();
+// On Vercel, env vars come from the dashboard — skip filesystem .env loading
+if (!process.env.VERCEL) {
+  require('dotenv').config();
+}
 
 /**
  * Read an env var with an optional default.
@@ -40,7 +43,7 @@ const FRONTEND_URL = getEnv('FRONTEND_URL', {
 });
 
 module.exports = {
-  PORT: getEnv('PORT', { defaultValue: '5000' }),
+  PORT: Number(getEnv('PORT', { defaultValue: '5000' })) || 5000,
   MONGO_URI: process.env.MONGO_URI || '',
   JWT_SECRET: process.env.JWT_SECRET || '',
   JWT_EXPIRES_IN: getEnv('JWT_EXPIRES_IN', { defaultValue: '7d' }),

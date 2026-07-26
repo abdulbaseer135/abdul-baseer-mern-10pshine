@@ -6,23 +6,22 @@
     },
     "backend": {
       "root": "backend/",
-      "framework": "express"
+      "framework": "express",
+      "entrypoint": "app.js"
     }
   },
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": {
-        "type": "service",
-        "service": "backend"
-      }
+      "source": "/api/(.*)",
+      "destination": { "service": "backend" }
     },
     {
-      "source": "/:path*",
-      "destination": {
-        "type": "service",
-        "service": "frontend"
-      }
+      "source": "/health",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/(.*)",
+      "destination": { "service": "frontend" }
     }
   ]
 }

@@ -1,6 +1,9 @@
 /**
- * Local development entry only.
- * On Vercel, use api/index.js (exports the Express app — no listen).
+ * Local development entry ONLY.
+ * Named so Vercel Express auto-detection does NOT pick this file
+ * (it would call listen()/Socket.IO and crash the serverless function).
+ *
+ * Start locally with: npm start  →  node src/local-server.js
  */
 const http = require('node:http');
 const app = require('./app');
@@ -27,4 +30,8 @@ const startServer = async () => {
   }
 };
 
-startServer();
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = { startServer };

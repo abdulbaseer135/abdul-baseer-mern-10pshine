@@ -68,12 +68,11 @@ if (process.env.CORS_ALLOW_ALL === 'true') {
       optionsSuccessStatus: 200,
     })
   );
-  app.options(/(.*)/, cors());
 } else {
   app.use(cors(corsOptions));
-  // Explicit preflight handling for all routes
-  app.options(/(.*)/, cors(corsOptions));
 }
+
+// cors() already handles OPTIONS preflight when used as middleware above
 
 // ─── Body parsers & logging ───────────────────────────────────────────────
 app.use(express.json({ limit: '2mb' }));
