@@ -1,20 +1,26 @@
 const express = require('express');
 const cors = require('cors');
-const path = require('node:path'); // Sonar: prefer node:path over path
+const path = require('node:path');
 const requestLogger = require('./middleware/requestLogger.middleware');
 const errorHandler = require('./middleware/errorHandler.middleware');
 const routes = require('./routes/index');
+const connectDB = require('./config/db');
+const { FRONTEND_URL } = require('./config/env');
 
 const app = express();
 app.disable('x-powered-by');
-
 app.disable('etag');
 
-// ✅ CORS — must be before all routes
-const defaultOrigins = ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000', 'http://127.0.0.1:3001'];
+// ─── CORS (FRONTEND_URL may be comma-separated) ───────────────────────────
+const defaultOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:3001',
+];
 
 const allowedOrigins = [
-  process.env.FRONTEND_URL,
+  FRONTEND_URL,
   process.env.CLIENT_URL,
   ...defaultOrigins,
 ]
@@ -23,38 +29,26 @@ const allowedOrigins = [
   .map((value) => value.trim())
   .filter(Boolean);
 
-console.log('[CORS] Allowed origins:', allowedOrigins);
+const isVercelOrigin = (value) =>
+  /^https:\/\/([a-z0-9-]+\.)*[a-z0-9-]+\.vercel\.app$/i.test(value);
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow curl/postman/tools with no Origin header
+    // Allow non-browser clients (curl, Postman, server-to-server)
     if (!origin) {
       return callback(null, true);
     }
 
-    // Normalize incoming origin for comparison
     const incoming = String(origin).trim();
 
-    // Debug log to help diagnose production preflight failures
-    // (will appear in Render logs)
-    console.debug('[CORS] Incoming Origin:', incoming);
-
-    // Allow explicit allowed origins or any Vercel preview/deployment domain
-    const isVercelOrigin = (value) => {
-      // Match patterns like: https://project-name.vercel.app or
-      // https://project-name-branch-username.vercel.app
-      return /^https:\/\/([a-z0-9-]+\.)*[a-z0-9-]+\.vercel\.app$/i.test(value);
-    };
-
     if (allowedOrigins.includes(incoming) || isVercelOrigin(incoming)) {
-      // Explicitly return the allowed origin so Access-Control-Allow-Origin
-      // equals the request origin (required when credentials: true).
+      // Echo the request origin when credentials: true
       return callback(null, incoming);
     }
 
     const error = new Error(`CORS not allowed for origin: ${incoming}`);
     error.status = 403;
-    console.error('[CORS] Rejected request from unauthorized origin:', incoming);
+    console.error('[CORS] Rejected origin:', incoming);
     return callback(error);
   },
   credentials: true,
@@ -63,9 +57,6 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-// Support a temporary permissive mode for quick testing. Enable by
-// setting CORS_ALLOW_ALL=true in environment (DO NOT leave enabled
-// in production long-term).
 if (process.env.CORS_ALLOW_ALL === 'true') {
   console.warn('[CORS] WARNING: permissive CORS enabled via CORS_ALLOW_ALL=true');
   app.use(
@@ -80,39 +71,47 @@ if (process.env.CORS_ALLOW_ALL === 'true') {
   app.options(/(.*)/, cors());
 } else {
   app.use(cors(corsOptions));
+  // Explicit preflight handling for all routes
   app.options(/(.*)/, cors(corsOptions));
 }
 
-app.use(express.json());
+// ─── Body parsers & logging ───────────────────────────────────────────────
+app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
-
-// HTTP request logging
 app.use(requestLogger);
 
-// ✅ Serve uploads directory as static files
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// ─── Health checks (no DB required — useful for Vercel smoke tests) ───────
+const healthHandler = (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    message: 'Backend is healthy',
+    timestamp: new Date().toISOString(),
+  });
+};
 
-// API routes
-app.use('/api/v1', routes);
+app.get('/health', healthHandler);
+app.get('/api/health', healthHandler);
 
-// Health check
-app.get('/health', (req, res) => {
+// ─── Ensure MongoDB is connected for API routes (serverless-safe cache) ───
+app.use('/api/v1', async (req, res, next) => {
   try {
-    res.status(200).json({
-      status: 'OK',
-      timestamp: new Date().toISOString(),
-    });
+    await connectDB();
+    next();
   } catch (err) {
-    // Sonar: handle caught exception
-    console.error('[Health Check] Error sending health status:', err?.message);
+    console.error('[DB] Failed before request:', err.message);
     res.status(500).json({
-      status: 'ERROR',
-      error: 'Failed to generate health check response',
+      success: false,
+      statusCode: 500,
+      message: err.message || 'Database connection failed',
     });
   }
 });
 
-// 404 handler — catch undefined routes
+// ─── Static uploads & API routes ──────────────────────────────────────────
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/api/v1', routes);
+
+// ─── 404 ──────────────────────────────────────────────────────────────────
 app.use((req, res) => {
   res.status(404).json({
     error: 'Not Found',
@@ -121,7 +120,7 @@ app.use((req, res) => {
   });
 });
 
-// Global error handler — must be last
+// ─── Global error handler (must be last) ──────────────────────────────────
 app.use(errorHandler);
 
 module.exports = app;
