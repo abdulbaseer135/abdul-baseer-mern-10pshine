@@ -11,9 +11,9 @@ app.disable('x-powered-by');
 app.disable('etag');
 
 // ✅ CORS — must be before all routes
-app.use(cors({
+const corsOptions = {
   origin: (origin, callback) => {
-    const configuredOrigins = [
+    const allowedOrigins = [
       process.env.FRONTEND_URL,
       process.env.CLIENT_URL,
       'http://localhost:3000',
@@ -30,9 +30,8 @@ app.use(cors({
       return /^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(originValue);
     };
 
-    const allowedOrigins = new Set(configuredOrigins);
-
-    const isAllowed = !origin || allowedOrigins.has(origin) || isVercelOrigin(origin);
+    const allowedOriginsSet = new Set(allowedOrigins);
+    const isAllowed = !origin || allowedOriginsSet.has(origin) || isVercelOrigin(origin);
 
     if (isAllowed) {
       callback(null, true);
@@ -44,7 +43,13 @@ app.use(cors({
     }
   },
   credentials: true,
-}));
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
