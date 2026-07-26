@@ -17,6 +17,11 @@ const protect = asyncHandler(async (req, res, next) => {
     throw new ApiError(401, 'Not authorized, no token provided');
   }
 
+  if (!JWT_SECRET) {
+    console.error('[Auth Middleware] JWT_SECRET is not configured');
+    throw new ApiError(500, 'Server misconfiguration: JWT_SECRET is missing');
+  }
+
   let decoded;
   try {
     // ✅ Verify JWT token

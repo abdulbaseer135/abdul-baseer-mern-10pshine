@@ -4,7 +4,7 @@ const sinon = require('sinon');
 const http = require('node:http');
 const mongoose = require('mongoose');
 
-describe('Server - server.js', () => {
+describe('Server - local-server.js', () => {
   let httpCreateServerStub;
   let consoleLogStub;
   let consoleErrorStub;
@@ -24,9 +24,9 @@ describe('Server - server.js', () => {
 
   describe('Server Initialization', () => {
     it('should be a module with exports', () => {
-      const server = require('../../../src/server');
-      // The file exports nothing (it just runs), but we can verify the file structure
-      expect(true).to.be.true;
+      const server = require('../../../src/local-server');
+      expect(server).to.have.property('startServer');
+      expect(server.startServer).to.be.a('function');
     });
 
     it('should attempt to create HTTP server from Express app', () => {

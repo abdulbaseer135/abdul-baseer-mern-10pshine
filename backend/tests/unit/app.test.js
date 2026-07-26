@@ -33,6 +33,16 @@ describe('Express App Setup - app.js', () => {
       expect(response.status).to.equal(200);
     });
 
+    it('should allow Vercel deployment origins', async () => {
+      const response = await request(app)
+        .get('/health')
+        .set('Origin', 'https://abdul-baseer-mern-10pshine-gamma.vercel.app');
+      expect(response.status).to.equal(200);
+      expect(response.get('access-control-allow-origin')).to.equal(
+        'https://abdul-baseer-mern-10pshine-gamma.vercel.app'
+      );
+    });
+
     it('should allow localhost:3001 origin', async () => {
       const response = await request(app)
         .get('/health')

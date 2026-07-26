@@ -13,6 +13,10 @@ const { sendOTPEmail } = require('../utils/nodemailer');
 const PASSWORD_RULES = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
 const generateToken = (userId) => {
+  if (!JWT_SECRET) {
+    console.error('[Auth] JWT_SECRET is not configured');
+    throw new ApiError(500, 'Server misconfiguration: JWT_SECRET is missing');
+  }
   return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 };
 

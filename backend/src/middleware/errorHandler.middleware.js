@@ -1,20 +1,35 @@
 const logger = require('../config/logger');
 
 const errorHandler = (err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
+  const statusCode = err.statusCode || err.status || 500;
 
-  logger.error({
-    err: {
-      message: err.message,
-      stack: err.stack,
-    },
-    request: {
-      method: req.method,
-      url: req.url,
-      body: req.body,
-    },
+  console.error('[Error]', {
+    message: err.message,
     statusCode,
-  }, `Error: ${err.message}`);
+    method: req.method,
+    url: req.originalUrl || req.url,
+  });
+
+  if (logger?.error) {
+    logger.error(
+      {
+        err: {
+          message: err.message,
+          stack: err.stack,
+        },
+        request: {
+          method: req.method,
+          url: req.url,
+        },
+        statusCode,
+      },
+      `Error: ${err.message}`
+    );
+  }
+
+  if (res.headersSent) {
+    return next(err);
+  }
 
   res.status(statusCode).json({
     success: false,
