@@ -39,7 +39,14 @@ const corsOptions = {
     // (will appear in Render logs)
     console.debug('[CORS] Incoming Origin:', incoming);
 
-    if (allowedOrigins.includes(incoming)) {
+    // Allow explicit allowed origins or any Vercel preview/deployment domain
+    const isVercelOrigin = (value) => {
+      // Match patterns like: https://project-name.vercel.app or
+      // https://project-name-branch-username.vercel.app
+      return /^https:\/\/([a-z0-9-]+\.)*[a-z0-9-]+\.vercel\.app$/i.test(value);
+    };
+
+    if (allowedOrigins.includes(incoming) || isVercelOrigin(incoming)) {
       // Explicitly return the allowed origin so Access-Control-Allow-Origin
       // equals the request origin (required when credentials: true).
       return callback(null, incoming);
