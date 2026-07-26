@@ -1,14 +1,7 @@
 import api from './api';
 
 export const getNotesService = async (params = {}) => {
-  const res = await api.get('/notes', {
-    params,
-    headers: {
-      'Cache-Control': 'no-cache',
-      Pragma: 'no-cache',
-      Expires: '0',
-    },
-  });
+  const res = await api.get('/notes', { params });
   
   console.log('[DEBUG getNotesService] response:', res.data);
   

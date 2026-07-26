@@ -53,7 +53,14 @@ const corsOptions = {
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'X-Requested-With',
+    'Cache-Control',
+    'Pragma',
+    'Expires',
+  ],
   optionsSuccessStatus: 200,
 };
 
@@ -64,7 +71,14 @@ if (process.env.CORS_ALLOW_ALL === 'true') {
       origin: (origin, cb) => cb(null, origin || true),
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+      allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'X-Requested-With',
+        'Cache-Control',
+        'Pragma',
+        'Expires',
+      ],
       optionsSuccessStatus: 200,
     })
   );
