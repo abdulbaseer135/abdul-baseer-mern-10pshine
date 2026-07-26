@@ -11,36 +11,34 @@ app.disable('x-powered-by');
 app.disable('etag');
 
 // ✅ CORS — must be before all routes
+const defaultOrigins = ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000', 'http://127.0.0.1:3001'];
+
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  process.env.CLIENT_URL,
+  ...defaultOrigins,
+]
+  .filter(Boolean)
+  .flatMap((value) => String(value).split(','))
+  .map((value) => value.trim())
+  .filter(Boolean);
+
+console.log('[CORS] Allowed origins:', allowedOrigins);
+
 const corsOptions = {
   origin: (origin, callback) => {
-    const allowedOrigins = [
-      process.env.FRONTEND_URL,
-      process.env.CLIENT_URL,
-      'http://localhost:3000',
-      'http://localhost:3001',
-      'http://127.0.0.1:3000',
-      'http://127.0.0.1:3001',
-    ]
-      .filter(Boolean)
-      .flatMap((value) => value.split(','))
-      .map((value) => value.trim())
-      .filter(Boolean);
-
-    const isVercelOrigin = (originValue) => {
-      return /^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(originValue);
-    };
-
-    const allowedOriginsSet = new Set(allowedOrigins);
-    const isAllowed = !origin || allowedOriginsSet.has(origin) || isVercelOrigin(origin);
-
-    if (isAllowed) {
-      callback(null, true);
-    } else {
-      const error = new Error(`CORS not allowed for origin: ${origin}`);
-      error.status = 403;
-      console.error('[CORS] Rejected request from unauthorized origin:', origin);
-      callback(error);
+    if (!origin) {
+      return callback(null, true);
     }
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    const error = new Error(`CORS not allowed for origin: ${origin}`);
+    error.status = 403;
+    console.error('[CORS] Rejected request from unauthorized origin:', origin);
+    return callback(error);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -49,7 +47,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+app.options(/(.*)/, cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
