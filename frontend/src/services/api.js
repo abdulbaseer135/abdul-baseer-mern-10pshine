@@ -78,15 +78,7 @@ if (api && api.interceptors) {
 
 // Dedicated helper for notes list
 export const getNotes = async (params = {}) => {
-  const response = await api.get('/notes', {
-    params,
-    headers: {
-      'Cache-Control': 'no-cache',
-      Pragma: 'no-cache',
-      Expires: '0',
-    },
-  });
-
+  const response = await api.get('/notes', { params });
   return response.data;
 };
 

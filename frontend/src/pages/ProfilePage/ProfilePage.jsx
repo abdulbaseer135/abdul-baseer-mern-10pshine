@@ -146,7 +146,7 @@ const ProfilePage = () => {
 
   // ✅ Profile image remove handler - Show confirmation modal
   const handleRemoveImage = () => {
-    profileImage.profileImage.setRemoveImageModal(true);
+    profileImage.setRemoveImageModal(true);
   };
 
   // ✅ Confirm and remove profile image
