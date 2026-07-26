@@ -95,9 +95,16 @@ const authSlice = createSlice({
       .addCase(register.pending,    (state) => { state.loading = true; state.error = null; })
       .addCase(register.fulfilled,  (state, action) => {
         state.loading = false;
-        state.token = action.payload.token;
-        state.user  = action.payload.user;
-        try { localStorage.setItem('token', action.payload.token); } catch {}
+        // Signup does not grant access until OTP verification completes
+        state.token = action.payload?.token || null;
+        state.user  = action.payload?.user || null;
+        try {
+          if (action.payload?.token) {
+            localStorage.setItem('token', action.payload.token);
+          } else {
+            localStorage.removeItem('token');
+          }
+        } catch {}
       })
       .addCase(register.rejected,   (state, action) => { state.loading = false; state.error = action.payload; })
 

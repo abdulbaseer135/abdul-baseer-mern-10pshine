@@ -138,7 +138,17 @@ const ProfilePage = () => {
   };
 
   const onDeleteAccount = async () => {
-    await handleDeleteAccount();
+    const success = await handleDeleteAccount();
+    if (success) {
+      navigate('/login', {
+        replace: true,
+        state: {
+          accountDeleted: true,
+          message:
+            'Your account has been deleted. Please create a new account before signing in.',
+        },
+      });
+    }
   };
 
   // ✅ Profile image upload handler

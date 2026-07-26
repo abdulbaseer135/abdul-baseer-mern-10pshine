@@ -47,12 +47,12 @@ describe('LoginPage', () => {
 
     it('should render forgot password link', () => {
       renderWithProviders(<LoginPage />);
-      expect(screen.getByText(/forgot password/i)).toBeInTheDocument();
+      expect(screen.getByText(/forgot\??/i)).toBeInTheDocument();
     });
 
     it('should render signup link', () => {
       renderWithProviders(<LoginPage />);
-      expect(screen.getByText(/create account|sign up/i)).toBeInTheDocument();
+      expect(screen.getByText(/create one|create a new account/i)).toBeInTheDocument();
     });
 
     it('should have email input with correct type', () => {
@@ -70,19 +70,21 @@ describe('LoginPage', () => {
 
   describe('Form Validation', () => {
     it('should show validation errors when form is empty', async () => {
-      mockHandleLogin.mockResolvedValue(false);
+      mockHandleLogin.mockResolvedValue({ success: false });
 
       renderWithProviders(<LoginPage />);
 
       fireEvent.click(screen.getByRole('button', { name: /login|sign in/i }));
 
       await waitFor(() => {
-        expect(mockHandleLogin).toHaveBeenCalled();
+        expect(screen.getByText(/email is required/i)).toBeInTheDocument();
+        expect(screen.getByText(/password is required/i)).toBeInTheDocument();
       });
+      expect(mockHandleLogin).not.toHaveBeenCalled();
     });
 
     it('should accept valid email', async () => {
-      mockHandleLogin.mockResolvedValue(true);
+      mockHandleLogin.mockResolvedValue({ success: true });
 
       renderWithProviders(<LoginPage />);
       const emailInput = screen.getByLabelText(/email/i);
@@ -98,7 +100,7 @@ describe('LoginPage', () => {
 
   describe('Login Submission', () => {
     it('should call handleLogin on form submission', async () => {
-      mockHandleLogin.mockResolvedValue(true);
+      mockHandleLogin.mockResolvedValue({ success: true });
 
       renderWithProviders(<LoginPage />);
       const emailInput = screen.getByLabelText(/email/i);
@@ -119,7 +121,7 @@ describe('LoginPage', () => {
     });
 
     it('should navigate to dashboard on successful login', async () => {
-      mockHandleLogin.mockResolvedValue(true);
+      mockHandleLogin.mockResolvedValue({ success: true });
 
       renderWithProviders(<LoginPage />);
       const emailInput = screen.getByLabelText(/email/i);
@@ -137,7 +139,7 @@ describe('LoginPage', () => {
     });
 
     it('should not navigate on failed login', async () => {
-      mockHandleLogin.mockResolvedValue(false);
+      mockHandleLogin.mockResolvedValue({ success: false });
 
       renderWithProviders(<LoginPage />);
       const emailInput = screen.getByLabelText(/email/i);
@@ -170,7 +172,7 @@ describe('LoginPage', () => {
     });
 
     it('should call handleClearError on form submission', async () => {
-      mockHandleLogin.mockResolvedValue(true);
+      mockHandleLogin.mockResolvedValue({ success: true });
 
       renderWithProviders(<LoginPage />);
       const emailInput = screen.getByLabelText(/email/i);
@@ -199,6 +201,35 @@ describe('LoginPage', () => {
 
       expect(screen.getByText(/email not found/i)).toBeInTheDocument();
     });
+
+    it('should show create-account guidance when deleted account tries to login', async () => {
+      mockHandleLogin.mockResolvedValue({
+        success: false,
+        accountDeleted: true,
+        message: 'This account has been deleted. Please create a new account before signing in.',
+      });
+      useAuth.mockReturnValue({
+        handleLogin: mockHandleLogin,
+        loading: false,
+        error: 'This account has been deleted. Please create a new account before signing in.',
+        handleClearError: mockHandleClearError,
+      });
+
+      renderWithProviders(<LoginPage />);
+
+      fireEvent.change(screen.getByLabelText(/email/i), {
+        target: { value: 'deleted@example.com' },
+      });
+      fireEvent.change(screen.getByLabelText(/password/i), {
+        target: { value: 'password123' },
+      });
+      fireEvent.click(screen.getByRole('button', { name: /login|sign in/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText(/this account has been deleted/i)).toBeInTheDocument();
+        expect(screen.getAllByText(/create a new account/i).length).toBeGreaterThan(0);
+      });
+    });
   });
 
   describe('Loading State', () => {
@@ -212,7 +243,7 @@ describe('LoginPage', () => {
 
       renderWithProviders(<LoginPage />);
 
-      const loginBtn = screen.getByRole('button', { name: /login|sign in/i });
+      const loginBtn = screen.getByRole('button', { name: /sign(ing)? in/i });
       expect(loginBtn).toBeDisabled();
     });
 
@@ -233,21 +264,22 @@ describe('LoginPage', () => {
 
       renderWithProviders(<LoginPage />);
 
-      const loginBtn = screen.getByRole('button', { name: /login|sign in/i });
+      const loginBtn = screen.getByRole('button', { name: /sign(ing)? in/i });
       expect(loginBtn).toBeDisabled();
+      expect(loginBtn).toHaveTextContent(/signing in/i);
     });
   });
 
   describe('Navigation Links', () => {
     it('should have link to forgot password page', () => {
       renderWithProviders(<LoginPage />);
-      const link = screen.getByText(/forgot password/i).closest('a');
+      const link = screen.getByText(/forgot\??/i).closest('a');
       expect(link).toHaveAttribute('href', expect.stringContaining('/forgot-password'));
     });
 
     it('should have link to signup page', () => {
       renderWithProviders(<LoginPage />);
-      const link = screen.getByText(/create account|sign up/i).closest('a');
+      const link = screen.getByText(/create one/i).closest('a');
       expect(link).toHaveAttribute('href', expect.stringContaining('/signup'));
     });
   });

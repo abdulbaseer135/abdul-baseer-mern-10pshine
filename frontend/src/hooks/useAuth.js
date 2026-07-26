@@ -19,11 +19,21 @@ const useAuth = () => {
     try {
       await dispatch(login(credentials)).unwrap();
       toast.success('Welcome back!');
-      return true;
+      return { success: true };
     } catch (err) {
-      console.error(err); // Sonar: handle caught exception
-      toast.error('Something went wrong. Try again.');
-      return false;
+      console.error(err);
+      const message =
+        typeof err === 'string'
+          ? err
+          : err?.message || 'Something went wrong. Try again.';
+
+      const needsVerification =
+        /verify your email|otp/i.test(message);
+      const accountDeleted =
+        /account has been deleted|create a new account/i.test(message);
+
+      toast.error(message);
+      return { success: false, needsVerification, accountDeleted, message };
     }
   };
 
@@ -73,7 +83,7 @@ const useAuth = () => {
   const handleDeleteAccount = async () => {
     try {
       await dispatch(deleteAccount()).unwrap();
-      toast.success('Account deleted');
+      toast.success('Your account has been permanently deleted.');
       return true;
     } catch (err) {
       console.error(err); // Sonar: handle caught exception

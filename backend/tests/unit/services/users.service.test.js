@@ -1,7 +1,9 @@
 const { expect } = require('chai');
 const { connect, disconnect, clear } = require('../../helpers/testDb');
 const usersService = require('../../../src/services/users.service');
+const authService = require('../../../src/services/auth.service');
 const { createUser } = require('../../../src/dal/users.dal');
+const { findDeletedByEmail } = require('../../../src/dal/deletedAccounts.dal');
 
 describe('Users Service', () => {
   before(async () => await connect());
@@ -9,11 +11,13 @@ describe('Users Service', () => {
   after(async () => await disconnect());
 
   let userId;
+  let userEmail;
 
   beforeEach(async () => {
+    userEmail = `abdul${Date.now()}@test.com`;
     const user = await createUser({
       name: 'Abdul Baseer',
-      email: `abdul${Date.now()}@test.com`,
+      email: userEmail,
       password: 'pass123',
     });
     userId = user._id;
@@ -54,6 +58,24 @@ describe('Users Service', () => {
       expect.fail('Should have thrown');
     } catch (err) {
       expect(err.statusCode).to.equal(404);
+    }
+  });
+
+  it('should record a deleted-account tombstone and block login', async () => {
+    await usersService.deleteProfile(userId);
+
+    const tombstone = await findDeletedByEmail(userEmail);
+    expect(tombstone).to.exist;
+    expect(tombstone.email).to.equal(userEmail.toLowerCase());
+
+    try {
+      await authService.login({ email: userEmail, password: 'pass123' });
+      expect.fail('Should have thrown');
+    } catch (err) {
+      expect(err.statusCode).to.equal(403);
+      expect(err.message).to.equal(
+        'This account has been deleted. Please create a new account before signing in.'
+      );
     }
   });
 

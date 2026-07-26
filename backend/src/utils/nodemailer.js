@@ -2,33 +2,46 @@ const nodemailer = require('nodemailer');
 const { EMAIL_HOST, EMAIL_PORT, EMAIL_SECURE, EMAIL_USER, EMAIL_PASS, EMAIL_FROM } = require('../config/env');
 const logger = require('../config/logger');
 
-// Create reusable transporter
-const transporter = nodemailer.createTransport({
-  host: EMAIL_HOST,
-  port: EMAIL_PORT,
-  secure: EMAIL_SECURE === 'true', // true for 465, false for other ports
-  auth: {
-    user: EMAIL_USER,
-    pass: EMAIL_PASS,
-  },
-});
+/**
+ * Create a fresh transporter per send on serverless.
+ * Persistent pooled SMTP connections often hang or go stale on Vercel.
+ */
+const createTransporter = () =>
+  nodemailer.createTransport({
+    host: EMAIL_HOST,
+    port: Number(EMAIL_PORT) || 587,
+    secure: EMAIL_SECURE === 'true',
+    auth: {
+      user: EMAIL_USER,
+      // Gmail app passwords may be stored with spaces
+      pass: EMAIL_PASS ? String(EMAIL_PASS).replaceAll(/\s+/g, '') : EMAIL_PASS,
+    },
+    pool: false,
+    connectionTimeout: 8_000,
+    greetingTimeout: 8_000,
+    socketTimeout: 12_000,
+    tls: {
+      // Avoid rare TLS stalls on some serverless runtimes
+      minVersion: 'TLSv1.2',
+    },
+  });
 
 /**
  * Send OTP email
- * @param {string} email - Recipient email
- * @param {string} otp - 6-digit OTP code
- * @param {string} purpose - 'verify' or 'reset'
- * @returns {Promise<void>}
+ * @param {string} email
+ * @param {string} otp
+ * @param {string} purpose - 'verify' | 'reset'
  */
 const sendOTPEmail = async (email, otp, purpose) => {
+  const transporter = createTransporter();
+
   try {
-    const subject = purpose === 'verify' 
-      ? 'Verify Your Email - 6 Digit Code'
-      : 'Reset Password - 6 Digit Code';
-    
-    const title = purpose === 'verify'
-      ? 'Email Verification'
-      : 'Password Reset';
+    const subject =
+      purpose === 'verify'
+        ? 'Verify Your Email - 6 Digit Code'
+        : 'Reset Password - 6 Digit Code';
+
+    const title = purpose === 'verify' ? 'Email Verification' : 'Password Reset';
 
     const htmlContent = `
       <!DOCTYPE html>
@@ -70,7 +83,7 @@ const sendOTPEmail = async (email, otp, purpose) => {
     `;
 
     await transporter.sendMail({
-      from: EMAIL_FROM,
+      from: EMAIL_FROM || EMAIL_USER,
       to: email,
       subject,
       html: htmlContent,
@@ -80,7 +93,41 @@ const sendOTPEmail = async (email, otp, purpose) => {
   } catch (error) {
     logger.error({ email, error: error.message }, 'Failed to send OTP email');
     throw new Error('Failed to send OTP email');
+  } finally {
+    try {
+      transporter.close();
+    } catch {
+      // ignore close errors
+    }
   }
 };
 
-module.exports = { sendOTPEmail, transporter };
+/**
+ * Best-effort email send that never blocks the API longer than maxWaitMs.
+ * OTP is already stored in DB before this is called, so the client can resend.
+ */
+const sendOTPEmailNonBlocking = async (email, otp, purpose, maxWaitMs = 4000) => {
+  const sendPromise = sendOTPEmail(email, otp, purpose).catch((err) => {
+    console.error('[email] OTP send failed:', err.message);
+    return null;
+  });
+
+  await Promise.race([
+    sendPromise,
+    new Promise((resolve) => setTimeout(resolve, maxWaitMs)),
+  ]);
+
+  // Keep the promise alive a bit longer on Vercel Fluid compute when possible
+  try {
+    // Optional — present on newer Vercel runtimes
+    // eslint-disable-next-line global-require, import/no-extraneous-dependencies
+    const vercelFns = require('@vercel/functions');
+    if (typeof vercelFns.waitUntil === 'function') {
+      vercelFns.waitUntil(sendPromise);
+    }
+  } catch {
+    // Package not installed — floating promise is best-effort
+  }
+};
+
+module.exports = { sendOTPEmail, sendOTPEmailNonBlocking };
