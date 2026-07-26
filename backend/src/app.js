@@ -56,8 +56,25 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-app.use(cors(corsOptions));
-app.options(/(.*)/, cors(corsOptions));
+// Support a temporary permissive mode for quick testing. Enable by
+// setting CORS_ALLOW_ALL=true in environment (DO NOT leave enabled
+// in production long-term).
+if (process.env.CORS_ALLOW_ALL === 'true') {
+  console.warn('[CORS] WARNING: permissive CORS enabled via CORS_ALLOW_ALL=true');
+  app.use(
+    cors({
+      origin: (origin, cb) => cb(null, origin || true),
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+      optionsSuccessStatus: 200,
+    })
+  );
+  app.options(/(.*)/, cors());
+} else {
+  app.use(cors(corsOptions));
+  app.options(/(.*)/, cors(corsOptions));
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
