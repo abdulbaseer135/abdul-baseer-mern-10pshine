@@ -27,17 +27,27 @@ console.log('[CORS] Allowed origins:', allowedOrigins);
 
 const corsOptions = {
   origin: (origin, callback) => {
+    // Allow curl/postman/tools with no Origin header
     if (!origin) {
       return callback(null, true);
     }
 
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
+    // Normalize incoming origin for comparison
+    const incoming = String(origin).trim();
+
+    // Debug log to help diagnose production preflight failures
+    // (will appear in Render logs)
+    console.debug('[CORS] Incoming Origin:', incoming);
+
+    if (allowedOrigins.includes(incoming)) {
+      // Explicitly return the allowed origin so Access-Control-Allow-Origin
+      // equals the request origin (required when credentials: true).
+      return callback(null, incoming);
     }
 
-    const error = new Error(`CORS not allowed for origin: ${origin}`);
+    const error = new Error(`CORS not allowed for origin: ${incoming}`);
     error.status = 403;
-    console.error('[CORS] Rejected request from unauthorized origin:', origin);
+    console.error('[CORS] Rejected request from unauthorized origin:', incoming);
     return callback(error);
   },
   credentials: true,
