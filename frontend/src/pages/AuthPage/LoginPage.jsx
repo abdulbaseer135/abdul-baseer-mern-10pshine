@@ -1,17 +1,50 @@
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
+import { sendOTPService } from '../../services/auth.service';
 
 const LoginPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const { handleLogin, loading, error, handleClearError } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [infoMessage, setInfoMessage] = useState(
+    location.state?.accountDeleted ? location.state.message : null
+  );
+  const [accountDeleted, setAccountDeleted] = useState(
+    Boolean(location.state?.accountDeleted)
+  );
+
+  useEffect(() => {
+    if (location.state?.accountDeleted) {
+      // Clear one-time navigation state so refresh doesn't re-show it
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.pathname, location.state, navigate]);
 
   const onSubmit = async (data) => {
     handleClearError();
-    const success = await handleLogin(data);
-    if (success) navigate('/dashboard');
+    setInfoMessage(null);
+    setAccountDeleted(false);
+    const result = await handleLogin(data);
+    if (result?.success) {
+      navigate('/dashboard');
+      return;
+    }
+    if (result?.accountDeleted) {
+      setAccountDeleted(true);
+      return;
+    }
+    if (result?.needsVerification) {
+      try {
+        await sendOTPService(data.email, 'verify');
+      } catch (err) {
+        console.error('[Login] Failed to resend OTP for unverified user:', err?.message);
+      }
+      navigate('/verify-otp', { state: { email: data.email, purpose: 'verify' } });
+    }
   };
 
 
@@ -63,6 +96,32 @@ const LoginPage = () => {
           boxShadow: 'var(--shadow-md)'
         }}>
 
+          {/* Post-deletion info banner */}
+          {infoMessage && !error && (
+            <div className="
+              flex items-start gap-2.5
+              px-3 py-2.5 rounded-md mb-4
+              border text-sm
+            "
+            style={{
+              backgroundColor: 'rgba(99, 102, 241, 0.08)',
+              borderColor: 'var(--accent-primary)',
+              color: 'var(--text-primary)'
+            }}>
+              <InfoIcon />
+              <span>
+                {infoMessage}{' '}
+                <Link
+                  to="/signup"
+                  className="font-semibold underline underline-offset-2"
+                  style={{ color: 'var(--accent-primary)' }}
+                >
+                  Create a new account
+                </Link>
+              </span>
+            </div>
+          )}
+
           {/* Error Banner */}
           {error && (
             <div className="
@@ -71,12 +130,32 @@ const LoginPage = () => {
               border text-sm
             "
             style={{
-              backgroundColor: 'rgba(239, 68, 68, 0.08)',
-              borderColor: 'var(--danger-primary)',
-              color: 'var(--danger-primary)'
+              backgroundColor: accountDeleted
+                ? 'rgba(99, 102, 241, 0.08)'
+                : 'rgba(239, 68, 68, 0.08)',
+              borderColor: accountDeleted
+                ? 'var(--accent-primary)'
+                : 'var(--danger-primary)',
+              color: accountDeleted
+                ? 'var(--text-primary)'
+                : 'var(--danger-primary)'
             }}>
-              <ErrorIcon />
-              <span>{error}</span>
+              {accountDeleted ? <InfoIcon /> : <ErrorIcon />}
+              <span>
+                {error}
+                {accountDeleted && (
+                  <>
+                    {' '}
+                    <Link
+                      to="/signup"
+                      className="font-semibold underline underline-offset-2"
+                      style={{ color: 'var(--accent-primary)' }}
+                    >
+                      Create a new account
+                    </Link>
+                  </>
+                )}
+              </span>
             </div>
           )}
 
@@ -275,6 +354,21 @@ const ErrorIcon = ({ size = 13 }) => (
 );
 
 ErrorIcon.propTypes = {
+  size: PropTypes.number,
+};
+
+const InfoIcon = ({ size = 13 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true"
+    stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
+    className="shrink-0 mt-px"
+    style={{ color: 'var(--accent-primary)' }}>
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="12" y1="16" x2="12" y2="12"/>
+    <line x1="12" y1="8" x2="12.01" y2="8"/>
+  </svg>
+);
+
+InfoIcon.propTypes = {
   size: PropTypes.number,
 };
 

@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const { findById, updateUser, deleteUser } = require('../dal/users.dal');
+const { recordDeletedEmail } = require('../dal/deletedAccounts.dal');
 const User = require('../models/User.model');
 const ApiError = require('../utils/ApiError');
 const logger = require('../config/logger');
@@ -62,7 +63,10 @@ const deleteProfile = async (userId) => {
     throw new ApiError(404, 'User not found');
   }
 
-  logger.info({ userId }, 'User account deleted successfully');
+  // Keep a tombstone so login can guide the user to sign up again
+  await recordDeletedEmail(user.email);
+
+  logger.info({ userId, email: user.email }, 'User account deleted successfully');
   return formatUserWithImageUrl(user);
 };
 

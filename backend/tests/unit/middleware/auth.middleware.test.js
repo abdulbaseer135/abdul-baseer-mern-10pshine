@@ -61,7 +61,7 @@ describe('Auth Middleware - auth.middleware.js', () => {
     it('should extract token from Bearer header and verify it', async () => {
       req.headers.authorization = 'Bearer valid-jwt-token';
       jwtStub.verify.returns({ id: 'user123' });
-      findByIdStub.resolves({ _id: 'user123', name: 'Test User' });
+      findByIdStub.resolves({ _id: 'user123', name: 'Test User', isEmailVerified: true });
       await protect(req, res, next);
       expect(jwtStub.verify.calledOnce).to.be.true;
     });
@@ -117,13 +117,13 @@ describe('Auth Middleware - auth.middleware.js', () => {
     it('should fetch user from database using decoded id', async () => {
       req.headers.authorization = 'Bearer valid-token';
       jwtStub.verify.returns({ id: 'user123' });
-      findByIdStub.resolves({ _id: 'user123', name: 'Test User', email: 'test@example.com' });
+      findByIdStub.resolves({ _id: 'user123', name: 'Test User', email: 'test@example.com', isEmailVerified: true });
       await protect(req, res, next);
       expect(findByIdStub.calledWith('user123')).to.be.true;
     });
 
     it('should attach user to request object on success', async () => {
-      const mockUser = { _id: 'user123', name: 'Test User', email: 'test@example.com' };
+      const mockUser = { _id: 'user123', name: 'Test User', email: 'test@example.com', isEmailVerified: true };
       req.headers.authorization = 'Bearer valid-token';
       jwtStub.verify.returns({ id: 'user123' });
       findByIdStub.resolves(mockUser);
@@ -134,10 +134,21 @@ describe('Auth Middleware - auth.middleware.js', () => {
     it('should call next() without error on success', async () => {
       req.headers.authorization = 'Bearer valid-token';
       jwtStub.verify.returns({ id: 'user123' });
-      findByIdStub.resolves({ _id: 'user123', name: 'Test User' });
+      findByIdStub.resolves({ _id: 'user123', name: 'Test User', isEmailVerified: true });
       await protect(req, res, next);
       expect(next.calledOnce).to.be.true;
       expect(next.getCall(0).args[0]).to.be.undefined;
+    });
+
+    it('should reject unverified users with 403', async () => {
+      req.headers.authorization = 'Bearer valid-token';
+      jwtStub.verify.returns({ id: 'user123' });
+      findByIdStub.resolves({ _id: 'user123', name: 'Test User', isEmailVerified: false });
+      await protect(req, res, next);
+      expect(next.calledOnce).to.be.true;
+      const apiError = next.getCall(0).args[0];
+      expect(apiError.statusCode).to.equal(403);
+      expect(apiError.message).to.include('verify your email');
     });
 
     it('should handle database lookup errors with 500', async () => {

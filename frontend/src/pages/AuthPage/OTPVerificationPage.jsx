@@ -75,7 +75,7 @@ const OTPVerificationPage = () => {
         } else if (purpose === 'reset') {
           navigate('/reset-password', { state: { email } });
         }
-      }, 2000);
+      }, 600);
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid OTP');
     } finally {

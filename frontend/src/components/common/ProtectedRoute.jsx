@@ -17,6 +17,17 @@ const ProtectedRoute = ({ children }) => {
 
   if (!token) return <Navigate to="/login" replace />;
 
+  // Incomplete account — force OTP before app access
+  if (user && user.isEmailVerified === false) {
+    return (
+      <Navigate
+        to="/verify-otp"
+        replace
+        state={{ email: user.email, purpose: 'verify' }}
+      />
+    );
+  }
+
   return children;
 };
 

@@ -66,6 +66,13 @@ const protect = asyncHandler(async (req, res, next) => {
     throw new ApiError(401, 'User no longer exists');
   }
 
+  if (!user.isEmailVerified) {
+    console.error('[Auth Middleware] Unverified user blocked:', {
+      userId: decoded.id,
+    });
+    throw new ApiError(403, 'Please verify your email with the OTP before continuing');
+  }
+
   req.user = user;
   next();
 });
