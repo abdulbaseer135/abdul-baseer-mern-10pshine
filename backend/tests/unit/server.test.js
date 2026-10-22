@@ -69,4 +69,38 @@ describe('Server startup', () => {
     sinon.assert.calledOnce(deps.disconnect);
     sinon.assert.calledWith(exit, 0);
   });
+  it('reports the failing startup phase without error details', async () => {
+    for (const [dependency, phase] of [
+      ['assertRequiredEnv', 'environment_validation'],
+      ['connectDB', 'database_connection'],
+      ['createServer', 'http_server_creation'],
+      ['initSocket', 'socket_initialization'],
+      ['listen', 'http_listen'],
+    ]) {
+      const deps = setup();
+      const error = new Error('private configuration value');
+      if (dependency === 'connectDB') deps.connectDB.rejects(error);
+      else (dependency === 'listen' ? deps.server.listen : deps[dependency]).throws(error);
+      const exit = sinon.stub(process, 'exit');
+      const output = sinon.stub(console, 'error');
+      await deps.startServer();
+      const diagnostic = JSON.parse(output.firstCall.args[0]);
+      expect(diagnostic.phase).to.equal(phase);
+      expect(diagnostic.category).to.equal('unexpected_error');
+      expect(output.firstCall.args[0]).not.to.include('private configuration value');
+      sinon.assert.calledWith(exit, 1);
+      exit.restore();
+      output.restore();
+    }
+  });
+  it('captures asynchronous listener errors after registering the handler before listen', async () => {
+    const deps = setup();
+    const exit = sinon.stub(process, 'exit');
+    const output = sinon.stub(console, 'error');
+    await deps.startServer();
+    sinon.assert.callOrder(deps.server.on, deps.server.listen);
+    deps.server.on.firstCall.args[1](Object.assign(new Error('private value'), { code: 'EADDRINUSE' }));
+    expect(JSON.parse(output.firstCall.args[0])).to.include({ phase: 'http_listen', category: 'port_in_use' });
+    sinon.assert.calledWith(exit, 1);
+  });
 });

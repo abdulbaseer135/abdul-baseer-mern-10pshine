@@ -12,13 +12,27 @@ const { PORT, assertRequiredEnv } = require('./config/env');
 const logger = require('./config/logger');
 const { initSocket } = require('./config/socket');
 const mongoose = require('mongoose');
+const { startupDiagnostic } = require('./utils/startupDiagnostics');
 
 const startServer = async () => {
+  let phase = 'environment_validation';
+  const enterPhase = (nextPhase) => {
+    phase = nextPhase;
+    logger.info({ event: 'startup_phase', phase }, 'Server startup');
+  };
+  const fail = (error) => {
+    console.error(JSON.stringify(startupDiagnostic(phase, error)));
+    process.exit(1);
+  };
   try {
+    enterPhase('environment_validation');
     assertRequiredEnv();
+    enterPhase('database_connection');
     await connectDB();
 
+    enterPhase('http_server_creation');
     const httpServer = http.createServer(app);
+    enterPhase('socket_initialization');
     const io = initSocket(httpServer);
 
     let stopping = false;
@@ -41,18 +55,16 @@ const startServer = async () => {
     process.once('SIGTERM', shutdown);
     process.once('SIGINT', shutdown);
 
+    enterPhase('http_listen');
+    httpServer.on('error', fail);
     httpServer.listen(PORT, () => {
+      logger.info({ event: 'startup_ready' }, 'Server startup complete');
       logger.info(`Server listening on port ${PORT}`);
       logger.info(`🔌 Socket.IO initialized`);
     });
-    httpServer.on('error', () => {
-      logger.error('HTTP server failed to listen');
-      process.exit(1);
-    });
     return httpServer;
   } catch (err) {
-    console.error('[Server] Failed to start:', process.env.NODE_ENV === 'production' ? 'Check environment configuration and database connectivity' : err.message);
-    process.exit(1);
+    fail(err);
   }
 };
 
