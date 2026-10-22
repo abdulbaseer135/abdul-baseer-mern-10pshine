@@ -4,12 +4,14 @@ import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { sendOTPService } from '../../services/auth.service';
+import { Eye, EyeOff } from 'lucide-react';
 
 const LoginPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const { handleLogin, loading, error, handleClearError } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [showPassword, setShowPassword] = useState(false);
   const [infoMessage, setInfoMessage] = useState(
     location.state?.accountDeleted ? location.state.message : null
   );
@@ -229,40 +231,55 @@ const LoginPage = () => {
                   Forgot?
                 </Link>
               </div>
-              <input
-                id="login-password"
-                type="password"
-                placeholder="••••••••"
-                className={`
-                  w-full px-3.5 py-2.5 rounded-lg text-sm
-                  border transition-all duration-150
-                  focus:outline-none focus:ring-2
-                  ${errors.password
-                    ? 'focus:ring-red-500/30'
-                    : 'focus:ring-indigo-500/30'
-                  }
-                `}
-                style={{
-                  backgroundColor: 'var(--surface-input)',
-                  borderColor: errors.password ? 'var(--danger-primary)' : 'var(--border-default)',
-                  color: 'var(--text-primary)',
-                  '--tw-ring-color': errors.password ? 'rgba(255, 107, 107, 0.3)' : 'rgba(129, 140, 248, 0.3)',
-                }}
-                onFocus={(e) => {
-                  if (!errors.password) {
-                    e.target.style.borderColor = 'var(--border-focus)';
-                  }
-                }}
-                onBlur={(e) => {
-                  if (!errors.password) {
-                    e.target.style.borderColor = 'var(--border-default)';
-                  }
-                }}
-                {...register('password', {
-                  required: 'Password is required',
-                  minLength: { value: 6, message: 'Minimum 6 characters' },
-                })}
-              />
+              <div className="relative">
+                <input
+                  id="login-password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  placeholder="••••••••"
+                  className={`
+                    w-full px-3.5 py-2.5 rounded-lg text-sm
+                    border transition-all duration-150
+                    focus:outline-none focus:ring-2
+                    pr-12
+                    ${errors.password
+                      ? 'focus:ring-red-500/30'
+                      : 'focus:ring-indigo-500/30'
+                    }
+                  `}
+                  style={{
+                    backgroundColor: 'var(--surface-input)',
+                    borderColor: errors.password ? 'var(--danger-primary)' : 'var(--border-default)',
+                    color: 'var(--text-primary)',
+                    '--tw-ring-color': errors.password ? 'rgba(255, 107, 107, 0.3)' : 'rgba(129, 140, 248, 0.3)',
+                  }}
+                  onFocus={(e) => {
+                    if (!errors.password) {
+                      e.target.style.borderColor = 'var(--border-focus)';
+                    }
+                  }}
+                  onBlur={(e) => {
+                    if (!errors.password) {
+                      e.target.style.borderColor = 'var(--border-default)';
+                    }
+                  }}
+                  {...register('password', {
+                    required: 'Password is required',
+                    minLength: { value: 6, message: 'Minimum 6 characters' },
+                  })}
+                />
+                <button
+                  type="button"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-pressed={showPassword}
+                  aria-controls="login-password"
+                  onClick={() => setShowPassword((visible) => !visible)}
+                  className="absolute right-1 top-1/2 -translate-y-1/2 h-9 w-10 flex items-center justify-center rounded-md hover:text-cyan-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                  style={{ color: 'var(--text-secondary)' }}
+                >
+                  {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
+                </button>
+              </div>
               {errors.password && (
                 <p className="flex items-center gap-1 text-xs"
                   style={{ color: 'var(--danger-primary)' }}>

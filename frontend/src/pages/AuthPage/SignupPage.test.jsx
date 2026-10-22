@@ -19,6 +19,20 @@ describe('SignupPage', () => {
     expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
   });
 
+  it('shows and hides the password while preserving its value without submitting', () => {
+    renderSignup();
+    const password = screen.getByLabelText(/^password$/i);
+    fireEvent.change(password, { target: { value: 'Password123!' } });
+    expect(password).toHaveAttribute('type', 'password');
+    fireEvent.click(screen.getByRole('button', { name: 'Show password' }));
+    expect(password).toHaveAttribute('type', 'text');
+    expect(password).toHaveValue('Password123!');
+    fireEvent.click(screen.getByRole('button', { name: 'Hide password' }));
+    expect(password).toHaveAttribute('type', 'password');
+    expect(password).toHaveValue('Password123!');
+    expect(authService.signupService).not.toHaveBeenCalled();
+  });
+
   it('shows validation errors when form is empty', async () => {
     renderSignup();
     fireEvent.click(screen.getByRole('button', { name: /create account/i }));

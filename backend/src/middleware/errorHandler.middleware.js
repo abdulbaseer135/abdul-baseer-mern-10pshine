@@ -2,28 +2,30 @@ const logger = require('../config/logger');
 
 const errorHandler = (err, req, res, next) => {
   const statusCode = err.statusCode || err.status || 500;
+  const isProduction = process.env.NODE_ENV === 'production';
+  const message = isProduction && statusCode >= 500 ? 'Internal Server Error' : err.message;
 
   console.error('[Error]', {
-    message: err.message,
+    message,
     statusCode,
     method: req.method,
-    url: req.originalUrl || req.url,
+    url: isProduction ? undefined : req.originalUrl || req.url,
   });
 
   if (logger?.error) {
     logger.error(
       {
         err: {
-          message: err.message,
-          stack: err.stack,
+          message,
+          stack: isProduction ? undefined : err.stack,
         },
         request: {
           method: req.method,
-          url: req.url,
+          url: isProduction ? undefined : req.url,
         },
         statusCode,
       },
-      `Error: ${err.message}`
+      `Error: ${message}`
     );
   }
 
@@ -34,8 +36,9 @@ const errorHandler = (err, req, res, next) => {
   res.status(statusCode).json({
     success: false,
     statusCode,
-    message: err.message || 'Internal Server Error',
-    errors: err.errors || [],
+    message: process.env.NODE_ENV === 'production' && statusCode >= 500
+      ? 'Internal Server Error' : err.message || 'Internal Server Error',
+    errors: process.env.NODE_ENV === 'production' && statusCode >= 500 ? [] : err.errors || [],
     stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
   });
 };

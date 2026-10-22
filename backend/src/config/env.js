@@ -16,7 +16,7 @@ function getEnv(key, { required = false, defaultValue } = {}) {
   if (required && (value === undefined || value === null || value === '')) {
     const message =
       `Missing required environment variable: ${key}. ` +
-      'Set it in Vercel Project Settings → Environment Variables (or your local .env).';
+      'Set it in your hosting environment (or your local .env).';
     console.error(`[env] ${message}`);
     throw new Error(message);
   }
@@ -35,9 +35,33 @@ function assertRequiredEnv() {
   if (missing.length > 0) {
     const message =
       `Missing required environment variable(s): ${missing.join(', ')}. ` +
-      'Set them in Vercel Project Settings → Environment Variables.';
+      'Set them in your hosting environment (or your local .env).';
     console.error(`[env] ${message}`);
     throw new Error(message);
+  }
+
+  if (process.env.NODE_ENV === 'production') {
+    if (process.env.JWT_SECRET.length < 32 || /replace-with|changeme|your-secret/i.test(process.env.JWT_SECRET)) {
+      throw new Error('JWT_SECRET must be a strong random value of at least 32 characters in production');
+    }
+    for (const key of ['FRONTEND_URL', 'BACKEND_URL', ...(process.env.CLIENT_URL ? ['CLIENT_URL'] : [])]) {
+      const values = (process.env[key] || '').split(',');
+      if (key === 'BACKEND_URL' && values.length !== 1) throw new Error('BACKEND_URL must be one HTTPS origin');
+      for (const value of values) {
+        let url;
+        try { url = new URL(value.trim()); } catch { throw new Error(`${key} must contain valid HTTPS origins`); }
+        if (url.protocol !== 'https:' || url.origin !== value.trim()) {
+          throw new Error(`${key} must contain HTTPS origins without paths or trailing slashes`);
+        }
+      }
+    }
+    if (!['CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET'].every((key) => process.env[key])) {
+      throw new Error('Configure CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET for persistent production uploads');
+    }
+    const smtpConfigured = ['EMAIL_HOST', 'EMAIL_USER', 'EMAIL_PASS'].every((key) => process.env[key]);
+    if (!process.env.EMAIL_FROM || (!process.env.RESEND_API_KEY && !smtpConfigured)) {
+      throw new Error('Configure EMAIL_FROM and either RESEND_API_KEY or complete SMTP credentials for production OTP delivery');
+    }
   }
 }
 

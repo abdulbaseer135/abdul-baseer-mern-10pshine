@@ -23,7 +23,7 @@ const defaultOrigins = [
 const allowedOrigins = [
   FRONTEND_URL,
   process.env.CLIENT_URL,
-  ...defaultOrigins,
+  ...(process.env.NODE_ENV === 'production' ? [] : defaultOrigins),
 ]
   .filter(Boolean)
   .flatMap((value) => String(value).split(','))
@@ -132,11 +132,11 @@ app.use('/api/v1', async (req, res, next) => {
     await connectDB();
     next();
   } catch (err) {
-    console.error('[DB] Failed before request:', err.message);
+    console.error('[DB] Failed before request:', process.env.NODE_ENV === 'production' ? 'Database unavailable' : err.message);
     res.status(500).json({
       success: false,
       statusCode: 500,
-      message: err.message || 'Database connection failed',
+      message: process.env.NODE_ENV === 'production' ? 'Database connection failed' : err.message || 'Database connection failed',
     });
   }
 });

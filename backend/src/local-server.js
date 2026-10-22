@@ -1,5 +1,5 @@
 /**
- * Local development entry ONLY.
+ * Persistent Node server entry for local development and Render.
  * Named so Vercel Express auto-detection does NOT pick this file
  * (it would call listen()/Socket.IO and crash the serverless function).
  *
@@ -11,6 +11,7 @@ const connectDB = require('./config/db');
 const { PORT, assertRequiredEnv } = require('./config/env');
 const logger = require('./config/logger');
 const { initSocket } = require('./config/socket');
+const mongoose = require('mongoose');
 
 const startServer = async () => {
   try {
@@ -18,14 +19,39 @@ const startServer = async () => {
     await connectDB();
 
     const httpServer = http.createServer(app);
-    initSocket(httpServer);
+    const io = initSocket(httpServer);
+
+    let stopping = false;
+    const shutdown = () => {
+      if (stopping) return;
+      stopping = true;
+      const timeout = setTimeout(() => process.exit(1), 10000);
+      timeout.unref();
+      io.close();
+      httpServer.close(async () => {
+        try {
+          await mongoose.disconnect();
+          clearTimeout(timeout);
+          process.exit(0);
+        } catch {
+          process.exit(1);
+        }
+      });
+    };
+    process.once('SIGTERM', shutdown);
+    process.once('SIGINT', shutdown);
 
     httpServer.listen(PORT, () => {
-      logger.info(`🚀 Server running on http://localhost:${PORT}`);
+      logger.info(`Server listening on port ${PORT}`);
       logger.info(`🔌 Socket.IO initialized`);
     });
+    httpServer.on('error', () => {
+      logger.error('HTTP server failed to listen');
+      process.exit(1);
+    });
+    return httpServer;
   } catch (err) {
-    console.error('[Server] Failed to start:', err.message);
+    console.error('[Server] Failed to start:', process.env.NODE_ENV === 'production' ? 'Check environment configuration and database connectivity' : err.message);
     process.exit(1);
   }
 };

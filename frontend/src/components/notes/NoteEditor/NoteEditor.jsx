@@ -152,7 +152,10 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
         border-0 bg-transparent
       "
       aria-labelledby="note-editor-heading"
-      onClose={onClose}
+      onClose={(event) => {
+        // StrictMode cleanup can queue a close event before reopening the dialog.
+        if (!event.currentTarget.open) onClose();
+      }}
     >
       {/* Backdrop */}
       <button

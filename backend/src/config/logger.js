@@ -8,6 +8,7 @@ let logger;
 try {
   logger = pino({
     level: process.env.LOG_LEVEL || 'info',
+    redact: ['token', 'password', 'otp', 'secret', 'authorization', 'title', 'search', 'request.headers.authorization', 'request.headers.cookie'],
     // Never use pino-pretty workers on Vercel — they crash cold starts
     transport:
       isProd || isServerless
