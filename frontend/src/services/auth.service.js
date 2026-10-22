@@ -53,7 +53,7 @@ export const verifyOTPService = async (email, otp, purpose) => {
 };
 
 // ✅ NEW: Reset password with new password
-export const resetPasswordService = async (email, newPassword) => {
-  const res = await api.post('/auth/reset-password', { email, newPassword });
+export const resetPasswordService = async (email, newPassword, resetToken) => {
+  const res = await api.post('/auth/reset-password', { email, newPassword, resetToken });
   return res.data;
 };

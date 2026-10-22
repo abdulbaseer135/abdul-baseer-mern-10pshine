@@ -1,24 +1,26 @@
+import { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 
-// Sonar: accessibility — label htmlFor + input id
-const PasswordField = ({
+const PasswordField = forwardRef(({
   label,
   placeholder,
   isVisible,
   onToggleVisibility,
   error,
-  id: inputId = 'password-field',
-  ...inputProps
-}) => (
+  id = 'password-field',
+  ...props
+}, ref) => (
   <>
     {label && (
-      <label htmlFor={inputId} className="text-xs font-semibold text-slate-900 dark:text-white">
+      <label htmlFor={id} className="text-xs font-semibold text-slate-900 dark:text-white">
         {label}
       </label>
     )}
+
     <div className="relative group">
       <input
-        id={inputId}
+        id={id}
+        ref={ref}
         type={isVisible ? 'text' : 'password'}
         placeholder={placeholder}
         className={`
@@ -33,7 +35,7 @@ const PasswordField = ({
             : 'border-slate-300 dark:border-slate-600 focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 dark:focus:ring-indigo-400/20'
           }
         `}
-        {...inputProps}
+        {...props}
       />
       <button
         type="button"
@@ -55,13 +57,16 @@ const PasswordField = ({
         {isVisible ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
       </button>
     </div>
+
     {error && (
       <p className="flex items-center gap-1 text-xs text-red-600 dark:text-red-300 font-medium">
         <span>•</span> {error.message}
       </p>
     )}
   </>
-);
+));
+
+PasswordField.displayName = 'PasswordField';
 
 PasswordField.propTypes = {
   label: PropTypes.string,
@@ -76,17 +81,17 @@ PasswordField.propTypes = {
 const EyeIcon = ({ size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-    <circle cx="12" cy="12" r="3"/>
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+    <circle cx="12" cy="12" r="3" />
   </svg>
 );
 
 const EyeOffIcon = ({ size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
-    <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/>
-    <line x1="1" y1="1" x2="23" y2="23"/>
+    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94" />
+    <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19" />
+    <line x1="1" y1="1" x2="23" y2="23" />
   </svg>
 );
 

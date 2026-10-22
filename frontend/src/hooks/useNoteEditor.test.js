@@ -1,66 +1,37 @@
 import { renderHook, act } from '@testing-library/react';
 import useNoteEditor from './useNoteEditor';
 
-describe('useNoteEditor Hook', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
+describe('useNoteEditor', () => {
+  it('opens an existing note and closes without saving', () => {
+    const { result } = renderHook(() => useNoteEditor(jest.fn()));
+    const note = { _id: 'n1', title: 'Task' };
+    act(() => result.current.handleEdit(note));
+    expect(result.current.editingNote).toEqual(note);
+    expect(result.current.showEditor).toBe(true);
+    act(() => result.current.handleClose());
+    expect(result.current.editingNote).toBeNull();
+    expect(result.current.showEditor).toBe(false);
   });
-
-  describe('Hook Initialization', () => {
-    it('should initialize without errors', () => {
-      const { result } = renderHook(() => useNoteEditor(null));
-      expect(result.current).toBeDefined();
-    });
-
-    it('should return editor state', () => {
-      const { result } = renderHook(() => useNoteEditor(null));
-      expect(result.current.title).toBeDefined();
-      expect(result.current.content).toBeDefined();
-      expect(result.current.category).toBeDefined();
-    });
+  it('saves edits and refreshes after success', async () => {
+    const save = jest.fn().mockResolvedValue(true);
+    const refresh = jest.fn();
+    const { result } = renderHook(() => useNoteEditor(save, refresh));
+    act(() => result.current.handleEdit({ _id: 'n1' }));
+    await act(async () => result.current.handleSave({ title: 'Changed' }));
+    expect(save).toHaveBeenCalledWith('n1', { title: 'Changed' }, true);
+    expect(refresh).toHaveBeenCalledTimes(1);
+    expect(result.current.showEditor).toBe(false);
   });
-
-  describe('Note Editing', () => {
-    it('should handle title change', () => {
-      const { result } = renderHook(() => useNoteEditor(null));
-      expect(result.current.title).toBeDefined();
-    });
-
-    it('should handle content change', () => {
-      const { result } = renderHook(() => useNoteEditor(null));
-      expect(result.current.content).toBeDefined();
-    });
-
-    it('should handle category change', () => {
-      const { result } = renderHook(() => useNoteEditor(null));
-      expect(result.current.category).toBeDefined();
-    });
-
-    it('should handle task status change', () => {
-      const { result } = renderHook(() => useNoteEditor(null));
-      expect(result.current.taskStatus !== undefined).toBe(true);
-    });
+  it('retains the editor when saving fails', async () => {
+    const { result } = renderHook(() => useNoteEditor(jest.fn().mockResolvedValue(false)));
+    act(() => result.current.setShowEditor(true));
+    await act(async () => result.current.handleSave({ title: 'Draft' }));
+    expect(result.current.showEditor).toBe(true);
+    expect(result.current.saving).toBe(false);
   });
-
-  describe('Validation', () => {
-    it('should provide validation checks', () => {
-      const { result } = renderHook(() => useNoteEditor(null));
-      expect(typeof result.current.isValid).toBe('boolean' || result.current.isValid === undefined);
-    });
-  });
-
-  describe('Editing Existing Note', () => {
-    it('should load note data when note is provided', () => {
-      const note = { _id: 'n1', title: 'Test', content: 'Content', category: 'general' };
-      const { result } = renderHook(() => useNoteEditor(note));
-      expect(result.current.title || note.title).toBeDefined();
-    });
-  });
-
-  describe('Reset Functionality', () => {
-    it('should provide reset function', () => {
-      const { result } = renderHook(() => useNoteEditor(null));
-      expect(result.current.reset !== undefined).toBe(true);
-    });
+  it('clears saving state after an unexpected rejection', async () => {
+    const { result } = renderHook(() => useNoteEditor(jest.fn().mockRejectedValue(new Error('Offline'))));
+    await act(async () => { await expect(result.current.handleSave({})).rejects.toThrow('Offline'); });
+    expect(result.current.saving).toBe(false);
   });
 });

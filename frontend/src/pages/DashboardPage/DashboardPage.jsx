@@ -13,16 +13,15 @@ import NoFilterMatchState from './NoFilterMatchState';
 import NotesGridView from './NotesGridView';
 
 const SORT_OPTIONS = [
-  { value: 'newest', label: 'Newest' },
-  { value: 'oldest', label: 'Oldest' },
-  { value: 'az', label: 'A → Z' },
-  { value: 'za', label: 'Z → A' },
+  { value: 'newest', label: 'Newest First' },
+  { value: 'oldest', label: 'Oldest First' },
+  { value: 'az', label: 'Title: A → Z' },
+  { value: 'za', label: 'Title: Z → A' },
 ];
 
 const DashboardPage = () => {
   const {
     notes,
-    pagination,
     isInitialLoading,
     isSearching,
     handleFetchNotes,
@@ -122,9 +121,9 @@ const DashboardPage = () => {
     return (
       <div className="min-h-screen" style={{ backgroundColor: 'var(--surface-page-bg)' }}>
         <Navbar />
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <NoteSkeletonGrid count={6} />
-        </div>
+        </main>
       </div>
     );
   }
@@ -166,53 +165,52 @@ const DashboardPage = () => {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--surface-page-bg)' }}>
+    <div className="min-h-screen relative flex flex-col" style={{ backgroundColor: 'var(--surface-page-bg)' }}>
       <Navbar />
 
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        <div className="mb-7 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 sm:gap-5">
-          <div className="flex-1">
-            <h1
-              className="text-3xl sm:text-4xl font-bold tracking-tight mb-1"
-              style={{ color: 'var(--text-primary)' }}
-            >
-              My Notes
-            </h1>
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-              <span className="font-medium">{pagination.total}</span> note
-              {pagination.total === 1 ? '' : 's'}
-              <span className="mx-1.5">•</span>
-              <span className="font-medium">
-                {currentFilter === 'all'
-                  ? 'All notes'
-                  : FILTER_OPTIONS.find((f) => f.id === currentFilter)?.label}
-              </span>
+      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 flex-1">
+        {/* Top Header & Global Actions */}
+        <header className="mb-6 sm:mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-3">
+              <h1
+                className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight"
+                style={{ color: 'var(--text-primary)' }}
+              >
+                My Notes
+              </h1>
+              {notes.length > 0 && (
+                <span
+                  className="px-2.5 py-0.5 rounded-full text-xs font-bold border"
+                  style={{
+                    backgroundColor: 'var(--surface-elevated)',
+                    borderColor: 'var(--border-default)',
+                    color: 'var(--accent-primary)',
+                  }}
+                >
+                  {visibleNotes.length} {visibleNotes.length === 1 ? 'note' : 'notes'}
+                </span>
+              )}
+            </div>
+            <p className="text-xs sm:text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+              Organize, search, and manage your notes across devices.
             </p>
           </div>
 
-          <div className="w-full sm:w-auto flex items-center gap-2 flex-wrap sm:flex-nowrap justify-end">
+          {/* Actions Bar */}
+          <div className="w-full sm:w-auto flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap">
+            {/* Export Notes */}
             <button
               onClick={handleExport}
               disabled={exporting || notes.length === 0}
-              title="Export all notes to JSON"
-              className="px-3 py-1.5 rounded-lg font-medium text-xs border transition-all duration-200 flex items-center justify-center gap-2 flex-shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex-1 sm:flex-none min-h-[44px] sm:min-h-[40px] px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400"
               style={{
-                backgroundColor: 'transparent',
-                borderColor: 'var(--border-subtle)',
-                color: 'var(--text-tertiary)',
+                backgroundColor: 'var(--surface-elevated)',
+                borderColor: 'var(--border-default)',
+                color: 'var(--text-secondary)',
               }}
-              onMouseEnter={(e) => {
-                if (!e.currentTarget.disabled) {
-                  e.currentTarget.style.backgroundColor = 'var(--surface-input)';
-                  e.currentTarget.style.borderColor = 'var(--border-default)';
-                  e.currentTarget.style.color = 'var(--text-secondary)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                e.currentTarget.style.color = 'var(--text-tertiary)';
-              }}
+              title="Export all notes to JSON"
+              aria-label="Export notes"
             >
               {exporting ? (
                 <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
@@ -220,35 +218,25 @@ const DashboardPage = () => {
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                 </svg>
               ) : (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v4a2 2 0 002 2h12a2 2 0 002-2v-4m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                 </svg>
               )}
-              <span className="hidden sm:inline">Export</span>
+              <span>Export</span>
             </button>
 
+            {/* Import Notes */}
             <button
               onClick={() => importRef.current?.click()}
               disabled={importing}
-              title="Import notes from JSON"
-              className="px-3 py-1.5 rounded-lg font-medium text-xs border transition-all duration-200 flex items-center justify-center gap-2 flex-shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex-1 sm:flex-none min-h-[44px] sm:min-h-[40px] px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400"
               style={{
-                backgroundColor: 'transparent',
-                borderColor: 'var(--border-subtle)',
-                color: 'var(--text-tertiary)',
+                backgroundColor: 'var(--surface-elevated)',
+                borderColor: 'var(--border-default)',
+                color: 'var(--text-secondary)',
               }}
-              onMouseEnter={(e) => {
-                if (!e.currentTarget.disabled) {
-                  e.currentTarget.style.backgroundColor = 'var(--surface-input)';
-                  e.currentTarget.style.borderColor = 'var(--border-default)';
-                  e.currentTarget.style.color = 'var(--text-secondary)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                e.currentTarget.style.color = 'var(--text-tertiary)';
-              }}
+              title="Import notes from JSON file"
+              aria-label="Import notes"
             >
               {importing ? (
                 <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
@@ -256,11 +244,11 @@ const DashboardPage = () => {
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                 </svg>
               ) : (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3-3m0 0l3 3m-3-3v6" />
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
               )}
-              <span className="hidden sm:inline">Import</span>
+              <span>Import</span>
             </button>
 
             <input
@@ -269,32 +257,39 @@ const DashboardPage = () => {
               accept=".json"
               className="hidden"
               onChange={handleImport}
+              aria-label="Upload JSON file"
             />
 
+            {/* Add Note Button (Desktop & Mobile Full-Width in Toolbar) */}
             <button
               onClick={() => {
                 setEditingNote(null);
                 setShowEditor(true);
               }}
-              className="px-4 py-2 rounded-lg font-semibold text-sm bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:active:bg-indigo-700 text-white transition-all duration-200 flex items-center justify-center gap-2 flex-shrink-0 shadow-md hover:shadow-lg"
+              className="w-full sm:w-auto min-h-[44px] sm:min-h-[40px] px-4 sm:px-5 py-2 rounded-xl font-semibold text-xs sm:text-sm bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-center gap-2 shrink-0 active:scale-[0.98]"
+              aria-label="Create note"
             >
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 5v14m7-7H5" strokeWidth={2} stroke="currentColor" fill="none" strokeLinecap="round" />
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
               </svg>
               <span>Add Note</span>
             </button>
           </div>
-        </div>
+        </header>
 
-        <div className="mb-5 flex flex-col gap-3">
+        {/* Search, Sort & Filter Toolbar */}
+        <section className="mb-6 flex flex-col gap-3.5" aria-label="Search and filter notes">
           <div className="flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center">
+            {/* Search Input */}
             <div className="relative w-full sm:flex-1">
               <svg
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
                 style={{ color: 'var(--text-muted)' }}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -303,18 +298,19 @@ const DashboardPage = () => {
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="Search notes..."
-                className="w-full pl-10 pr-10 py-2 rounded-lg text-sm border focus:outline-none focus:ring-2 focus:ring-indigo-500/30 transition-all duration-200 placeholder:text-text-muted"
+                placeholder="Search by title, body, or tags..."
+                className="w-full pl-10 pr-10 min-h-[44px] py-2 rounded-xl text-sm border focus:outline-none transition-all duration-200 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                 style={{
                   backgroundColor: 'var(--surface-input)',
-                  borderColor: searchInput ? 'var(--border-strong)' : 'var(--border-default)',
+                  borderColor: searchInput ? 'var(--accent-primary)' : 'var(--border-default)',
                   color: 'var(--text-primary)',
                 }}
+                aria-label="Search notes"
               />
 
               {isSearching && (
-                <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                  <svg className="animate-spin h-4 w-4 text-indigo-500" viewBox="0 0 24 24" fill="none">
+                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <svg className="animate-spin h-4 w-4 text-cyan-500" viewBox="0 0 24 24" fill="none">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                   </svg>
@@ -323,8 +319,10 @@ const DashboardPage = () => {
 
               {searchInput && !isSearching && (
                 <button
+                  type="button"
                   onClick={() => setSearchInput('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                  aria-label="Clear search"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
                 >
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M6 18L18 6M6 6l12 12" strokeWidth={2} stroke="currentColor" fill="none" strokeLinecap="round" />
@@ -333,15 +331,13 @@ const DashboardPage = () => {
               )}
             </div>
 
-            <div className="relative flex items-center gap-1.5 flex-shrink-0">
-              <svg className="w-3.5 h-3.5" style={{ color: 'var(--text-muted)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-              </svg>
-
+            {/* Sort Dropdown */}
+            <div className="relative flex items-center shrink-0">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="appearance-none px-3 py-2 rounded-lg text-sm font-medium border focus:outline-none focus:ring-2 focus:ring-indigo-500/30 transition-all duration-200 cursor-pointer pr-8"
+                aria-label="Sort notes"
+                className="w-full sm:w-auto appearance-none pl-3.5 pr-9 min-h-[44px] py-2 rounded-xl text-sm font-medium border focus:outline-none transition-all duration-200 cursor-pointer"
                 style={{
                   backgroundColor: 'var(--surface-input)',
                   borderColor: 'var(--border-default)',
@@ -356,60 +352,69 @@ const DashboardPage = () => {
               </select>
 
               <svg
-                className="absolute right-2 w-3.5 h-3.5 pointer-events-none"
-                style={{ color: 'var(--text-muted)' }}
+                className="absolute right-3 w-4 h-4 pointer-events-none text-slate-400"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
+                aria-hidden="true"
               >
                 <polyline points="6 9 12 15 18 9" />
               </svg>
             </div>
           </div>
 
-          <div className="flex gap-1.5 overflow-x-auto pb-2 sm:overflow-visible sm:pb-0 sm:flex-wrap -mx-4 px-4 sm:mx-0 sm:px-0">
+          {/* Filter Chips - Horizontal Scrolling on Mobile with Smooth Wrap on Tablet/Desktop */}
+          <div className="flex gap-2 overflow-x-auto pb-1 sm:pb-0 sm:flex-wrap -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">
             {FILTER_OPTIONS.map((filter) => (
               <button
                 key={filter.id}
+                type="button"
                 onClick={() => setCurrentFilter(filter.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 whitespace-nowrap flex-shrink-0 sm:flex-shrink ${
+                className={`min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold border transition-all duration-200 whitespace-nowrap shrink-0 ${
                   currentFilter === filter.id
-                    ? 'bg-indigo-600 dark:bg-indigo-500 text-white border-indigo-600 dark:border-indigo-500 shadow-sm hover:shadow-md'
-                    : ''
+                    ? 'bg-cyan-600 dark:bg-cyan-500 text-white border-cyan-600 dark:border-cyan-500 shadow-sm'
+                    : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:border-cyan-500/40 hover:bg-cyan-500/5'
                 }`}
                 style={
                   currentFilter === filter.id
                     ? {}
                     : {
-                        backgroundColor: 'transparent',
-                        borderColor: 'var(--border-subtle)',
-                        color: 'var(--text-tertiary)',
+                        backgroundColor: 'var(--surface-elevated)',
                       }
                 }
-                onMouseEnter={(e) => {
-                  if (currentFilter !== filter.id) {
-                    e.currentTarget.style.backgroundColor = 'var(--surface-input)';
-                    e.currentTarget.style.borderColor = 'var(--border-default)';
-                    e.currentTarget.style.color = 'var(--text-secondary)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (currentFilter !== filter.id) {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                    e.currentTarget.style.color = 'var(--text-tertiary)';
-                  }
-                }}
               >
                 {filter.label}
               </button>
             ))}
           </div>
-        </div>
+        </section>
 
+        {/* Content Section */}
         {contentArea}
-      </div>
+      </main>
+
+      {/* Mobile Floating Action Button (FAB) for Instant Note Creation */}
+      <button
+        type="button"
+        onClick={() => {
+          setEditingNote(null);
+          setShowEditor(true);
+        }}
+        aria-label="Create note floating button"
+        className="
+          fixed bottom-5 right-5 z-40 sm:hidden
+          w-14 h-14 rounded-full
+          bg-gradient-to-r from-cyan-600 to-teal-600 text-white
+          shadow-lg shadow-cyan-600/30 flex items-center justify-center
+          active:scale-95 transition-transform duration-150
+        "
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </button>
 
       {showEditor && (
         <NoteEditor

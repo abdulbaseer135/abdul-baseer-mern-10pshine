@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { redirectToLogin } from '../utils/navigation';
 
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api/v1',
@@ -6,6 +7,8 @@ const api = axios.create({
 
 // Read token from Redux store, fallback to localStorage
 export const requestInterceptor = (config) => {
+  config.headers = config.headers || {};
+
   try {
     const state = globalThis.__REDUX_STORE__?.getState();
     const token = state?.auth?.token || globalThis.localStorage?.getItem('token');
@@ -57,9 +60,7 @@ export const responseInterceptor = (error) => {
     }
 
     try {
-      if (globalThis.location && globalThis.location.pathname !== '/login') {
-        globalThis.location.href = '/login';
-      }
+      if (globalThis.location?.pathname !== '/login') redirectToLogin();
     } catch (err) {
       console.error('[API] Failed to redirect to login:', err?.message);
     }

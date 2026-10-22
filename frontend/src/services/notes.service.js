@@ -2,9 +2,8 @@ import api from './api';
 
 export const getNotesService = async (params = {}) => {
   const res = await api.get('/notes', { params });
-  
-  console.log('[DEBUG getNotesService] response:', res.data);
-  
+
+
   // ✅ Ensure we always return the data property
   return res.data;
 };
@@ -15,9 +14,7 @@ export const getNoteByIdService = async (id) => {
 };
 
 export const createNoteService = async (data) => {
-  console.log('[DEBUG createNoteService] sending:', data);
   const res = await api.post('/notes', data);
-  console.log('[DEBUG createNoteService] response:', res.data);
   return res.data;
 };
 
@@ -64,12 +61,10 @@ export const importNotesService = async (file) => {
       throw new Error('No valid notes found in file');
     }
 
-    console.log('[DEBUG importNotesService] sending', notes.length, 'notes to backend');
 
     const res = await api.post('/notes/import', { notes });
-    
-    console.log('[DEBUG importNotesService] response:', res.data);
-    
+
+
     return res.data;
   } catch (err) {
     console.error('[DEBUG importNotesService] Error:', err.message);

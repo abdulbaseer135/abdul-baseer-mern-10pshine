@@ -13,15 +13,15 @@ const PASSWORD_RULES = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d
  */
 const formatUserWithImageUrl = (user) => {
   if (!user) return null;
-  
+
   const userObj = user.toObject ? user.toObject() : user;
-  
+
   // Convert relative image paths to full URLs
   if (userObj.profileImage && !userObj.profileImage.startsWith('http')) {
     const baseUrl = process.env.BACKEND_URL || 'http://localhost:5000';
     userObj.profileImage = `${baseUrl}${userObj.profileImage}`;
   }
-  
+
   return userObj;
 };
 
@@ -39,12 +39,12 @@ const getProfile = async (userId) => {
 };
 
 const updateProfile = async (userId, updateData) => {
+  if (!updateData || typeof updateData.name !== 'string' || !updateData.name.trim()) {
+    throw new ApiError(400, 'Only a non-empty profile name can be updated');
+  }
   logger.info({ userId, fields: Object.keys(updateData) }, 'Updating user profile');
 
-  delete updateData.password;
-  delete updateData.email;
-
-  const user = await updateUser(userId, updateData);
+  const user = await updateUser(userId, { name: updateData.name.trim() });
   if (!user) {
     logger.warn({ userId }, 'Profile update failed — user not found');
     throw new ApiError(404, 'User not found');

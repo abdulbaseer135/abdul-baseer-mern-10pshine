@@ -20,6 +20,7 @@ global.SpeechRecognition = jest.fn().mockImplementation(() => ({
 describe('useSpeechToText Hook', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    global.SpeechRecognition.mockImplementation(() => ({ start: jest.fn(), stop: jest.fn() }));
   });
 
   describe('Hook Initialization', () => {
@@ -31,7 +32,7 @@ describe('useSpeechToText Hook', () => {
     it('should return required properties', () => {
       const { result } = renderHook(() => useSpeechToText());
       expect(result.current.isListening).toBeDefined();
-      expect(result.current.transcript).toBeDefined();
+      expect(result.current.finalText).toBeDefined();
       expect(result.current.startListening).toBeDefined();
       expect(result.current.stopListening).toBeDefined();
     });
@@ -50,7 +51,7 @@ describe('useSpeechToText Hook', () => {
 
     it('should initialize with empty transcript', () => {
       const { result } = renderHook(() => useSpeechToText());
-      expect(result.current.transcript).toBe('');
+      expect(result.current.finalText).toBe('');
     });
   });
 
@@ -90,12 +91,12 @@ describe('useSpeechToText Hook', () => {
     it('should accumulate transcript', async () => {
       const { result } = renderHook(() => useSpeechToText());
 
-      expect(result.current.transcript).toBe('');
+      expect(result.current.finalText).toBe('');
     });
 
     it('should clear transcript when needed', async () => {
       const { result } = renderHook(() => useSpeechToText());
-      expect(result.current.transcript).toBe('');
+      expect(result.current.finalText).toBe('');
     });
   });
 

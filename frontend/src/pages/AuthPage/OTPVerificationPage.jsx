@@ -33,7 +33,7 @@ const OTPVerificationPage = () => {
   const handleOtpChange = (index, value) => {
     // Only allow digits
     if (!/^\d*$/.test(value)) return;
-    
+
     const newOtp = [...otp];
     newOtp[index] = value.slice(-1);
     setOtp(newOtp);
@@ -65,7 +65,7 @@ const OTPVerificationPage = () => {
     setSuccess(false);
 
     try {
-      await verifyOTPService(email, otpCode, purpose);
+      const result = await verifyOTPService(email, otpCode, purpose);
       setSuccess(true);
 
       // Navigate based on purpose
@@ -73,7 +73,7 @@ const OTPVerificationPage = () => {
         if (purpose === 'verify') {
           navigate('/login');
         } else if (purpose === 'reset') {
-          navigate('/reset-password', { state: { email } });
+          navigate('/reset-password', { state: { email, resetToken: result?.data?.resetToken } });
         }
       }, 600);
     } catch (err) {
@@ -175,7 +175,7 @@ const OTPVerificationPage = () => {
             <div className="flex justify-center gap-2 sm:gap-3">
               {otp.map((digit, index) => (
                 <input
-                  key={`otp-${index}-${digit || 'empty'}`}
+                  key={`otp-${index}`}
                   id={`otp-${index}`}
                   type="text"
                   maxLength="1"

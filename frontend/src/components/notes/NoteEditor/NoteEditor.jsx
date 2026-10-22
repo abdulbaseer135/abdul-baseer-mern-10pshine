@@ -10,12 +10,12 @@ import { openDialog, closeDialog } from '../../../utils/dialogUtils';
 const NoteEditor = ({ note, onSave, onClose, loading }) => {
   const { handleSubmit, reset, formState: { errors } } = useForm();
   const dialogRef = useRef(null);
-  const [content, setContent]           = useState('');
+  const [content, setContent] = useState('');
   const [contentError, setContentError] = useState('');
-  const [title, setTitle]               = useState('');
-  const [category, setCategory]         = useState('general');
-  const [taskStatus, setTaskStatus]     = useState('todo');
-  const richTextEditorRef               = useRef(null);
+  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState('general');
+  const [taskStatus, setTaskStatus] = useState('todo');
+  const richTextEditorRef = useRef(null);
 
   const contentVoice = useSpeechToText();
   const previousInterimRef = useRef('');
@@ -76,7 +76,6 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
       const newText = currentInterim.slice(prevInterim.length);
 
       if (newText.trim()) {
-        console.debug('[Voice] Appending interim:', newText);
         editor
           .chain()
           .focus()
@@ -94,8 +93,6 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
     const editor = richTextEditorRef.current.getEditor?.();
     if (!editor) return;
 
-    console.debug('[Voice] Final text:', contentVoice.finalText);
-
     editor
       .chain()
       .focus()
@@ -105,7 +102,6 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
     previousInterimRef.current = '';
     previousFinalRef.current = contentVoice.finalText;
     contentVoice.resetFinalText();
-    console.debug('[Voice] Ready for next phrase');
   }, [contentVoice.finalText]);
 
   useEffect(() => {
@@ -118,55 +114,32 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
     if (titleVoice.isListening) {
       titleVoice.stopListening();
     } else {
-      if (contentVoice.isListening) {
-        if (richTextEditorRef.current?.stopContentVoice) {
-          richTextEditorRef.current.stopContentVoice();
-        }
-        contentVoice.stopListening();
-      }
       titleVoice.startListening();
     }
-  }, [titleVoice, contentVoice]);
+  }, [titleVoice]);
 
   const handleContentVoiceToggle = useCallback(() => {
     if (contentVoice.isListening) {
       contentVoice.stopListening();
-      previousInterimRef.current = '';
     } else {
-      if (titleVoice.isListening) {
-        titleVoice.stopListening();
-      }
-      previousInterimRef.current = '';
       contentVoice.startListening();
     }
-  }, [contentVoice, titleVoice]);
+  }, [contentVoice]);
 
   const onSubmit = (data) => {
     const plainText = stripHtmlTags(content).trim();
     if (!plainText) {
-      setContentError('Content is required');
+      setContentError('Content cannot be empty');
       return;
     }
-    setContentError('');
 
-    const noteData = {
-      title: title || data.title,
+    onSave({
+      title: data.title || title || 'Untitled Note',
       content,
       category,
-      isPinned: note?.isPinned || false,
-    };
-
-    if (category === 'task') {
-      noteData.taskStatus = taskStatus;
-    }
-
-    onSave(noteData);
+      taskStatus: category === 'task' ? taskStatus : undefined,
+    });
   };
-
-  let saveButtonLabel = 'Create Note';
-  if (note) {
-    saveButtonLabel = 'Update Note';
-  }
 
   return (
     <dialog
@@ -174,46 +147,53 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
       className="
         fixed inset-0 z-50
         flex items-center justify-center
-        px-3 sm:px-4 py-4 sm:py-6
+        px-3 sm:px-4 py-3 sm:py-6
         m-0 p-0 w-full max-w-none max-h-none
         border-0 bg-transparent
       "
       aria-labelledby="note-editor-heading"
+      onClose={onClose}
     >
+      {/* Backdrop */}
       <button
         type="button"
-        className="absolute inset-0 w-full h-full m-0 p-0 border-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm cursor-default"
+        className="absolute inset-0 w-full h-full m-0 p-0 border-0 bg-black/50 dark:bg-black/75 backdrop-blur-xs cursor-default"
         aria-label="Close note editor"
         onClick={onClose}
       />
+
+      {/* Editor Modal Window */}
       <div
         className="
           relative z-10 w-full max-w-2xl
-          bg-white dark:bg-slate-800
-          border border-slate-200 dark:border-slate-700
-          rounded-lg sm:rounded-xl shadow-xl dark:shadow-black/40
+          bg-white dark:bg-slate-900
+          border border-slate-200 dark:border-slate-800
+          rounded-2xl shadow-2xl
           flex flex-col
-          max-h-[92vh] sm:max-h-[90vh]
-          animate-in
+          max-h-[94vh] sm:max-h-[90vh]
+          animate-in overflow-hidden
         "
       >
+        {/* Modal Header */}
         <div className="
           flex items-center justify-between
-          px-4 sm:px-5 py-3 sm:py-3
-          border-b border-slate-200 dark:border-slate-700
+          px-4 sm:px-6 py-3.5 sm:py-4
+          border-b border-slate-100 dark:border-slate-800
           shrink-0
         ">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <div className="
-              w-8 h-8 rounded-md flex items-center justify-center text-xs
-              bg-indigo-100 dark:bg-indigo-950
-              border border-indigo-200 dark:border-indigo-800
+              w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-xs
+              bg-cyan-50 dark:bg-cyan-950/50 text-cyan-600 dark:text-cyan-400
+              border border-cyan-200 dark:border-cyan-800/60
             ">
               {note ? <EditIcon /> : <PlusIcon />}
             </div>
-            <h2 id="note-editor-heading" className="text-sm font-semibold text-slate-900 dark:text-white">
-              {note ? 'Edit Note' : 'New Note'}
-            </h2>
+            <div>
+              <h2 id="note-editor-heading" className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                {note ? 'Edit Note' : 'Create New Note'}
+              </h2>
+            </div>
           </div>
 
           <button
@@ -221,11 +201,9 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
             onClick={onClose}
             aria-label="Close"
             className="
-              w-8 h-8 rounded-md flex items-center justify-center text-xs
-              text-slate-500 dark:text-slate-400
-              hover:text-slate-700 dark:hover:text-slate-200
-              hover:bg-slate-100 dark:hover:bg-slate-700
-              border border-transparent
+              w-9 h-9 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center
+              text-slate-400 hover:text-slate-700 dark:hover:text-slate-200
+              hover:bg-slate-100 dark:hover:bg-slate-800
               transition-all duration-150
             "
           >
@@ -233,24 +211,25 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
           </button>
         </div>
 
+        {/* Form Body */}
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-3 px-4 sm:px-5 py-3 sm:py-4 overflow-y-auto"
+          className="flex flex-col gap-4 px-4 sm:px-6 py-4 overflow-y-auto flex-1"
         >
-          <div className="flex flex-col gap-1">
+          {/* Note Title */}
+          <div className="flex flex-col gap-1.5 relative">
             <label htmlFor="note-editor-title" className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Title
+              Note Title
             </label>
 
             {titleVoice.isListening && (
-              <div className="absolute -top-6 left-0 flex items-center gap-1.5 pt-2">
+              <div className="flex items-center gap-1.5 py-0.5 text-rose-500">
                 <span className="flex gap-0.5 items-end h-3">
-                  <span className="w-0.5 bg-red-500 rounded-full animate-bar1" style={{ height: '40%', animationDelay: '0s' }} />
-                  <span className="w-0.5 bg-red-500 rounded-full animate-bar1" style={{ height: '100%', animationDelay: '0.15s' }} />
-                  <span className="w-0.5 bg-red-500 rounded-full animate-bar1" style={{ height: '60%', animationDelay: '0.3s' }} />
-                  <span className="w-0.5 bg-red-500 rounded-full animate-bar1" style={{ height: '80%', animationDelay: '0.45s' }} />
+                  <span className="w-1 bg-rose-500 rounded-full animate-soundBar" style={{ height: '50%' }} />
+                  <span className="w-1 bg-rose-500 rounded-full animate-soundBar" style={{ height: '100%', animationDelay: '0.15s' }} />
+                  <span className="w-1 bg-rose-500 rounded-full animate-soundBar" style={{ height: '70%', animationDelay: '0.3s' }} />
                 </span>
-                <span className="text-xs font-medium text-red-500 tracking-wide">
+                <span className="text-xs font-semibold tracking-wide">
                   Listening for title...
                 </span>
               </div>
@@ -267,20 +246,16 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
                   reset({ title: e.target.value.slice(0, 100) }, { keepValues: true });
                 }}
                 className={`
-                  w-full pr-10 pl-3 py-2 rounded-md text-base font-semibold
-                  bg-white dark:bg-slate-700
+                  w-full pr-11 pl-3.5 py-2.5 rounded-xl text-base font-semibold
+                  bg-white dark:bg-slate-800/90
                   text-slate-900 dark:text-white
                   placeholder-slate-400 dark:placeholder-slate-500
-                  focus:outline-none
-                  transition-all duration-200
-                  border
+                  focus:outline-none transition-all duration-200 border
                   ${titleVoice.isListening
-                    ? 'border-red-500 dark:border-red-500 shadow-sm shadow-red-500/10 dark:shadow-red-500/10 bg-red-50/30 dark:bg-red-950/20'
-                    : `border-slate-300 dark:border-slate-600
-                       focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 dark:focus:ring-indigo-400/20
-                       group-hover:border-slate-400 dark:group-hover:border-slate-500`
+                    ? 'border-rose-500 ring-2 ring-rose-500/20 bg-rose-50/20 dark:bg-rose-950/20'
+                    : 'border-slate-200 dark:border-slate-700 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 group-hover:border-slate-300 dark:group-hover:border-slate-600'
                   }
-                  ${errors.title ? 'border-red-500 dark:border-red-500' : ''}
+                  ${errors.title ? 'border-rose-500' : ''}
                 `}
               />
 
@@ -289,32 +264,36 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
                   type="button"
                   onClick={handleTitleVoiceToggle}
                   aria-label={titleVoice.isListening ? 'Stop voice input' : 'Start voice input'}
+                  title={titleVoice.isListening ? 'Stop voice listening' : 'Speak title'}
                   className={`
-                    absolute right-3 top-1/2 -translate-y-1/2
-                    w-8 h-8 flex items-center justify-center rounded-full
-                    text-gray-400 hover:text-indigo-500
-                    hover:bg-indigo-50 dark:hover:bg-indigo-900/30
-                    transition-all duration-200 hover:scale-110
+                    absolute right-2 top-1/2 -translate-y-1/2
+                    w-8 h-8 flex items-center justify-center rounded-lg
+                    transition-all duration-200
                     ${titleVoice.isListening
-                      ? 'bg-red-500 text-white scale-110 shadow-[0_0_0_0_rgba(239,68,68,1)] animate-[voicePulse_1.2s_cubic-bezier(0.4,0,0.6,1)_infinite]'
-                      : ''
+                      ? 'bg-rose-500 text-white shadow-sm'
+                      : 'text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-950/40'
                     }
                   `}
                 >
-                  {titleVoice.isListening ? '🛑' : '🎤'}
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                    <line x1="12" y1="19" x2="12" y2="22"/>
+                  </svg>
                 </button>
               )}
             </div>
 
             {errors.title && (
-              <p className="flex items-center gap-1 text-xs text-red-600 dark:text-red-300">
+              <p className="flex items-center gap-1 text-xs text-rose-500">
                 <ErrorIcon />
                 {errors.title.message}
               </p>
             )}
           </div>
 
-          <fieldset className="flex flex-col gap-1 border-0 p-0 m-0">
+          {/* Category Selector */}
+          <fieldset className="flex flex-col gap-1.5 border-0 p-0 m-0">
             <legend className="text-xs font-semibold text-slate-700 dark:text-slate-300">
               Category
             </legend>
@@ -330,22 +309,23 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
                     }
                   }}
                   className={`
-                    px-3 py-1.5 rounded-md text-xs font-semibold
-                    border transition-all duration-150
+                    min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold
+                    border transition-all duration-150 flex items-center gap-1.5
                     ${category === cat
-                      ? 'border-indigo-600 dark:border-indigo-500 bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300'
-                      : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-slate-600'
+                      ? 'border-cyan-600 dark:border-cyan-500 bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 shadow-xs'
+                      : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-cyan-400 hover:bg-cyan-50/40 dark:hover:bg-slate-750'
                     }
                   `}
                 >
-                  {CATEGORY_INFO[cat].icon} {CATEGORY_INFO[cat].label}
+                  {CATEGORY_INFO[cat]?.icon} {CATEGORY_INFO[cat]?.label}
                 </button>
               ))}
             </div>
           </fieldset>
 
+          {/* Task Status Selector (when Category is Task) */}
           {category === 'task' && (
-            <fieldset className="flex flex-col gap-1 border-0 p-0 m-0">
+            <fieldset className="flex flex-col gap-1.5 border-0 p-0 m-0">
               <legend className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                 Task Status
               </legend>
@@ -356,37 +336,31 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
                     type="button"
                     onClick={() => setTaskStatus(status)}
                     className={`
-                      px-3 py-1.5 rounded-md text-xs font-semibold
-                      border transition-all duration-150
+                      min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold
+                      border transition-all duration-150 flex items-center gap-1.5
                       ${taskStatus === status
-                        ? 'border-indigo-600 dark:border-indigo-500 bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300'
-                        : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-slate-600'
+                        ? 'border-cyan-600 dark:border-cyan-500 bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 shadow-xs'
+                        : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-cyan-400 hover:bg-cyan-50/40 dark:hover:bg-slate-750'
                       }
                     `}
                   >
-                    {TASK_STATUS_INFO[status].icon} {TASK_STATUS_INFO[status].label}
+                    {TASK_STATUS_INFO[status]?.icon} {TASK_STATUS_INFO[status]?.label}
                   </button>
                 ))}
               </div>
             </fieldset>
           )}
 
-          <fieldset className="flex flex-col gap-1 border-0 p-0 m-0">
+          {/* Note Content Editor */}
+          <fieldset className="flex flex-col gap-1.5 border-0 p-0 m-0">
             <legend className="text-xs font-semibold text-slate-700 dark:text-slate-300">
               Content
             </legend>
             <div
               className={`
-              rounded-md overflow-hidden
-              border transition-all duration-150
-              ${contentError
-                ? 'border-red-500 dark:border-red-500'
-                : 'border-slate-300 dark:border-slate-600'
-              }
-              bg-white dark:bg-slate-700
-              focus-within:border-indigo-500 dark:focus-within:border-indigo-400
-              focus-within:ring-2 focus-within:ring-indigo-500/20 dark:focus-within:ring-indigo-400/20
-            `}
+                rounded-xl overflow-hidden
+                ${contentError ? 'ring-2 ring-rose-500/50' : ''}
+              `}
             >
               <RichTextEditor
                 ref={richTextEditorRef}
@@ -404,23 +378,25 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
               />
             </div>
             {contentError && (
-              <p className="flex items-center gap-1 text-xs text-red-600 dark:text-red-300">
+              <p className="flex items-center gap-1 text-xs text-rose-500">
                 <ErrorIcon />
                 {contentError}
               </p>
             )}
           </fieldset>
 
-          <div className="flex gap-2 pt-2 pb-1">
+          {/* Sticky Bottom Action Buttons */}
+          <div className="flex gap-3 pt-3 pb-1 border-t border-slate-100 dark:border-slate-800 mt-auto">
             <button
               type="button"
               onClick={onClose}
               className="
-                flex-1 py-2 rounded-md text-sm font-medium
-                border border-slate-300 dark:border-slate-600
+                flex-1 min-h-[44px] py-2.5 rounded-xl text-sm font-semibold
+                border border-slate-200 dark:border-slate-700
                 text-slate-700 dark:text-slate-300
-                hover:bg-slate-50 dark:hover:bg-slate-700
-                hover:border-slate-400 dark:hover:border-slate-500
+                bg-white dark:bg-slate-800
+                hover:bg-slate-50 dark:hover:bg-slate-750
+                hover:border-slate-300 dark:hover:border-slate-600
                 transition-all duration-150
               "
             >
@@ -431,24 +407,25 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
               type="submit"
               disabled={loading}
               className="
-                flex-1 py-2 rounded-md text-sm font-semibold
-                bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800
-                dark:bg-indigo-500 dark:hover:bg-indigo-600
+                flex-1 min-h-[44px] py-2.5 rounded-xl text-sm font-semibold
+                bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500
                 text-white
                 disabled:opacity-50 disabled:cursor-not-allowed
                 flex items-center justify-center gap-2
-                transition-all duration-150
+                shadow-sm hover:shadow-md transition-all duration-150
               "
             >
               {loading ? (
                 <>
-                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                   </svg>
-                  Saving...
+                  <span>Saving...</span>
                 </>
-              ) : saveButtonLabel}
+              ) : (
+                <span>Save Note</span>
+              )}
             </button>
           </div>
         </form>
@@ -457,51 +434,45 @@ const NoteEditor = ({ note, onSave, onClose, loading }) => {
   );
 };
 
-const editorNoteShape = PropTypes.shape({
-  title: PropTypes.string,
-  content: PropTypes.string,
-  category: PropTypes.string,
-  taskStatus: PropTypes.string,
-  isPinned: PropTypes.bool,
-});
-
 NoteEditor.propTypes = {
-  note: editorNoteShape,
+  note: PropTypes.shape({
+    _id: PropTypes.string,
+    title: PropTypes.string,
+    content: PropTypes.string,
+    category: PropTypes.string,
+    taskStatus: PropTypes.string,
+  }),
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   loading: PropTypes.bool,
 };
 
 const EditIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"
-    stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
   </svg>
 );
 
 const PlusIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"
-    stroke="#6366f1" strokeWidth="2.5" strokeLinecap="round">
-    <line x1="12" y1="5" x2="12" y2="19" />
-    <line x1="5" y1="12" x2="19" y2="12" />
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+    <line x1="12" y1="5" x2="12" y2="19"/>
+    <line x1="5" y1="12" x2="19" y2="12"/>
   </svg>
 );
 
 const CloseIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"
-    stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-    <line x1="18" y1="6" x2="6" y2="18" />
-    <line x1="6" y1="6" x2="18" y2="18" />
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"/>
+    <line x1="6" y1="6" x2="18" y2="18"/>
   </svg>
 );
 
 const ErrorIcon = () => (
-  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true"
-    stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-    <circle cx="12" cy="12" r="10" />
-    <line x1="12" y1="8" x2="12" y2="12" />
-    <line x1="12" y1="16" x2="12.01" y2="16" />
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="12" y1="8" x2="12" y2="12"/>
+    <line x1="12" y1="16" x2="12.01" y2="16"/>
   </svg>
 );
 

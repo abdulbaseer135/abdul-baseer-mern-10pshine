@@ -12,18 +12,21 @@ const useNoteEditor = (onSave, onFetch) => {
   const handleSave = useCallback(
     async (noteData) => {
       setSaving(true);
-      const success = editingNote
-        ? await onSave(editingNote._id, noteData, true)
-        : await onSave(null, noteData, false);
-      setSaving(false);
+      try {
+        const success = editingNote
+          ? await onSave(editingNote._id, noteData, true)
+          : await onSave(null, noteData, false);
 
-      if (success) {
-        setShowEditor(false);
-        setEditingNote(null);
-        onFetch?.();
+        if (success) {
+          setShowEditor(false);
+          setEditingNote(null);
+          onFetch?.();
+        }
+
+        return success;
+      } finally {
+        setSaving(false);
       }
-
-      return success;
     },
     [editingNote, onSave, onFetch]
   );

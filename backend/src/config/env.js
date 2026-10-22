@@ -1,3 +1,6 @@
+const path = require('node:path');
+const os = require('node:os');
+
 // On Vercel, env vars come from the dashboard — skip filesystem .env loading
 if (!process.env.VERCEL) {
   require('dotenv').config();
@@ -51,6 +54,11 @@ module.exports = {
   LOG_LEVEL: getEnv('LOG_LEVEL', { defaultValue: 'info' }),
   FRONTEND_URL,
   CLIENT_URL: getEnv('CLIENT_URL', { defaultValue: FRONTEND_URL }),
+  UPLOADS_PATH: getEnv('UPLOADS_PATH', {
+    defaultValue: process.env.VERCEL
+      ? path.join(os.tmpdir(), 'uploads')
+      : path.join(__dirname, '../../uploads'),
+  }),
   EMAIL_HOST: process.env.EMAIL_HOST,
   EMAIL_PORT: process.env.EMAIL_PORT,
   EMAIL_SECURE: process.env.EMAIL_SECURE,

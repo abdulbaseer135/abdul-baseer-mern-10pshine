@@ -1,92 +1,35 @@
 import { renderHook, act } from '@testing-library/react';
 import useDeleteModal from './useDeleteModal';
 
-describe('useDeleteModal Hook', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
+describe('useDeleteModal', () => {
+  it('opens with note details and cancels', () => {
+    const { result } = renderHook(() => useDeleteModal(jest.fn()));
+    act(() => result.current.handleDeleteClick({ _id: 'n1', title: 'Draft' }));
+    expect(result.current.deleteModal).toEqual({ isOpen: true, noteId: 'n1', noteTitle: 'Draft' });
+    act(() => result.current.handleDeleteCancel());
+    expect(result.current.deleteModal.isOpen).toBe(false);
   });
-
-  describe('Hook Initialization', () => {
-    it('should initialize without errors', () => {
-      const { result } = renderHook(() => useDeleteModal());
-      expect(result.current).toBeDefined();
-    });
-
-    it('should return modal state', () => {
-      const { result } = renderHook(() => useDeleteModal());
-      expect(result.current.isOpen).toBeDefined();
-      expect(result.current.noteId).toBeDefined();
-    });
+  it('deletes the selected note and refreshes', async () => {
+    const remove = jest.fn().mockResolvedValue(true);
+    const refresh = jest.fn();
+    const { result } = renderHook(() => useDeleteModal(remove, refresh));
+    act(() => result.current.handleDeleteClick({ _id: 'n1', title: 'Draft' }));
+    await act(async () => result.current.handleDeleteConfirm());
+    expect(remove).toHaveBeenCalledWith('n1');
+    expect(refresh).toHaveBeenCalledTimes(1);
+    expect(result.current.deleteModal.isOpen).toBe(false);
   });
-
-  describe('Modal State Management', () => {
-    it('should manage open/close state', () => {
-      const { result } = renderHook(() => useDeleteModal());
-      expect(typeof result.current.isOpen).toBe('boolean');
-    });
-
-    it('should store note ID for deletion', () => {
-      const { result } = renderHook(() => useDeleteModal());
-      expect(result.current.noteId).toBeDefined();
-    });
+  it('does not delete without a selection', async () => {
+    const remove = jest.fn();
+    const { result } = renderHook(() => useDeleteModal(remove));
+    await act(async () => result.current.handleDeleteConfirm());
+    expect(remove).not.toHaveBeenCalled();
   });
-
-  describe('Modal Operations', () => {
-    it('should provide open function', () => {
-      const { result } = renderHook(() => useDeleteModal());
-      expect(typeof result.current.open).toBe('function');
-    });
-
-    it('should provide close function', () => {
-      const { result } = renderHook(() => useDeleteModal());
-      expect(typeof result.current.close).toBe('function');
-    });
-
-    it('should open modal and store note ID', () => {
-      const { result } = renderHook(() => useDeleteModal());
-
-      act(() => {
-        result.current.open('note-123');
-      });
-
-      expect(result.current.isOpen).toBe(true);
-      expect(result.current.noteId).toBe('note-123');
-    });
-
-    it('should close modal', () => {
-      const { result } = renderHook(() => useDeleteModal());
-
-      act(() => {
-        result.current.open('note-123');
-      });
-
-      act(() => {
-        result.current.close();
-      });
-
-      expect(result.current.isOpen).toBe(false);
-    });
-  });
-
-  describe('Multiple Operations', () => {
-    it('should handle open and close cycles', () => {
-      const { result } = renderHook(() => useDeleteModal());
-
-      act(() => {
-        result.current.open('note-1');
-      });
-      expect(result.current.isOpen).toBe(true);
-
-      act(() => {
-        result.current.close();
-      });
-      expect(result.current.isOpen).toBe(false);
-
-      act(() => {
-        result.current.open('note-2');
-      });
-      expect(result.current.isOpen).toBe(true);
-      expect(result.current.noteId).toBe('note-2');
-    });
+  it('recovers loading state and retains selection on rejection', async () => {
+    const { result } = renderHook(() => useDeleteModal(jest.fn().mockRejectedValue(new Error('Offline'))));
+    act(() => result.current.handleDeleteClick({ _id: 'n1', title: 'Draft' }));
+    await act(async () => { await expect(result.current.handleDeleteConfirm()).rejects.toThrow('Offline'); });
+    expect(result.current.isDeleting).toBe(false);
+    expect(result.current.deleteModal.isOpen).toBe(true);
   });
 });

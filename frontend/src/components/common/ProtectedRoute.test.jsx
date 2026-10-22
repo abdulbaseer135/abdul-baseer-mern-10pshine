@@ -1,93 +1,32 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { renderWithProviders, renderWithRouter } from '../../utils/testUtils';
+import { screen } from '@testing-library/react';
+import { configureStore } from '@reduxjs/toolkit';
+import { Routes, Route } from 'react-router-dom';
+import { renderWithProviders } from '../../utils/testUtils';
 import ProtectedRoute from './ProtectedRoute';
-import { useNavigate } from 'react-router-dom';
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: jest.fn(),
-}));
-
+const renderRoute = (auth) => {
+  const store = configureStore({ reducer: { auth: (state = auth) => state } });
+  return renderWithProviders(
+    <Routes>
+      <Route path="/" element={<ProtectedRoute><div>Protected Content</div></ProtectedRoute>} />
+      <Route path="/login" element={<div>Login Page</div>} />
+      <Route path="/verify-otp" element={<div>Verify Email</div>} />
+    </Routes>, { store }
+  );
+};
 describe('ProtectedRoute', () => {
-  const mockNavigate = jest.fn();
-  const TestComponent = () => <div>Protected Content</div>;
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-    useNavigate.mockReturnValue(mockNavigate);
+  it('shows content with a token and verified user', () => {
+    renderRoute({ token: 'token', user: { _id: 'u1', isEmailVerified: true } });
+    expect(screen.getByText('Protected Content')).toBeInTheDocument();
   });
-
-  describe('When user is authenticated', () => {
-    it('should render protected component', () => {
-      const store = {
-        getState: jest.fn(() => ({
-          auth: { user: { _id: 'user123', email: 'test@example.com' } },
-        })),
-      };
-
-      renderWithRouter(
-        <ProtectedRoute>
-          <TestComponent />
-        </ProtectedRoute>
-      );
-
-      expect(screen.getByText(/protected content/i)).toBeInTheDocument();
-    });
-
-    it('should not redirect when user exists', () => {
-      renderWithRouter(
-        <ProtectedRoute>
-          <TestComponent />
-        </ProtectedRoute>
-      );
-
-      expect(mockNavigate).not.toHaveBeenCalled();
-    });
+  it('redirects a logged-out visitor', () => {
+    renderRoute({ token: null, user: null });
+    expect(screen.getByText('Login Page')).toBeInTheDocument();
+    expect(screen.queryByText('Protected Content')).not.toBeInTheDocument();
   });
-
-  describe('When user is not authenticated', () => {
-    it('should redirect to login when no user', async () => {
-      // Create component without auth context
-      const UnauthenticatedComponent = () => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          useNavigate()('/login');
-        }
-        return <div>Protected Content</div>;
-      };
-
-      renderWithRouter(<UnauthenticatedComponent />);
-
-      // In real implementation, should redirect
-      expect(mockNavigate).toHaveBeenCalled();
-    });
-
-    it('should not render protected content when unauthorized', async () => {
-      renderWithRouter(
-        <ProtectedRoute>
-          <TestComponent />
-        </ProtectedRoute>
-      );
-
-      // In real scenario without auth, should not show
-      // This depends on actual implementation
-    });
-  });
-
-  describe('Access Control', () => {
-    it('should check for valid JWT token', () => {
-      const token = localStorage.getItem('token');
-      expect(typeof token === 'string' || token === null).toBe(true);
-    });
-
-    it('should handle expired token gracefully', () => {
-      localStorage.setItem('token', 'expired-token');
-      // Component should handle this scenario
-      renderWithRouter(
-        <ProtectedRoute>
-          <TestComponent />
-        </ProtectedRoute>
-      );
-    });
+  it('requires verification for an incomplete account', () => {
+    renderRoute({ token: 'token', user: { email: 'test@example.com', isEmailVerified: false } });
+    expect(screen.getByText('Verify Email')).toBeInTheDocument();
+    expect(screen.queryByText('Protected Content')).not.toBeInTheDocument();
   });
 });

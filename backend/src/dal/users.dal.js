@@ -9,7 +9,7 @@ const findByEmail = async (email) => {
 };
 
 const findById = async (id) => {
-  return await User.findById(id).select('-password').lean();
+  return await User.findById(id).select('-password -otp -passwordReset').lean();
 };
 
 const updateUser = async (id, updateData) => {
@@ -17,7 +17,7 @@ const updateUser = async (id, updateData) => {
     id,
     updateData,
     { returnDocument: 'after', runValidators: true }
-  ).select('-password').lean();
+  ).select('-password -otp -passwordReset').lean();
 };
 
 // ═════════════════════════════════════════════════════════════════════

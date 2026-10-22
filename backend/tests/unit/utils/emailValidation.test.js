@@ -1,4 +1,6 @@
 const { expect } = require('chai');
+const sinon = require('sinon');
+const dns = require('node:dns').promises;
 const { validateEmailFormat, validateEmailDomain } = require('../../../src/utils/emailValidation');
 
 describe('Email Validation Utilities', () => {
@@ -10,7 +12,7 @@ describe('Email Validation Utilities', () => {
         'user+tag@example.co.uk',
         'user123@subdomain.example.com'
       ];
-      
+
       validEmails.forEach(email => {
         expect(validateEmailFormat(email)).to.be.true;
       });
@@ -25,7 +27,7 @@ describe('Email Validation Utilities', () => {
         'user@.com',
         'user@@example.com'
       ];
-      
+
       invalidEmails.forEach(email => {
         expect(validateEmailFormat(email)).to.be.false;
       });
@@ -42,10 +44,15 @@ describe('Email Validation Utilities', () => {
   });
 
   describe('validateEmailDomain', () => {
+    beforeEach(() => { sinon.stub(dns, 'resolveMx').callsFake(async (domain) => {
+      if (domain === 'invalid-domain-12345.com') throw new Error('ENOTFOUND');
+      return [{ exchange: 'mail.example.com', priority: 10 }];
+    }); });
+    afterEach(() => sinon.restore());
     it('should validate domains with valid MX records', async () => {
       // Common domains with valid MX records
       const validDomains = ['gmail.com', 'yahoo.com', 'hotmail.com'];
-      
+
       for (const domain of validDomains) {
         const result = await validateEmailDomain(`test@${domain}`);
         expect(result).to.be.a('boolean');

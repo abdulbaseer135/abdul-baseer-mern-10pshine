@@ -5,7 +5,7 @@ const crypto = require('node:crypto'); // Sonar: prefer node:crypto import
  * @returns {string} - 6-digit OTP
  */
 const generateOTP = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  return crypto.randomInt(100000, 1000000).toString();
 };
 
 /**
@@ -25,7 +25,8 @@ const hashOTP = (otp) => {
  */
 const verifyOTP = (storedHash, inputOTP) => {
   const inputHash = hashOTP(inputOTP);
-  return storedHash === inputHash;
+  if (typeof storedHash !== 'string' || storedHash.length !== inputHash.length) return false;
+  return crypto.timingSafeEqual(Buffer.from(storedHash), Buffer.from(inputHash));
 };
 
 /**

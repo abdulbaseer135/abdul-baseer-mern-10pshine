@@ -8,8 +8,7 @@ const useNoteImportExport = (onFetch, searchQuery) => {
 
   const handleExport = useCallback(async () => {
     setExporting(true);
-    await performExport();
-    setExporting(false);
+    try { await performExport(); } finally { setExporting(false); }
   }, []);
 
   const handleImport = useCallback(
@@ -18,11 +17,14 @@ const useNoteImportExport = (onFetch, searchQuery) => {
       const file = files && files.length > 0 ? files[0] : null;
 
       setImporting(true);
-      if (file) {
-        e.target.value = '';
-        await performImport(file, onFetch, searchQuery);
+      try {
+        if (file) {
+          e.target.value = '';
+          await performImport(file, onFetch, searchQuery);
+        }
+      } finally {
+        setImporting(false);
       }
-      setImporting(false);
     },
     [searchQuery, onFetch]
   );

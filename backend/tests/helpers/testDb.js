@@ -4,12 +4,13 @@ const mongoose = require('mongoose');
 let mongod;
 
 const connect = async () => {
-  mongod = await MongoMemoryServer.create();
+  mongod = await MongoMemoryServer.create({ instance: { launchTimeout: 60000 } });
   const uri = mongod.getUri();
   await mongoose.connect(uri);
 };
 
 const disconnect = async () => {
+  if (!mongod) return;
   await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
   await mongod.stop();

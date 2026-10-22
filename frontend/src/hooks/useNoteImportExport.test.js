@@ -71,7 +71,7 @@ describe('useNoteImportExport Hook', () => {
       const file = new File(['{}'], 'notes.json', { type: 'application/json' });
 
       await act(async () => {
-        await result.current.handleImport(file);
+        await result.current.handleImport({ target: { files: [file], value: 'notes.json' } });
       });
 
       expect(result.current.importing !== undefined).toBe(true);
@@ -103,7 +103,7 @@ describe('useNoteImportExport Hook', () => {
 
       await act(async () => {
         try {
-          await result.current.handleImport(file);
+          await result.current.handleImport({ target: { files: [file], value: 'notes.json' } });
         } catch (e) {
           // Error handling
         }
@@ -122,7 +122,7 @@ describe('useNoteImportExport Hook', () => {
       const file = new File(['{}'], 'notes.json', { type: 'application/json' });
 
       await act(async () => {
-        await result.current.handleImport(file);
+        await result.current.handleImport({ target: { files: [file], value: 'notes.json' } });
       });
 
       // Callback should be handled
@@ -153,7 +153,7 @@ describe('useNoteImportExport Hook', () => {
       const file = new File(['{}'], 'notes.json', { type: 'application/json' });
 
       await act(async () => {
-        await result.current.handleImport(file);
+        await result.current.handleImport({ target: { files: [file], value: 'notes.json' } });
       });
 
       expect(result.current.importing !== undefined).toBe(true);

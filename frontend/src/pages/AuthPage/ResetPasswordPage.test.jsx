@@ -19,7 +19,7 @@ describe('ResetPasswordPage', () => {
     jest.clearAllMocks();
     useNavigate.mockReturnValue(mockNavigate);
     useLocation.mockReturnValue({
-      state: { email: 'test@example.com' },
+      state: { email: 'test@example.com', resetToken: 'test-reset-token' },
     });
   });
 
@@ -42,7 +42,7 @@ describe('ResetPasswordPage', () => {
 
     it('should render page title', () => {
       renderWithProviders(<ResetPasswordPage />);
-      expect(screen.getByText(/reset password/i)).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /reset password/i })).toBeInTheDocument();
     });
 
     it('should display email display', () => {
@@ -72,12 +72,12 @@ describe('ResetPasswordPage', () => {
   describe('Password Strength Indicator', () => {
     it('should display password strength meter', () => {
       renderWithProviders(<ResetPasswordPage />);
-      expect(screen.getByText(/strength/i)).toBeInTheDocument();
+      expect(screen.getByText(/at least 8 characters/i)).toBeInTheDocument();
     });
 
     it('should show weak strength for simple password', async () => {
       renderWithProviders(<ResetPasswordPage />);
-      const passwordInput = screen.getByPlaceholderText(/new password/i);
+      const passwordInput = screen.getByLabelText('New Password');
 
       await userEvent.type(passwordInput, 'simple');
 
@@ -86,7 +86,7 @@ describe('ResetPasswordPage', () => {
 
     it('should show fair strength for medium password', async () => {
       renderWithProviders(<ResetPasswordPage />);
-      const passwordInput = screen.getByPlaceholderText(/new password/i);
+      const passwordInput = screen.getByLabelText('New Password');
 
       await userEvent.type(passwordInput, 'Medium123');
 
@@ -97,7 +97,7 @@ describe('ResetPasswordPage', () => {
 
     it('should show strong strength for complex password', async () => {
       renderWithProviders(<ResetPasswordPage />);
-      const passwordInput = screen.getByPlaceholderText(/new password/i);
+      const passwordInput = screen.getByLabelText('New Password');
 
       await userEvent.type(passwordInput, 'StrongP@ss123');
 
@@ -122,7 +122,7 @@ describe('ResetPasswordPage', () => {
 
     it('should require password to match pattern', async () => {
       renderWithProviders(<ResetPasswordPage />);
-      const passwordInput = screen.getByPlaceholderText(/new password/i);
+      const passwordInput = screen.getByLabelText('New Password');
 
       await userEvent.type(passwordInput, 'weak');
 
@@ -132,8 +132,8 @@ describe('ResetPasswordPage', () => {
 
     it('should require passwords to match', async () => {
       renderWithProviders(<ResetPasswordPage />);
-      const passwordInput = screen.getByPlaceholderText(/new password/i);
-      const confirmInput = screen.getByPlaceholderText(/confirm password/i);
+      const passwordInput = screen.getByLabelText('New Password');
+      const confirmInput = screen.getByLabelText('Confirm Password');
 
       await userEvent.type(passwordInput, 'StrongP@ss123');
       await userEvent.type(confirmInput, 'DifferentP@ss123');
@@ -152,8 +152,8 @@ describe('ResetPasswordPage', () => {
       authService.resetPasswordService.mockResolvedValue({});
 
       renderWithProviders(<ResetPasswordPage />);
-      const passwordInput = screen.getByPlaceholderText(/new password/i);
-      const confirmInput = screen.getByPlaceholderText(/confirm password/i);
+      const passwordInput = screen.getByLabelText('New Password');
+      const confirmInput = screen.getByLabelText('Confirm Password');
       const submitBtn = screen.getByRole('button', { name: /reset|submit/i });
 
       await userEvent.type(passwordInput, 'StrongP@ss123');
@@ -164,7 +164,8 @@ describe('ResetPasswordPage', () => {
       await waitFor(() => {
         expect(authService.resetPasswordService).toHaveBeenCalledWith(
           'test@example.com',
-          'StrongP@ss123'
+          'StrongP@ss123',
+          'test-reset-token'
         );
       });
     });
@@ -173,8 +174,8 @@ describe('ResetPasswordPage', () => {
       authService.resetPasswordService.mockResolvedValue({});
 
       renderWithProviders(<ResetPasswordPage />);
-      const passwordInput = screen.getByPlaceholderText(/new password/i);
-      const confirmInput = screen.getByPlaceholderText(/confirm password/i);
+      const passwordInput = screen.getByLabelText('New Password');
+      const confirmInput = screen.getByLabelText('Confirm Password');
       const submitBtn = screen.getByRole('button', { name: /reset|submit/i });
 
       await userEvent.type(passwordInput, 'StrongP@ss123');
@@ -194,8 +195,8 @@ describe('ResetPasswordPage', () => {
       authService.resetPasswordService.mockResolvedValue({});
 
       renderWithProviders(<ResetPasswordPage />);
-      const passwordInput = screen.getByPlaceholderText(/new password/i);
-      const confirmInput = screen.getByPlaceholderText(/confirm password/i);
+      const passwordInput = screen.getByLabelText('New Password');
+      const confirmInput = screen.getByLabelText('Confirm Password');
       const submitBtn = screen.getByRole('button', { name: /reset|submit/i });
 
       await userEvent.type(passwordInput, 'StrongP@ss123');
@@ -216,8 +217,8 @@ describe('ResetPasswordPage', () => {
       });
 
       renderWithProviders(<ResetPasswordPage />);
-      const passwordInput = screen.getByPlaceholderText(/new password/i);
-      const confirmInput = screen.getByPlaceholderText(/confirm password/i);
+      const passwordInput = screen.getByLabelText('New Password');
+      const confirmInput = screen.getByLabelText('Confirm Password');
       const submitBtn = screen.getByRole('button', { name: /reset|submit/i });
 
       await userEvent.type(passwordInput, 'StrongP@ss123');
@@ -234,8 +235,8 @@ describe('ResetPasswordPage', () => {
       authService.resetPasswordService.mockRejectedValue(new Error('Network error'));
 
       renderWithProviders(<ResetPasswordPage />);
-      const passwordInput = screen.getByPlaceholderText(/new password/i);
-      const confirmInput = screen.getByPlaceholderText(/confirm password/i);
+      const passwordInput = screen.getByLabelText('New Password');
+      const confirmInput = screen.getByLabelText('Confirm Password');
       const submitBtn = screen.getByRole('button', { name: /reset|submit/i });
 
       await userEvent.type(passwordInput, 'StrongP@ss123');
@@ -256,8 +257,8 @@ describe('ResetPasswordPage', () => {
       );
 
       renderWithProviders(<ResetPasswordPage />);
-      const passwordInput = screen.getByPlaceholderText(/new password/i);
-      const confirmInput = screen.getByPlaceholderText(/confirm password/i);
+      const passwordInput = screen.getByLabelText('New Password');
+      const confirmInput = screen.getByLabelText('Confirm Password');
       const submitBtn = screen.getByRole('button', { name: /reset|submit/i });
 
       await userEvent.type(passwordInput, 'StrongP@ss123');
@@ -265,9 +266,9 @@ describe('ResetPasswordPage', () => {
 
       fireEvent.click(submitBtn);
 
-      expect(submitBtn).toBeDisabled();
+      await waitFor(() => expect(submitBtn).toBeDisabled());
 
-      jest.advanceTimersByTime(150);
+      await new Promise(resolve => setTimeout(resolve, 150));
     });
 
     it('should enable submit button when not loading', () => {
@@ -280,7 +281,7 @@ describe('ResetPasswordPage', () => {
   describe('Password Toggle Visibility', () => {
     it('should toggle new password visibility', async () => {
       renderWithProviders(<ResetPasswordPage />);
-      const passwordInput = screen.getByPlaceholderText(/new password/i);
+      const passwordInput = screen.getByLabelText('New Password');
       const toggleButtons = screen.getAllByRole('button', { name: /show|hide/i });
 
       // Initially hidden
@@ -297,7 +298,7 @@ describe('ResetPasswordPage', () => {
 
     it('should toggle confirm password visibility', async () => {
       renderWithProviders(<ResetPasswordPage />);
-      const confirmInput = screen.getByPlaceholderText(/confirm password/i);
+      const confirmInput = screen.getByLabelText('Confirm Password');
       const toggleButtons = screen.getAllByRole('button', { name: /show|hide/i });
 
       // Initially hidden
@@ -316,7 +317,7 @@ describe('ResetPasswordPage', () => {
   describe('Input Handling', () => {
     it('should accept valid password input', async () => {
       renderWithProviders(<ResetPasswordPage />);
-      const passwordInput = screen.getByPlaceholderText(/new password/i);
+      const passwordInput = screen.getByLabelText('New Password');
 
       await userEvent.type(passwordInput, 'StrongP@ss123');
 
@@ -334,7 +335,7 @@ describe('ResetPasswordPage', () => {
   describe('Requirements Display', () => {
     it('should display password requirements', () => {
       renderWithProviders(<ResetPasswordPage />);
-      expect(screen.getByText(/requirement|character|uppercase|lowercase|number|special/i)).toBeInTheDocument();
+      expect(screen.getByText('At least 8 characters')).toBeInTheDocument();
     });
   });
 });

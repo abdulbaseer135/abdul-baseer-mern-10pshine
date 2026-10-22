@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID: uuidv4 } = require('node:crypto');
 
 const TASK_STATUSES = ['todo', 'doing', 'done'];
 const NOTE_CATEGORIES = ['general', 'idea', 'task'];
@@ -100,14 +100,15 @@ noteSchema.pre('findOneAndUpdate', async function () {
     return;
   }
 
-  const payload = update.$set ? update.$set : update;
-  normalizeTaskStatus(payload);
-
-  if (update.$set) {
-    update.$set = payload;
+  const payload = { ...update, ...update.$set };
+  if (payload.category === undefined && payload.taskStatus === undefined) return;
+  const existing = await this.model.findOne(this.getQuery()).lean();
+  const state = { category: existing?.category, taskStatus: existing?.taskStatus, ...payload };
+  if (payload.category === 'task' && existing?.category !== 'task' && payload.taskStatus === undefined) {
+    state.taskStatus = 'todo';
   }
-
-  this.setUpdate(update);
+  normalizeTaskStatus(state);
+  this.setUpdate({ ...update, $set: { ...update.$set, taskStatus: state.taskStatus } });
 });
 
 // ✅ Compound unique index: noteId must be unique per user, not globally
@@ -122,7 +123,6 @@ noteSchema.index(
   { shareToken: 1 },
   {
     unique: true,
-    sparse: true,
     partialFilterExpression: { shareToken: { $type: 'string' } },
   }
 );

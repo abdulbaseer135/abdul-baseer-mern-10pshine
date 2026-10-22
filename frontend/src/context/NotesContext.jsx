@@ -19,7 +19,8 @@ export const NotesProvider = ({ children }) => {
       setLoading(true);
       setError('');
       const res = await getNotesService();
-      setNotes(res.data.notes || res.data);
+      const data = res?.data ?? res;
+      setNotes(data?.notes ?? data ?? []);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to fetch notes');
     } finally {

@@ -65,6 +65,9 @@ const protect = asyncHandler(async (req, res, next) => {
     });
     throw new ApiError(401, 'User no longer exists');
   }
+  if ((decoded.tokenVersion ?? 0) !== (user.tokenVersion ?? 0)) {
+    throw new ApiError(401, 'Session expired. Please sign in again');
+  }
 
   if (!user.isEmailVerified) {
     console.error('[Auth Middleware] Unverified user blocked:', {

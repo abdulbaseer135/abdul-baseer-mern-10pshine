@@ -84,8 +84,6 @@ describe('useProfileImage Hook', () => {
         'image/jpeg',
         'image/png',
         'image/webp',
-        'image/gif',
-        'image/svg+xml',
       ];
 
       for (const type of validTypes) {
@@ -107,6 +105,13 @@ describe('useProfileImage Hook', () => {
           expect(profileService.uploadProfileImageService).toHaveBeenCalled();
         });
       }
+    });
+    it('rejects SVG content before uploading', async () => {
+      const { result } = renderHook(() => useProfileImage(mockOnFetchProfile));
+      const file = new File(['<svg onload="alert(1)"></svg>'], 'image.svg', { type: 'image/svg+xml' });
+      await act(async () => result.current.handleImageUpload({ target: { files: [file] } }));
+      expect(result.current.imageError).toContain('JPEG, PNG or WebP');
+      expect(profileService.uploadProfileImageService).not.toHaveBeenCalled();
     });
   });
 

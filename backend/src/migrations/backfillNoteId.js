@@ -1,14 +1,14 @@
 /**
  * Migration Script: Backfill noteId for existing notes
- * 
+ *
  * This script ensures all existing notes have a unique noteId field.
  * It should be run once after deploying the noteId schema change.
- * 
+ *
  * Usage: node src/migrations/backfillNoteId.js
  */
 
 const mongoose = require('mongoose');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID: uuidv4 } = require('node:crypto');
 const logger = require('../config/logger');
 
 // Dynamically load the Note model

@@ -1,3 +1,5 @@
+> Requires the standalone SonarScanner CLI on PATH. The npm scanner wrapper has been removed. Use your own SONAR_TOKEN; rotate any previously committed token.
+
 # 🚀 SonarQube Analysis - Quick Start Guide
 
 ## Your npm Scripts Are Ready!
@@ -57,7 +59,7 @@ npm run sonar:scan
 
 ```bash
 $env:SONAR_TOKEN = "your_token_here"
-npx sonarqube-scanner `
+sonar-scanner `
   -Dsonar.projectKey=Notes-App---Abdul-Baseer `
   -Dsonar.sources=backend/src,frontend/src `
   -Dsonar.tests=backend/tests `
@@ -87,12 +89,12 @@ To avoid entering the token every time:
 
 ### Windows PowerShell (Current Session Only)
 ```powershell
-$env:SONAR_TOKEN = "sqp_xxxxxxxxxxxxxxxxxxxxx"
+$env:SONAR_TOKEN = "YOUR_SONAR_TOKEN"
 ```
 
 ### Windows PowerShell (Permanent)
 ```powershell
-[Environment]::SetEnvironmentVariable("SONAR_TOKEN", "sqp_xxxxxxxxxxxxxxxxxxxxx", "User")
+[Environment]::SetEnvironmentVariable("SONAR_TOKEN", "YOUR_SONAR_TOKEN", "User")
 
 # Restart PowerShell after this
 ```
