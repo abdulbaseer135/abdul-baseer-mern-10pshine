@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
+import { API_BASE_URL } from '../utils/constants';
 
-const SOCKET_IO_ENABLED = process.env.REACT_APP_ENABLE_SOCKET_IO === 'true';
+const SOCKET_IO_ENABLED = process.env.VITE_ENABLE_SOCKET_IO === 'true';
 
 const useSocket = (userId, { onCreated, onUpdated, onDeleted } = {}) => {
   const socketRef = useRef(null);
@@ -14,8 +15,7 @@ const useSocket = (userId, { onCreated, onUpdated, onDeleted } = {}) => {
   useEffect(() => {
     if (!userId || !SOCKET_IO_ENABLED) return;
 
-    const socketUrl =
-      process.env.REACT_APP_API_URL?.replace(/\/api\/v1\/?$/, '') || 'http://localhost:5000';
+    const socketUrl = new URL(API_BASE_URL).origin;
 
     const socket = io(socketUrl, {
       auth: (callback) => callback({ token: globalThis.__REDUX_STORE__?.getState()?.auth?.token || localStorage.getItem('token') }),

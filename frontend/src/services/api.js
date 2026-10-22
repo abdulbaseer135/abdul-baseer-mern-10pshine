@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { API_BASE_URL } from '../utils/constants';
 import { redirectToLogin } from '../utils/navigation';
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api/v1',
+  baseURL: API_BASE_URL,
 });
 
 // Read token from Redux store, fallback to localStorage

@@ -37,7 +37,7 @@ describe('LoginPage', () => {
 
     it('should render password input field', () => {
       renderWithProviders(<LoginPage />);
-      expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument();
     });
 
     it('should render login button', () => {
@@ -63,7 +63,7 @@ describe('LoginPage', () => {
 
     it('should have password input with correct type', () => {
       renderWithProviders(<LoginPage />);
-      const passwordInput = screen.getByLabelText(/password/i);
+      const passwordInput = screen.getByLabelText(/^password$/i);
       expect(passwordInput.type).toBe('password');
     });
   });
@@ -88,7 +88,7 @@ describe('LoginPage', () => {
 
       renderWithProviders(<LoginPage />);
       const emailInput = screen.getByLabelText(/email/i);
-      const passwordInput = screen.getByLabelText(/password/i);
+      const passwordInput = screen.getByLabelText(/^password$/i);
 
       fireEvent.change(emailInput, { target: { value: 'valid@example.com' } });
       fireEvent.change(passwordInput, { target: { value: 'password123' } });
@@ -104,7 +104,7 @@ describe('LoginPage', () => {
 
       renderWithProviders(<LoginPage />);
       const emailInput = screen.getByLabelText(/email/i);
-      const passwordInput = screen.getByLabelText(/password/i);
+      const passwordInput = screen.getByLabelText(/^password$/i);
       const loginBtn = screen.getByRole('button', { name: /login|sign in/i });
 
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
@@ -125,7 +125,7 @@ describe('LoginPage', () => {
 
       renderWithProviders(<LoginPage />);
       const emailInput = screen.getByLabelText(/email/i);
-      const passwordInput = screen.getByLabelText(/password/i);
+      const passwordInput = screen.getByLabelText(/^password$/i);
       const loginBtn = screen.getByRole('button', { name: /login|sign in/i });
 
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
@@ -143,7 +143,7 @@ describe('LoginPage', () => {
 
       renderWithProviders(<LoginPage />);
       const emailInput = screen.getByLabelText(/email/i);
-      const passwordInput = screen.getByLabelText(/password/i);
+      const passwordInput = screen.getByLabelText(/^password$/i);
       const loginBtn = screen.getByRole('button', { name: /login|sign in/i });
 
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
@@ -176,7 +176,7 @@ describe('LoginPage', () => {
 
       renderWithProviders(<LoginPage />);
       const emailInput = screen.getByLabelText(/email/i);
-      const passwordInput = screen.getByLabelText(/password/i);
+      const passwordInput = screen.getByLabelText(/^password$/i);
       const loginBtn = screen.getByRole('button', { name: /login|sign in/i });
 
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
@@ -220,7 +220,7 @@ describe('LoginPage', () => {
       fireEvent.change(screen.getByLabelText(/email/i), {
         target: { value: 'deleted@example.com' },
       });
-      fireEvent.change(screen.getByLabelText(/password/i), {
+      fireEvent.change(screen.getByLabelText(/^password$/i), {
         target: { value: 'password123' },
       });
       fireEvent.click(screen.getByRole('button', { name: /login|sign in/i }));
@@ -285,6 +285,21 @@ describe('LoginPage', () => {
   });
 
   describe('Form Input Handling', () => {
+    it('shows and hides the password without clearing it or submitting the form', async () => {
+      renderWithProviders(<LoginPage />);
+      const passwordInput = screen.getByLabelText(/^password$/i);
+      await userEvent.type(passwordInput, 'MyPassword123!');
+      expect(passwordInput).toHaveAttribute('type', 'password');
+
+      fireEvent.click(screen.getByRole('button', { name: 'Show password' }));
+      expect(passwordInput).toHaveAttribute('type', 'text');
+      expect(passwordInput).toHaveValue('MyPassword123!');
+
+      fireEvent.click(screen.getByRole('button', { name: 'Hide password' }));
+      expect(passwordInput).toHaveAttribute('type', 'password');
+      expect(passwordInput).toHaveValue('MyPassword123!');
+      expect(mockHandleLogin).not.toHaveBeenCalled();
+    });
     it('should update email input value', async () => {
       renderWithProviders(<LoginPage />);
       const emailInput = screen.getByLabelText(/email/i);
@@ -296,7 +311,7 @@ describe('LoginPage', () => {
 
     it('should update password input value', async () => {
       renderWithProviders(<LoginPage />);
-      const passwordInput = screen.getByLabelText(/password/i);
+      const passwordInput = screen.getByLabelText(/^password$/i);
 
       await userEvent.type(passwordInput, 'MyPassword123!');
 

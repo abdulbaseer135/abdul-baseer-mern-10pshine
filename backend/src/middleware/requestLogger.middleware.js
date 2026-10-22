@@ -1,6 +1,9 @@
 const logger = require('../config/logger');
 
 const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+// Query strings and public share paths may contain search text or access tokens.
+const logUrl = (url = '') => process.env.NODE_ENV === 'production'
+  ? url.split('?')[0].replace(/\/shared\/[^/]+/g, '/shared/[redacted]') : url;
 
 // pino-http can be fragile on some serverless runtimes — use a tiny logger there
 if (isServerless) {
@@ -8,7 +11,7 @@ if (isServerless) {
     const start = Date.now();
     res.on('finish', () => {
       console.log(
-        `[http] ${req.method} ${req.originalUrl || req.url} ${res.statusCode} ${Date.now() - start}ms`
+        `[http] ${req.method} ${logUrl(req.originalUrl || req.url)} ${res.statusCode} ${Date.now() - start}ms`
       );
     });
     next();
@@ -19,9 +22,9 @@ if (isServerless) {
   module.exports = pinoHttp({
     logger,
     customSuccessMessage: (req, res) =>
-      `${req.method} ${req.url} completed — ${res.statusCode}`,
+      `${req.method} ${logUrl(req.url)} completed — ${res.statusCode}`,
     customErrorMessage: (req, res, err) =>
-      `${req.method} ${req.url} failed — ${res.statusCode} — ${err.message}`,
+      `${req.method} ${logUrl(req.url)} failed — ${res.statusCode}`,
     customAttributeKeys: {
       req: 'request',
       res: 'response',
@@ -32,7 +35,7 @@ if (isServerless) {
       req(req) {
         return {
           method: req.method,
-          url: req.url,
+          url: logUrl(req.url),
           userAgent: req.headers['user-agent'],
         };
       },

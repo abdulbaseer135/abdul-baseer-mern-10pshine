@@ -52,8 +52,7 @@ const connectDB = async (retries = 3, delay = 2000) => {
       return cached.conn;
     } catch (error) {
       cached.promise = null;
-      logger.error({ err: error, attempt }, `MongoDB connection attempt ${attempt}/${retries} failed`);
-      console.error(`[DB] MongoDB connection attempt ${attempt}/${retries} failed:`, error.message);
+      logger.error({ ...(process.env.NODE_ENV === 'production' ? {} : { err: error }), attempt }, `MongoDB connection attempt ${attempt}/${retries} failed`);
 
       if (attempt === retries) {
         throw error;
