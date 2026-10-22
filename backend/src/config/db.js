@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const dns = require('node:dns');
 const logger = require('./logger');
 const { assertRequiredEnv } = require('./env');
+const { startupDiagnostic } = require('../utils/startupDiagnostics');
 
 /**
  * Cached connection for serverless (warm invocations reuse the same client).
@@ -29,8 +30,7 @@ const connectDB = async (retries = 3, delay = 2000) => {
           serverSelectionTimeoutMS: 5000,
         })
         .then((conn) => {
-          logger.info(`MongoDB connected: ${conn.connection.host}`);
-          logger.info(`MongoDB database name: ${conn.connection.name}`);
+          logger.info('MongoDB connected');
           return conn;
         })
         .catch(async (err) => {
@@ -40,7 +40,7 @@ const connectDB = async (retries = 3, delay = 2000) => {
             try {
               dns.setServers(['8.8.8.8', '1.1.1.1']);
             } catch (dnsErr) {
-              console.error('[DB] Could not set fallback DNS servers:', dnsErr.message);
+              console.error('[DB] Could not set fallback DNS servers');
             }
           }
           throw err;
@@ -52,7 +52,7 @@ const connectDB = async (retries = 3, delay = 2000) => {
       return cached.conn;
     } catch (error) {
       cached.promise = null;
-      logger.error({ ...(process.env.NODE_ENV === 'production' ? {} : { err: error }), attempt }, `MongoDB connection attempt ${attempt}/${retries} failed`);
+      logger.error({ ...startupDiagnostic('database_connection', error), attempt }, `MongoDB connection attempt ${attempt}/${retries} failed`);
 
       if (attempt === retries) {
         throw error;

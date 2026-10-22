@@ -73,7 +73,9 @@ if (require.main === module) {
   (async () => {
     try {
       // Connect to MongoDB
-      const dbUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/notes-app';
+      const { MONGO_URI } = require('../config/env');
+      if (!MONGO_URI) throw new Error('MONGO_URI is required; no local database fallback is configured');
+      const dbUri = MONGO_URI;
       await mongoose.connect(dbUri);
       logger.info('Connected to MongoDB');
 

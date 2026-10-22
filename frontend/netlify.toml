@@ -1,0 +1,17 @@
+[build]
+  # Base is relative to the repository root; publish is relative to base.
+  base = "frontend"
+  command = "npm run build"
+  publish = "build"
+
+[build.environment]
+  NODE_VERSION = "24.14.0"
+  # This public API origin is intentionally embedded in Vite's browser bundle.
+  # Keep secret scanning enabled for all other environment variables.
+  SECRETS_SCAN_OMIT_KEYS = "VITE_API_URL"
+
+# Serve React Router routes through the app; existing static files take precedence.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -16,6 +16,20 @@ describe('Production environment validation', () => {
   });
   afterEach(() => { process.env = previous; });
   it('accepts complete deployment configuration', () => expect(assertRequiredEnv).not.to.throw());
+  it('validates Render-assigned ports rather than silently falling back', () => {
+    for (const port of ['invalid', '', '0', '-1', '65536', '5000.5']) {
+      process.env.PORT = port;
+      expect(assertRequiredEnv).to.throw('PORT');
+    }
+    process.env.PORT = '10000';
+    expect(assertRequiredEnv).not.to.throw();
+    delete process.env.PORT;
+    expect(assertRequiredEnv).not.to.throw();
+  });
+  it('rejects malformed URI configuration without including the URI in diagnostics', () => {
+    process.env.MONGO_URI = 'invalid-private-value';
+    expect(assertRequiredEnv).to.throw('MONGO_URI');
+  });
   it('rejects a weak JWT secret', () => {
     process.env.JWT_SECRET = 'short';
     expect(assertRequiredEnv).to.throw('JWT_SECRET');

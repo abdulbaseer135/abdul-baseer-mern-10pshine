@@ -1,3 +1,17 @@
+> Current frontend target: Netlify. Follow [NETLIFY_DEPLOYMENT.md](NETLIFY_DEPLOYMENT.md); the Vercel instructions below are retained for reference.
+
+## Render startup diagnostics
+
+Startup logs now identify `environment_validation`, `database_connection`, `http_server_creation`, `socket_initialization`, and `http_listen`, followed by `startup_ready` on success. A failure prints a structured `startup_failed` event with a safe category. Validation errors include variable names and reasons (`missing`, `invalid_format`, `weak_secret`), never their values. Raw errors, stacks, database URIs, host/database configuration values, and credentials are excluded from these diagnostics.
+
+The former generic production startup error cannot establish which operation failed. Successful logs from another instance do not prove the latest failed instance had the same configuration or database connectivity. Inspect logs for the same deployment and instance. Module imports occur before the startup function; module-loading failures are outside its phase logger and would not produce the former generic catch message.
+
+Keep NODE_ENV=production. Render supplies PORT; a missing PORT defaults to 5000 locally. Invalid, blank, zero, fractional, negative, or out-of-range ports now fail validation instead of silently falling back to 5000. The listener uses Node's default interfaces and the supplied numeric port; it is not bound to localhost.
+
+After reviewing and approving the changes, push the reviewed commit and manually deploy the existing Render service without changing its plan, database or working credentials. Inspect `startup_failed.phase` and `category`. For configuration failures, correct only the named variables in Render and retry. For database-server-selection failures, inspect Atlas network access and cluster availability; that category alone does not prove bad credentials. For `port_in_use`, inspect listener/process configuration. Recheck `/health` and authenticated API operations after `startup_ready`.
+
+Verification: 332 backend tests passed, including failure-phase, redaction, environment-validation and listener-error tests. Actual child-process checks confirmed safe rejection of invalid PORT and missing upload credentials. A production-mode server started against disposable MongoDB, logged all phases, served health and protected routes, and omitted response stacks and tested secret values. A separate real occupied-port harness check was inconclusive on Windows and was stopped; asynchronous EADDRINUSE handling passed its unit test. No production database connection, credential replacement, push, or deployment was performed by these checks.
+
 # Deployment: Vercel + Render + MongoDB Atlas
 
 This repository uses Vite/React (`frontend/build`), Express (`backend/src/local-server.js`), MongoDB, authenticated Socket.IO, OTP email, and Cloudinary profile images. No database migration or UI redesign is required. Preparation does not publish anything. Push and production deployment require the owner's approval.
