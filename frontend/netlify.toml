@@ -1,0 +1,14 @@
+[build]
+  # Base is relative to the repository root; publish is relative to base.
+  base = "frontend"
+  command = "npm run build"
+  publish = "build"
+
+[build.environment]
+  NODE_VERSION = "24.14.0"
+
+# Serve React Router routes through the app; existing static files take precedence.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

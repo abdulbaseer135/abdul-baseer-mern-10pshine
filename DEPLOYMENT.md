@@ -1,3 +1,5 @@
+> Current frontend target: Netlify. Follow [NETLIFY_DEPLOYMENT.md](NETLIFY_DEPLOYMENT.md); the Vercel instructions below are retained for reference.
+
 # Deployment: Vercel + Render + MongoDB Atlas
 
 This repository uses Vite/React (`frontend/build`), Express (`backend/src/local-server.js`), MongoDB, authenticated Socket.IO, OTP email, and Cloudinary profile images. No database migration or UI redesign is required. Preparation does not publish anything. Push and production deployment require the owner's approval.
