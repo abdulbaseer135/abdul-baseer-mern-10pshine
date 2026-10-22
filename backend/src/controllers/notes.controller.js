@@ -5,11 +5,9 @@ const { getIO } = require('../config/socket');
 const crypto = require('node:crypto');
 
 const createNote = asyncHandler(async (req, res) => {
-  console.log('[DEBUG createNote] userId:', req.user._id.toString(), 'body:', req.body);
 
   const note = await notesService.create(req.user._id, req.body);
 
-  console.log('[DEBUG createNote] SUCCESS - created note mongoId:', note._id.toString(), 'noteId:', note.noteId);
 
   getIO().to(req.user._id.toString()).emit('note:created', note);
   return res.status(201).json(new ApiResponse(201, note, 'Note created successfully'));
@@ -20,11 +18,9 @@ const getAllNotes = asyncHandler(async (req, res) => {
   const limit = Number.parseInt(req.query.limit, 10) || 10;
   const search = req.query.search?.trim() || '';
 
-  console.log('[DEBUG getAllNotes] userId:', req.user._id.toString(), 'page:', page, 'limit:', limit, 'search:', search);
 
   const result = await notesService.getAll(req.user._id, page, limit, search);
 
-  console.log('[DEBUG getAllNotes] fetched notes count:', result?.notes?.length || 0, 'totalPages:', result?.totalPages);
 
   return res.status(200).json(new ApiResponse(200, result, 'Notes fetched successfully'));
 });
@@ -35,7 +31,6 @@ const getNoteById = asyncHandler(async (req, res) => {
 });
 
 const updateNote = asyncHandler(async (req, res) => {
-  console.log('[DEBUG updateNote] userId:', req.user._id.toString(), 'noteId:', req.params.id);
 
   const note = await notesService.update(req.params.id, req.user._id, req.body);
   getIO().to(req.user._id.toString()).emit('note:updated', note);
@@ -97,7 +92,6 @@ const importNotes = asyncHandler(async (req, res) => {
   const { notes } = req.body;
   const userId = req.user._id.toString();
 
-  console.log('[DEBUG importNotes] userId:', userId, 'totalNotes to import:', notes?.length || 0);
 
   if (!Array.isArray(notes) || notes.length === 0) {
     return res
@@ -132,7 +126,6 @@ const importNotes = asyncHandler(async (req, res) => {
     if (n.noteId && typeof n.noteId === 'string') {
       const existingNote = await notesService.getByNoteId(n.noteId, req.user._id);
       if (existingNote) {
-        console.log('[DEBUG importNotes] SKIP - duplicate noteId for user:', n.noteId);
         skippedNotes.push({
           noteId: n.noteId,
           title: noteTitle,
@@ -146,7 +139,6 @@ const importNotes = asyncHandler(async (req, res) => {
 
     try {
       const created = await notesService.create(req.user._id, noteToCreate);
-      console.log('[DEBUG importNotes] IMPORTED - noteId:', created.noteId, '_id:', created._id.toString());
       importedNotes.push(created);
       getIO().to(userId).emit('note:created', created);
     } catch (error) {
@@ -159,7 +151,6 @@ const importNotes = asyncHandler(async (req, res) => {
   }
 
   const message = `${importedNotes.length} note(s) imported successfully, ${skippedNotes.length} skipped`;
-  console.log('[DEBUG importNotes] COMPLETE:', message);
 
   return res.status(201).json(
     new ApiResponse(

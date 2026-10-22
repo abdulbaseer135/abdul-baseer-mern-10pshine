@@ -80,7 +80,7 @@ describe('OTPVerificationPage', () => {
     it('should only allow digit input', async () => {
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       fireEvent.change(inputs[0], { target: { value: 'a' } });
       expect(inputs[0].value).toBe('');
     });
@@ -88,7 +88,7 @@ describe('OTPVerificationPage', () => {
     it('should accept digit input', () => {
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       fireEvent.change(inputs[0], { target: { value: '1' } });
       expect(inputs[0].value).toBe('1');
     });
@@ -96,11 +96,11 @@ describe('OTPVerificationPage', () => {
     it('should only accept single digit per input', async () => {
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       await act(async () => {
         fireEvent.change(inputs[0], { target: { value: '12' } });
       });
-      
+
       // Wait for the value to update (React should slice it to '2')
       await waitFor(() => {
         expect(inputs[0].value).toBe('2');
@@ -112,7 +112,7 @@ describe('OTPVerificationPage', () => {
     it('should move focus to next input when digit entered', async () => {
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       inputs[0].focus();
       fireEvent.change(inputs[0], { target: { value: '1' } });
 
@@ -124,7 +124,7 @@ describe('OTPVerificationPage', () => {
     it('should not move focus if no digit entered', () => {
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       inputs[0].focus();
       fireEvent.change(inputs[0], { target: { value: '' } });
 
@@ -134,14 +134,14 @@ describe('OTPVerificationPage', () => {
     it('should not move focus beyond last input', async () => {
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       await act(async () => {
         inputs[5].focus();
       });
-      
+
       // Initial focus check
       expect(inputs[5]).toHaveFocus();
-      
+
       await act(async () => {
         fireEvent.change(inputs[5], { target: { value: '6' } });
       });
@@ -158,7 +158,7 @@ describe('OTPVerificationPage', () => {
     it('should move focus to previous input on backspace when current is empty', () => {
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       inputs[1].focus();
       fireEvent.keyDown(inputs[1], { key: 'Backspace' });
 
@@ -168,18 +168,18 @@ describe('OTPVerificationPage', () => {
     it('should not move focus on backspace when current has value', async () => {
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       await act(async () => {
         fireEvent.change(inputs[1], { target: { value: '1' } });
       });
-      
+
       await act(async () => {
         inputs[1].focus();
       });
-      
+
       // Verify focus is on the input
       expect(inputs[1]).toHaveFocus();
-      
+
       await act(async () => {
         fireEvent.keyDown(inputs[1], { key: 'Backspace' });
       });
@@ -195,9 +195,9 @@ describe('OTPVerificationPage', () => {
     it('should not move focus before first input', async () => {
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       inputs[0].focus();
-      
+
       await act(async () => {
         fireEvent.keyDown(inputs[0], { key: 'Backspace' });
       });
@@ -211,7 +211,7 @@ describe('OTPVerificationPage', () => {
     it('should show error if OTP length is less than 6', async () => {
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       await act(async () => {
         fireEvent.change(inputs[0], { target: { value: '1' } });
         fireEvent.change(inputs[1], { target: { value: '2' } });
@@ -219,7 +219,7 @@ describe('OTPVerificationPage', () => {
       });
 
       await act(async () => {
-        fireEvent.click(screen.getByRole('button', { name: /verify/i }));
+        fireEvent.submit(screen.getByRole('button', { name: /verify/i }).closest('form'));
       });
 
       await waitFor(
@@ -235,7 +235,7 @@ describe('OTPVerificationPage', () => {
 
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       for (let i = 0; i < 6; i++) {
         fireEvent.change(inputs[i], { target: { value: `${i + 1}` } });
       }
@@ -260,7 +260,7 @@ describe('OTPVerificationPage', () => {
 
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       for (let i = 0; i < 6; i++) {
         fireEvent.change(inputs[i], { target: { value: `${i + 1}` } });
       }
@@ -282,7 +282,7 @@ describe('OTPVerificationPage', () => {
 
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       for (let i = 0; i < 6; i++) {
         fireEvent.change(inputs[i], { target: { value: `${i + 1}` } });
       }
@@ -307,7 +307,7 @@ describe('OTPVerificationPage', () => {
 
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       for (let i = 0; i < 6; i++) {
         fireEvent.change(inputs[i], { target: { value: `${i + 1}` } });
       }
@@ -338,7 +338,7 @@ describe('OTPVerificationPage', () => {
 
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       for (let i = 0; i < 6; i++) {
         fireEvent.change(inputs[i], { target: { value: `${i + 1}` } });
       }
@@ -357,7 +357,7 @@ describe('OTPVerificationPage', () => {
 
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       for (let i = 0; i < 6; i++) {
         fireEvent.change(inputs[i], { target: { value: `${i + 1}` } });
       }
@@ -378,7 +378,7 @@ describe('OTPVerificationPage', () => {
 
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       for (let i = 0; i < 6; i++) {
         fireEvent.change(inputs[i], { target: { value: `${i + 1}` } });
       }
@@ -430,7 +430,7 @@ describe('OTPVerificationPage', () => {
 
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       await act(async () => {
         fireEvent.change(inputs[0], { target: { value: '1' } });
       });
@@ -438,12 +438,12 @@ describe('OTPVerificationPage', () => {
       await act(async () => {
         fireEvent.click(screen.getByRole('button', { name: /resend/i }));
         // Wait for the async sendOTPService to resolve and state to update
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await Promise.resolve();
       });
 
       // Verify service was called
       expect(authService.sendOTPService).toHaveBeenCalled();
-      
+
       // After resend, inputs should be cleared
       await waitFor(
         () => {
@@ -473,7 +473,7 @@ describe('OTPVerificationPage', () => {
 
       await act(async () => {
         fireEvent.click(resendBtn);
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await Promise.resolve();
       });
 
       await waitFor(() => {
@@ -496,7 +496,7 @@ describe('OTPVerificationPage', () => {
 
       await act(async () => {
         fireEvent.click(resendBtn);
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await Promise.resolve();
       });
 
       await waitFor(() => {
@@ -526,7 +526,7 @@ describe('OTPVerificationPage', () => {
       await act(async () => {
         fireEvent.click(resendBtn);
         // Let the async mock resolve
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await Promise.resolve();
       });
 
       await waitFor(() => {
@@ -534,9 +534,9 @@ describe('OTPVerificationPage', () => {
       });
 
       // Advance all timers to completion (runs all pending timers)
-      await act(async () => {
-        jest.runAllTimers();
-      });
+      for (let second = 0; second < 31; second++) {
+        await act(async () => { jest.advanceTimersByTime(1000); });
+      }
 
       // After all timers run, button should show "Resend OTP" and be enabled
       await waitFor(() => {
@@ -560,7 +560,7 @@ describe('OTPVerificationPage', () => {
 
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       for (let i = 0; i < 6; i++) {
         fireEvent.change(inputs[i], { target: { value: `${i + 1}` } });
       }
@@ -574,7 +574,7 @@ describe('OTPVerificationPage', () => {
     it('should enable submit button when all 6 digits entered', () => {
       renderWithProviders(<OTPVerificationPage />);
       const inputs = screen.getAllByRole('textbox');
-      
+
       // Initially disabled (no OTP)
       const submitBtn = screen.getByRole('button', { name: /verify/i });
       expect(submitBtn).toBeDisabled();

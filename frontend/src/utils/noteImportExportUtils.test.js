@@ -173,9 +173,8 @@ describe('Note Import/Export Utilities', () => {
       await performImport(mockFile, onFetchMock, searchQuery);
 
       // Should not throw, defaults to 0 for both
-      expect(toast.warning).toHaveBeenCalledWith(
-        'All 0 note(s) were duplicates and skipped.'
-      );
+      expect(toast.warning).not.toHaveBeenCalled();
+      expect(onFetchMock).toHaveBeenCalled();
     });
 
     it('should call onFetch with correct pagination params', async () => {

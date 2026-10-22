@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 
+const SOCKET_IO_ENABLED = process.env.REACT_APP_ENABLE_SOCKET_IO === 'true';
+
 const useSocket = (userId, { onCreated, onUpdated, onDeleted } = {}) => {
   const socketRef = useRef(null);
   const handlersRef = useRef({ onCreated, onUpdated, onDeleted });
@@ -10,15 +12,16 @@ const useSocket = (userId, { onCreated, onUpdated, onDeleted } = {}) => {
   }, [onCreated, onUpdated, onDeleted]);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || !SOCKET_IO_ENABLED) return;
 
-    const socket = io(
-      process.env.REACT_APP_API_URL?.replace('/api/v1', '') || 'http://localhost:5000',
-      {
-        transports: ['websocket'],
-        withCredentials: true,
-      }
-    );
+    const socketUrl =
+      process.env.REACT_APP_API_URL?.replace(/\/api\/v1\/?$/, '') || 'http://localhost:5000';
+
+    const socket = io(socketUrl, {
+      auth: (callback) => callback({ token: globalThis.__REDUX_STORE__?.getState()?.auth?.token || localStorage.getItem('token') }),
+      transports: ['websocket'],
+      withCredentials: true,
+    });
 
     socketRef.current = socket;
 
@@ -34,12 +37,16 @@ const useSocket = (userId, { onCreated, onUpdated, onDeleted } = {}) => {
       handlersRef.current.onDeleted?.(id);
     };
 
-    socket.emit('join', userId);
+    socket.on('connect_error', (err) => {
+      console.warn('[Socket.IO] connection failed:', err?.message || err);
+    });
+
     socket.on('note:created', handleCreated);
     socket.on('note:updated', handleUpdated);
     socket.on('note:deleted', handleDeleted);
 
     return () => {
+      socket.off('connect_error');
       socket.off('note:created', handleCreated);
       socket.off('note:updated', handleUpdated);
       socket.off('note:deleted', handleDeleted);

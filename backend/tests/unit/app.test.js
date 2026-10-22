@@ -12,11 +12,11 @@ describe('Express App Setup - app.js', () => {
     it('should create an Express application', () => {
       expect(app).to.exist;
       expect(typeof app).to.equal('function');
-      expect(app._router).to.exist;
+      expect(app.router).to.exist;
     });
 
     it('should have middleware loaded', () => {
-      expect(app._router).to.exist;
+      expect(app.router).to.exist;
     });
 
     it('should have x-powered-by header disabled', async () => {
@@ -33,14 +33,12 @@ describe('Express App Setup - app.js', () => {
       expect(response.status).to.equal(200);
     });
 
-    it('should allow Vercel deployment origins', async () => {
+    it('should reject unconfigured Vercel deployment origins', async () => {
       const response = await request(app)
         .get('/health')
-        .set('Origin', 'https://abdul-baseer-mern-10pshine-gamma.vercel.app');
-      expect(response.status).to.equal(200);
-      expect(response.get('access-control-allow-origin')).to.equal(
-        'https://abdul-baseer-mern-10pshine-gamma.vercel.app'
-      );
+        .set('Origin', 'https://untrusted-preview-123.vercel.app');
+      expect(response.status).to.equal(403);
+      expect(response.get('access-control-allow-origin')).to.be.undefined;
     });
 
     it('should allow localhost:3001 origin', async () => {
@@ -110,7 +108,7 @@ describe('Express App Setup - app.js', () => {
     });
 
     it('should have request logger middleware configured', () => {
-      expect(app._router).to.exist;
+      expect(app.router).to.exist;
     });
   });
 

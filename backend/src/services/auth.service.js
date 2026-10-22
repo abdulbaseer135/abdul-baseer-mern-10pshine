@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const crypto = require('node:crypto');
 const { findByEmail, createUser, findById, updateUser } = require('../dal/users.dal');
 const {
   findDeletedByEmail,
@@ -12,6 +13,7 @@ const logger = require('../config/logger');
 const { validateEmailFormat, validateEmailDomain } = require('../utils/emailValidation');
 const { generateOTP, hashOTP, verifyOTP, getOTPExpiry } = require('../utils/otp');
 const { sendOTPEmailNonBlocking } = require('../utils/nodemailer');
+const { getIO } = require('../config/socket');
 
 const DELETED_ACCOUNT_LOGIN_MESSAGE =
   'This account has been deleted. Please create a new account before signing in.';
@@ -19,12 +21,12 @@ const DELETED_ACCOUNT_LOGIN_MESSAGE =
 // ✅ Password strength rule — same as frontend
 const PASSWORD_RULES = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
-const generateToken = (userId) => {
+const generateToken = (userId, tokenVersion = 0) => {
   if (!JWT_SECRET) {
     console.error('[Auth] JWT_SECRET is not configured');
     throw new ApiError(500, 'Server misconfiguration: JWT_SECRET is missing');
   }
-  return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  return jwt.sign({ id: userId, tokenVersion }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 };
 
 const register = async ({ name, email, password }) => {
@@ -63,6 +65,7 @@ const register = async ({ name, email, password }) => {
 
       await updateUser(existingUser._id, {
         otp: {
+          attempts: 0,
           code: otpHash,
           expiresAt: getOTPExpiry(),
           purpose: 'verify',
@@ -100,9 +103,10 @@ const register = async ({ name, email, password }) => {
   try {
     const otp = generateOTP();
     const otpHash = hashOTP(otp);
-    
+
     await updateUser(user._id, {
       otp: {
+        attempts: 0,
         code: otpHash,
         expiresAt: getOTPExpiry(),
         purpose: 'verify',
@@ -161,7 +165,7 @@ const login = async ({ email, password }) => {
     );
   }
 
-  const token = generateToken(user._id);
+  const token = generateToken(user._id, user.tokenVersion);
 
   logger.info({ email, userId: user._id }, 'User logged in successfully');
 
@@ -207,6 +211,7 @@ const sendOTP = async (email, purpose) => {
 
   await updateUser(user._id, {
     otp: {
+      attempts: 0,
       code: otpHash,
       expiresAt: getOTPExpiry(),
       purpose,
@@ -221,6 +226,9 @@ const sendOTP = async (email, purpose) => {
 const verifyOTPCode = async (email, otp, purpose) => {
   logger.info({ email, purpose }, 'Verify OTP request');
 
+  if (!['verify', 'reset'].includes(purpose) || !/^\d{6}$/.test(otp)) {
+    throw new ApiError(400, 'Invalid OTP or purpose');
+  }
   if (!validateEmailFormat(email)) {
     throw new ApiError(400, 'Invalid email format');
   }
@@ -240,6 +248,12 @@ const verifyOTPCode = async (email, otp, purpose) => {
   }
 
   // ✅ Verify OTP
+  const attempted = await User.findOneAndUpdate(
+    { _id: user._id, 'otp.code': user.otp.code, $or: [{ 'otp.attempts': { $lt: 5 } }, { 'otp.attempts': { $exists: false } }] },
+    { $inc: { 'otp.attempts': 1 } },
+    { returnDocument: 'after' }
+  );
+  if (!attempted) throw new ApiError(429, 'Too many OTP attempts. Request a new code.');
   if (!verifyOTP(user.otp.code, otp)) {
     throw new ApiError(400, 'Invalid OTP');
   }
@@ -247,6 +261,7 @@ const verifyOTPCode = async (email, otp, purpose) => {
   // ✅ Clear OTP and update verification status if purpose is 'verify'
   const updateData = {
     otp: {
+      attempts: 0,
       code: null,
       expiresAt: null,
       purpose: null,
@@ -257,11 +272,24 @@ const verifyOTPCode = async (email, otp, purpose) => {
     updateData.isEmailVerified = true;
   }
 
-  await updateUser(user._id, updateData);
+  let resetToken;
+  if (purpose === 'reset') {
+    resetToken = crypto.randomBytes(32).toString('hex');
+    updateData.passwordReset = {
+      tokenHash: hashOTP(resetToken),
+      expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+    };
+  }
+  const consumed = await User.findOneAndUpdate(
+    { _id: user._id, 'otp.code': user.otp.code, 'otp.expiresAt': { $gt: new Date() } },
+    { $set: updateData }
+  );
+  if (!consumed) throw new ApiError(400, 'OTP has already been used or expired');
   logger.info({ email, purpose }, 'OTP verified successfully');
+  return resetToken ? { resetToken } : null;
 };
 
-const resetPassword = async (email, newPassword) => {
+const resetPassword = async (email, newPassword, resetToken) => {
   logger.info({ email }, 'Password reset request');
 
   if (!validateEmailFormat(email)) {
@@ -272,22 +300,19 @@ const resetPassword = async (email, newPassword) => {
     throw new ApiError(400, 'Password must be at least 8 characters and include uppercase, lowercase, number, and special character (!@#$%^&*)');
   }
 
-  const user = await User.findOne({ email }).select('+password');
-  if (!user) {
-    throw new ApiError(404, 'Email not found');
+  if (typeof resetToken !== 'string' || !/^[a-f0-9]{64}$/.test(resetToken)) {
+    throw new ApiError(400, 'A valid password reset token is required');
   }
-
-  user.password = newPassword;
-  await user.save(); // ✅ pre-save hook hashes it
-
-  // ✅ Clear OTP after successful reset
-  await updateUser(user._id, {
-    otp: {
-      code: null,
-      expiresAt: null,
-      purpose: null,
-    },
-  });
+  const password = await bcrypt.hash(newPassword, 12);
+  const user = await User.findOneAndUpdate(
+    { email, 'passwordReset.tokenHash': hashOTP(resetToken), 'passwordReset.expiresAt': { $gt: new Date() } },
+    { $set: { password, otp: { code: null, expiresAt: null, purpose: null, attempts: 0 } }, $unset: { passwordReset: 1 }, $inc: { tokenVersion: 1 } },
+    { returnDocument: 'after' }
+  );
+  if (!user) {
+    throw new ApiError(400, 'Invalid or expired password reset token');
+  }
+  getIO().in(user._id.toString()).disconnectSockets(true);
 
   logger.info({ email }, 'Password reset successfully');
 };

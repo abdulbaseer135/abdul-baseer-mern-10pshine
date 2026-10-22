@@ -33,6 +33,22 @@ const createTransporter = () =>
  * @param {string} purpose - 'verify' | 'reset'
  */
 const sendOTPEmail = async (email, otp, purpose) => {
+  // HTTPS delivery works on hosts that block outbound SMTP ports.
+  if (process.env.RESEND_API_KEY) {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: process.env.EMAIL_FROM,
+        to: [email],
+        subject: purpose === 'verify' ? 'Verify Your Email - 6 Digit Code' : 'Reset Password - 6 Digit Code',
+        text: `Your verification code is ${otp}. It expires in 10 minutes. Do not share this code.`,
+      }),
+      signal: AbortSignal.timeout(12000),
+    });
+    if (!response.ok) throw new Error('Failed to send OTP email');
+    return;
+  }
   const transporter = createTransporter();
 
   try {

@@ -105,7 +105,7 @@ const DashboardControls = ({
 
         {/* Import Button */}
         <button
-          onClick={() => importRef.current?.click()}
+          onClick={() => onImportClick ? onImportClick() : importRef?.current?.click()}
           disabled={importing}
           className="
             px-3 py-2 rounded-lg text-sm font-medium

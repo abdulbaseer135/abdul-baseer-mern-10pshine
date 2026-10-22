@@ -125,7 +125,7 @@ describe('ForgotPasswordPage', () => {
       fireEvent.click(submitBtn);
 
       await waitFor(() => {
-        expect(screen.getByText(/failed to send otp|try again/i)).toBeInTheDocument();
+        expect(screen.getByText(/network error/i)).toBeInTheDocument();
       });
     });
 
@@ -169,9 +169,9 @@ describe('ForgotPasswordPage', () => {
       await userEvent.type(emailInput, 'test@example.com');
       fireEvent.click(submitBtn);
 
-      expect(submitBtn).toBeDisabled();
+      await waitFor(() => expect(submitBtn).toBeDisabled());
 
-      jest.advanceTimersByTime(150);
+      await new Promise(resolve => setTimeout(resolve, 150));
     });
 
     it('should enable submit button when not loading', () => {

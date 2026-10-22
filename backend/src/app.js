@@ -5,11 +5,12 @@ const requestLogger = require('./middleware/requestLogger.middleware');
 const errorHandler = require('./middleware/errorHandler.middleware');
 const routes = require('./routes/index');
 const connectDB = require('./config/db');
-const { FRONTEND_URL } = require('./config/env');
+const { FRONTEND_URL, UPLOADS_PATH } = require('./config/env');
 
 const app = express();
 app.disable('x-powered-by');
 app.disable('etag');
+if (process.env.TRUST_PROXY === '1') app.set('trust proxy', 1);
 
 // ─── CORS (FRONTEND_URL may be comma-separated) ───────────────────────────
 const defaultOrigins = [
@@ -29,9 +30,6 @@ const allowedOrigins = [
   .map((value) => value.trim())
   .filter(Boolean);
 
-const isVercelOrigin = (value) =>
-  /^https:\/\/([a-z0-9-]+\.)*[a-z0-9-]+\.vercel\.app$/i.test(value);
-
 const corsOptions = {
   origin: (origin, callback) => {
     // Allow non-browser clients (curl, Postman, server-to-server)
@@ -41,7 +39,9 @@ const corsOptions = {
 
     const incoming = String(origin).trim();
 
-    if (allowedOrigins.includes(incoming) || isVercelOrigin(incoming)) {
+    if (
+      allowedOrigins.includes(incoming)
+    ) {
       // Echo the request origin when credentials: true
       return callback(null, incoming);
     }
@@ -64,7 +64,7 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-if (process.env.CORS_ALLOW_ALL === 'true') {
+if (process.env.CORS_ALLOW_ALL === 'true' && process.env.NODE_ENV !== 'production') {
   console.warn('[CORS] WARNING: permissive CORS enabled via CORS_ALLOW_ALL=true');
   app.use(
     cors({
@@ -142,7 +142,7 @@ app.use('/api/v1', async (req, res, next) => {
 });
 
 // ─── Static uploads & API routes ──────────────────────────────────────────
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/uploads', express.static(UPLOADS_PATH));
 app.use('/api/v1', routes);
 
 // ─── 404 ──────────────────────────────────────────────────────────────────

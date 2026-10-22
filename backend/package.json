@@ -8,10 +8,10 @@
   },
   "scripts": {
     "start": "node src/local-server.js",
-    "dev": "nodemon src/local-server.js",
+    "dev": "node --watch src/local-server.js",
     "test": "mocha",
     "test:coverage": "nyc mocha",
-    "sonar": "node sonar.js"
+    "sonar": "sonar-scanner"
   },
   "keywords": [],
   "author": "",
@@ -23,28 +23,31 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.7.1",
     "joi": "^18.1.2",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.4.1",
-    "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.9.7",
+    "multer": "^2.4.0",
+    "nodemailer": "^10.2.0",
     "pino": "^10.3.1",
     "pino-http": "^11.0.0",
     "pino-pretty": "^13.1.3",
     "serverless-http": "^3.0.0",
-    "socket.io": "^4.8.3",
-    "uuid": "^9.0.1"
+    "socket.io": "^4.8.3"
   },
   "devDependencies": {
-    "@hapi/joi": "^17.1.1",
     "chai": "^6.2.2",
-    "mocha": "^11.7.5",
+    "mocha": "^12.0.3",
     "mongodb-memory-server": "^11.0.1",
-    "nodemon": "^3.1.14",
-    "nyc": "^17.1.0",
+    "nyc": "^18.0.0",
     "proxyquire": "^2.1.3",
     "sinon": "^21.1.2",
-    "sonarqube-scanner": "^4.2.3",
     "supertest": "^7.2.2"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "overrides": {
+    "js-yaml": "^4.1.1"
   }
 }

@@ -71,13 +71,13 @@ describe('Note Sort Utilities', () => {
       expect(sorted[1].isPinned).toBe(true);
 
       // Pinned notes sorted by oldest
-      expect(new Date(sorted[0].createdAt)).toBeLessThanOrEqual(
-        new Date(sorted[1].createdAt)
+      expect(new Date(sorted[0].createdAt).getTime()).toBeLessThanOrEqual(
+        new Date(sorted[1].createdAt).getTime()
       );
 
       // Unpinned notes sorted by oldest
-      expect(new Date(sorted[2].createdAt)).toBeLessThanOrEqual(
-        new Date(sorted[3].createdAt)
+      expect(new Date(sorted[2].createdAt).getTime()).toBeLessThanOrEqual(
+        new Date(sorted[3].createdAt).getTime()
       );
     });
 

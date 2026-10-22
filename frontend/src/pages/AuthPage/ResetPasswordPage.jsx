@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -31,6 +31,10 @@ const ResetPasswordPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const email = location.state?.email || '';
+  const resetToken = location.state?.resetToken;
+  useEffect(() => {
+    if (!email || !resetToken) navigate('/forgot-password');
+  }, [email, resetToken, navigate]);
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const [loading, setLoading] = useState(false);
@@ -56,10 +60,7 @@ const ResetPasswordPage = () => {
   `;
 
   // Redirect if no email in state
-  if (!email) {
-    navigate('/forgot-password');
-    return null;
-  }
+  if (!email || !resetToken) return null;
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -67,7 +68,7 @@ const ResetPasswordPage = () => {
     setSuccess(false);
 
     try {
-      await resetPasswordService(email, data.newPassword);
+      await resetPasswordService(email, data.newPassword, resetToken);
       setSuccess(true);
       // Navigate to login after 2 seconds
       setTimeout(() => {
@@ -109,7 +110,7 @@ const ResetPasswordPage = () => {
             Reset Password
           </h1>
           <p className="text-sm mt-1.5 text-gray-600 dark:text-gray-400">
-            Create a new password for your account
+            Create a new password for {email}
           </p>
         </div>
 

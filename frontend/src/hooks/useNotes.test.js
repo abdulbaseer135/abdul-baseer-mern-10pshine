@@ -8,6 +8,12 @@ import themeReducer from '../store/slices/themeSlice';
 import * as authService from '../services/auth.service';
 
 jest.mock('../services/auth.service');
+jest.mock('../services/notes.service', () => ({
+  getNotesService: jest.fn().mockResolvedValue({ data: { notes: [], totalPages: 1 } }),
+  createNoteService: jest.fn().mockResolvedValue({ data: { _id: 'note-123', title: 'Test' } }),
+  updateNoteService: jest.fn().mockResolvedValue({ data: { _id: 'note-123', title: 'Updated' } }),
+  deleteNoteService: jest.fn().mockResolvedValue({}),
+}));
 
 const createTestStore = () => {
   return configureStore({
@@ -22,7 +28,7 @@ const createTestStore = () => {
 const renderUseNotesHook = () => {
   const store = createTestStore();
   const wrapper = ({ children }) => <Provider store={store}>{children}</Provider>;
-  return { result: renderHook(() => useNotes(), { wrapper }), store };
+  return { ...renderHook(() => useNotes(), { wrapper }), store };
 };
 
 describe('useNotes Hook', () => {

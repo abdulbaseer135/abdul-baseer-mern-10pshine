@@ -12,7 +12,11 @@ const noteShape = PropTypes.shape({
 });
 
 const NotesGridView = ({ visibleNotes, isSearching, onEdit, onDelete, onView, onPin, onShare }) => (
-  <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 transition-opacity duration-200 ${isSearching ? 'opacity-60' : 'opacity-100'}`}>
+  <div
+    className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 transition-opacity duration-200 ${
+      isSearching ? 'opacity-60' : 'opacity-100'
+    }`}
+  >
     {visibleNotes.map((note) => (
       <NoteCard
         key={note._id}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { sanitizeNoteHtml } from '../../utils/sanitizeNoteHtml';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleTheme } from '../../store/slices/themeSlice';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -27,9 +28,9 @@ const SharedNotePage = () => {
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
@@ -144,7 +145,7 @@ const SharedNotePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-[#0a0a0a] dark:via-[#0d1117] dark:to-[#0a0a0a] px-4 py-6 sm:py-8 lg:py-10 transition-colors duration-200 relative overflow-hidden">
-      
+
       {/* ✨ Subtle premium background accent */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/5 dark:bg-indigo-500/[0.03] rounded-full blur-3xl opacity-40 dark:opacity-20" />
@@ -219,7 +220,7 @@ const SharedNotePage = () => {
 
         {/* ─── TOP HERO SECTION ───────────────────────────────── */}
         <div className="mb-8 lg:mb-10">
-          
+
           {/* Premium label badge */}
           <div className="inline-block mb-4">
             <div className="
@@ -320,7 +321,7 @@ const SharedNotePage = () => {
               backdrop-blur-sm
             "
             style={{ wordBreak: 'break-word' }}
-            dangerouslySetInnerHTML={{ __html: note.content }}
+            dangerouslySetInnerHTML={{ __html: sanitizeNoteHtml(note.content) }}
           />
         </div>
 
@@ -329,7 +330,7 @@ const SharedNotePage = () => {
           <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <span>Share this note</span>
           </h3>
-          
+
           <div className="flex flex-wrap gap-3">
             {/* Copy Link */}
             <button

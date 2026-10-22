@@ -78,6 +78,10 @@ const update = async (noteId, userId, updateData) => {
     throw new ApiError(403, 'Not authorized to update this note');
   }
 
+  const allowedFields = ['title', 'content', 'category', 'taskStatus', 'isPinned'];
+  if (!updateData || Object.keys(updateData).some((key) => !allowedFields.includes(key))) {
+    throw new ApiError(400, 'Only title, content, category, taskStatus and isPinned can be updated');
+  }
   const updated = await updateNote(noteId, updateData);
 
   logger.info({ userId, noteId }, 'Note updated successfully');

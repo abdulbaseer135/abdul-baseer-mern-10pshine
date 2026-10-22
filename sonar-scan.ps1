@@ -37,7 +37,7 @@ STEPS TO GET TOKEN:
   5. Copy the token
 
 EXAMPLE:
-  .\sonar-scan.ps1 -Token "sqp_abcd1234efgh5678ijkl"
+  .\sonar-scan.ps1 -Token "YOUR_SONAR_TOKEN"
 
 "@
     exit 0
@@ -107,7 +107,7 @@ if ($frontendStatus -ne 0) {
 # Step 3: Run SonarQube Scanner
 Write-Host "🔍 Step 3: Running SonarQube Scanner..." -ForegroundColor Green
 Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Gray
-npx sonarqube-scanner 2>&1
+sonar-scanner 2>&1
 
 $scanStatus = $LASTEXITCODE
 

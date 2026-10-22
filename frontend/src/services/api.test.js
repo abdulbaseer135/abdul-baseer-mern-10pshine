@@ -1,3 +1,5 @@
+import { redirectToLogin } from '../utils/navigation';
+jest.mock('../utils/navigation');
 import axios from 'axios';
 
 // Mock axios before importing api module
@@ -20,27 +22,22 @@ describe('API Service - api.js', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     delete globalThis.__REDUX_STORE__;
-    
+
     // Create a basic localStorage mock object
-    globalThis.localStorage = {
+    Object.defineProperty(globalThis, 'localStorage', { configurable: true, writable: true, value: {
       getItem: () => null,
       removeItem: () => {},
       setItem: () => {},
       clear: () => {},
-    };
-    
+    } });
+
     // Use jest.spyOn to wrap the methods
     jest.spyOn(globalThis.localStorage, 'getItem');
     jest.spyOn(globalThis.localStorage, 'removeItem');
     jest.spyOn(globalThis.localStorage, 'setItem');
     jest.spyOn(globalThis.localStorage, 'clear');
-    
-    // Mock location with a writable href property
-    Object.defineProperty(globalThis, 'location', {
-      value: { href: '/dashboard' },
-      writable: true,
-      configurable: true,
-    });
+
+    window.history.replaceState({}, '', '/dashboard');
   });
 
   afterEach(() => {
@@ -66,7 +63,7 @@ describe('Request Interceptor', () => {
     it('should fallback to localStorage token when Redux store is unavailable', () => {
       const mockToken = 'local-token-456';
       delete globalThis.__REDUX_STORE__;
-      
+
       globalThis.localStorage.getItem.mockReturnValue(mockToken);
 
       const config = { headers: {} };
@@ -78,13 +75,13 @@ describe('Request Interceptor', () => {
     it('should handle Redux store error and fallback to localStorage', () => {
       const mockToken = 'fallback-token';
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      
+
       globalThis.__REDUX_STORE__ = {
         getState: jest.fn(() => {
           throw new Error('Redux store error');
         }),
       };
-      
+
       globalThis.localStorage.getItem.mockReturnValue(mockToken);
 
       const config = { headers: {} };
@@ -92,7 +89,7 @@ describe('Request Interceptor', () => {
 
       expect(result.headers.Authorization).toBe(`Bearer ${mockToken}`);
       expect(consoleSpy).toHaveBeenCalled();
-      
+
       consoleSpy.mockRestore();
     });
 
@@ -178,7 +175,7 @@ describe('Request Interceptor', () => {
       globalThis.__REDUX_STORE__ = { dispatch: dispatchSpy };
       const removeItemSpy = jest.fn();
       global.localStorage = { removeItem: removeItemSpy };
-      global.location = { href: '/dashboard' };
+      window.history.replaceState({}, '', '/dashboard');
 
       const error = {
         response: { status: 401 },
@@ -200,7 +197,7 @@ describe('Request Interceptor', () => {
       globalThis.__REDUX_STORE__ = { dispatch: dispatchSpy };
       const removeItemSpy = jest.fn();
       global.localStorage = { removeItem: removeItemSpy };
-      global.location = { href: '/dashboard' };
+      window.history.replaceState({}, '', '/dashboard');
 
       const error = {
         response: { status: 401 },
@@ -222,7 +219,7 @@ describe('Request Interceptor', () => {
       globalThis.__REDUX_STORE__ = { dispatch: dispatchSpy };
       const removeItemSpy = jest.fn();
       global.localStorage = { removeItem: removeItemSpy };
-      global.location = { href: '/dashboard' };
+      window.history.replaceState({}, '', '/dashboard');
 
       const error = {
         response: { status: 401 },
@@ -255,7 +252,7 @@ describe('Request Interceptor', () => {
     });
 
     it('should redirect to /login on 401 if not already there', async () => {
-      globalThis.location.href = '/dashboard';
+      window.history.replaceState({}, '', '/dashboard');
 
       const error = {
         response: { status: 401 },
@@ -268,11 +265,11 @@ describe('Request Interceptor', () => {
         // Expected
       }
 
-      expect(globalThis.location.href).toBe('/login');
+      expect(redirectToLogin).toHaveBeenCalledTimes(1);
     });
 
     it('should not redirect if already on /login', async () => {
-      globalThis.location.href = '/login';
+      window.history.replaceState({}, '', '/login');
 
       const error = {
         response: { status: 401 },
@@ -285,7 +282,8 @@ describe('Request Interceptor', () => {
         // Expected
       }
 
-      expect(globalThis.location.href).toBe('/login');
+      expect(window.location.pathname).toBe('/login');
+      expect(redirectToLogin).not.toHaveBeenCalled();
     });
 
     it('should handle missing response in error', async () => {

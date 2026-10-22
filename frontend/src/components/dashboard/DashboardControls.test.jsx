@@ -12,8 +12,8 @@ const FILTER_OPTIONS = [
 const SORT_OPTIONS = [
   { value: 'newest', label: 'Newest' },
   { value: 'oldest', label: 'Oldest' },
-  { value: 'az', label: 'A → Z' },
-  { value: 'za', label: 'Z → A' },
+  { value: 'az', label: 'A \u2192 Z' },
+  { value: 'za', label: 'Z \u2192 A' },
 ];
 
 describe('DashboardControls', () => {
@@ -51,7 +51,7 @@ describe('DashboardControls', () => {
 
     it('should render filter dropdown', () => {
       render(<DashboardControls {...defaultProps} />);
-      expect(screen.getByDisplayValue('all')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('All Notes')).toBeInTheDocument();
     });
 
     it('should render sort dropdown', () => {
@@ -90,7 +90,7 @@ describe('DashboardControls', () => {
       render(<DashboardControls {...defaultProps} />);
       const searchInput = screen.getByPlaceholderText(/search notes/i);
 
-      await userEvent.type(searchInput, 'test query');
+      fireEvent.change(searchInput, { target: { value: 'test query' } });
 
       expect(mockSetSearchInput).toHaveBeenCalledWith('test query');
     });
@@ -123,7 +123,7 @@ describe('DashboardControls', () => {
   describe('Filter Dropdown', () => {
     it('should change filter on selection', () => {
       render(<DashboardControls {...defaultProps} />);
-      const filterSelect = screen.getByDisplayValue('all');
+      const filterSelect = screen.getByDisplayValue('All Notes');
 
       fireEvent.change(filterSelect, { target: { value: 'general' } });
 
@@ -132,19 +132,19 @@ describe('DashboardControls', () => {
 
     it('should display current filter value', () => {
       render(<DashboardControls {...defaultProps} currentFilter="idea" />);
-      const filterSelect = screen.getByDisplayValue('idea');
+      const filterSelect = screen.getByDisplayValue('Idea');
       expect(filterSelect).toBeInTheDocument();
     });
 
     it('should include all filter options in dropdown', () => {
       render(<DashboardControls {...defaultProps} />);
-      const options = screen.getAllByRole('option');
+      const options = screen.getAllByRole('combobox')[0].querySelectorAll('option');
       expect(options.length).toBe(FILTER_OPTIONS.length);
     });
 
     it('should handle filter change multiple times', () => {
       render(<DashboardControls {...defaultProps} />);
-      const filterSelect = screen.getByDisplayValue('all');
+      const filterSelect = screen.getByDisplayValue('All Notes');
 
       fireEvent.change(filterSelect, { target: { value: 'task' } });
       fireEvent.change(filterSelect, { target: { value: 'idea' } });
@@ -258,7 +258,7 @@ describe('DashboardControls', () => {
 
       fireEvent.click(importBtn);
 
-      expect(mockOnImportClick).toHaveBeenCalled();
+      expect(mockRef.current.click).toHaveBeenCalledTimes(1);
     });
 
     it('should disable import button when importing', () => {
@@ -286,7 +286,7 @@ describe('DashboardControls', () => {
   describe('Disabled States', () => {
     it('should disable both export and import when both active', () => {
       render(<DashboardControls {...defaultProps} exporting={true} importing={true} />);
-      
+
       const exportBtn = screen.getByRole('button', { name: /export/i });
       const importBtn = screen.getByRole('button', { name: /import/i });
 
@@ -296,14 +296,14 @@ describe('DashboardControls', () => {
 
     it('should allow export when import disabled', () => {
       render(<DashboardControls {...defaultProps} importing={true} exporting={false} />);
-      
+
       const exportBtn = screen.getByRole('button', { name: /export/i });
       expect(exportBtn).not.toBeDisabled();
     });
 
     it('should allow import when export disabled', () => {
       render(<DashboardControls {...defaultProps} exporting={true} importing={false} />);
-      
+
       const importBtn = screen.getByRole('button', { name: /import/i });
       expect(importBtn).not.toBeDisabled();
     });
@@ -327,9 +327,9 @@ describe('DashboardControls', () => {
     it('should handle search and filter together', async () => {
       render(<DashboardControls {...defaultProps} />);
       const searchInput = screen.getByPlaceholderText(/search notes/i);
-      const filterSelect = screen.getByDisplayValue('all');
+      const filterSelect = screen.getByDisplayValue('All Notes');
 
-      await userEvent.type(searchInput, 'task');
+      fireEvent.change(searchInput, { target: { value: 'task' } });
       fireEvent.change(filterSelect, { target: { value: 'task' } });
 
       expect(mockSetSearchInput).toHaveBeenCalledWith('task');
@@ -339,11 +339,11 @@ describe('DashboardControls', () => {
     it('should handle search, filter, and sort together', async () => {
       render(<DashboardControls {...defaultProps} />);
       const searchInput = screen.getByPlaceholderText(/search notes/i);
-      const filterSelect = screen.getByDisplayValue('all');
+      const filterSelect = screen.getByDisplayValue('All Notes');
       const selects = screen.getAllByRole('combobox');
       const sortSelect = selects.find(s => s.value === 'newest');
 
-      await userEvent.type(searchInput, 'important');
+      fireEvent.change(searchInput, { target: { value: 'important' } });
       fireEvent.change(filterSelect, { target: { value: 'general' } });
       fireEvent.change(sortSelect, { target: { value: 'az' } });
 

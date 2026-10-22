@@ -14,12 +14,15 @@ const useDeleteModal = (onDelete, onFetch) => {
 
   const handleDeleteConfirm = useCallback(async () => {
     if (!deleteModal.noteId) return;
-    
+
     setIsDeleting(true);
-    await onDelete(deleteModal.noteId);
-    setIsDeleting(false);
-    setDeleteModal({ isOpen: false, noteId: null, noteTitle: '' });
-    onFetch?.();
+    try {
+      await onDelete(deleteModal.noteId);
+      setDeleteModal({ isOpen: false, noteId: null, noteTitle: '' });
+      onFetch?.();
+    } finally {
+      setIsDeleting(false);
+    }
   }, [deleteModal.noteId, onDelete, onFetch]);
 
   const handleDeleteCancel = useCallback(() => {

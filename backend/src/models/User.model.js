@@ -29,7 +29,9 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    tokenVersion: { type: Number, default: 0 },
     otp: {
+      attempts: { type: Number, default: 0 },
       code: {
         type: String,
         default: null,
@@ -43,6 +45,10 @@ const userSchema = new mongoose.Schema(
         enum: ['verify', 'reset'],
         default: null,
       },
+    },
+    passwordReset: {
+      tokenHash: { type: String, select: false },
+      expiresAt: { type: Date, select: false },
     },
   },
   { timestamps: true }

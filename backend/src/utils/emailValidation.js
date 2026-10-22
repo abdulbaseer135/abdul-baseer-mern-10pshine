@@ -13,13 +13,15 @@ const validateEmailFormat = (email) => {
   return emailRegex.test(email);
 };
 
-const withTimeout = (promise, ms, label) =>
-  Promise.race([
+const withTimeout = async (promise, ms, label) => {
+  let timer;
+  try { return await Promise.race([
     promise,
     new Promise((_, reject) => {
-      setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+      timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
     }),
-  ]);
+  ]); } finally { clearTimeout(timer); }
+};
 
 /**
  * Validate email domain MX records (capped — DNS can hang on serverless).
@@ -27,6 +29,7 @@ const withTimeout = (promise, ms, label) =>
  * @returns {Promise<boolean>}
  */
 const validateEmailDomain = async (email) => {
+  if (!validateEmailFormat(email)) return false;
   try {
     const domain = email.split('@')[1];
     if (!domain) return false;

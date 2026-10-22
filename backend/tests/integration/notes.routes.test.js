@@ -160,6 +160,20 @@ describe('Notes Routes Integration Tests', () => {
   // ─── Data Integrity Tests ───────────────────────────────────────────
 
   describe('Data Integrity', () => {
+    it('rejects ownership, sharing and MongoDB operator injection through updates', async () => {
+      for (const payload of [{ userId: new mongoose.Types.ObjectId() }, { isPublic: true }, { shareToken: 'forged' }, { $set: { title: 'Injected' } }]) {
+        try {
+          await notesService.update(noteId, userId, payload);
+          expect.fail('Expected the update to be rejected');
+        } catch (err) {
+          expect(err.statusCode).to.equal(400);
+        }
+      }
+      const unchanged = await notesService.getOne(noteId, userId);
+      expect(unchanged.title).to.equal('Test Note');
+      expect(unchanged.userId.toString()).to.equal(userId.toString());
+      expect(unchanged.isPublic).to.be.false;
+    });
     it('should preserve note metadata on update', async () => {
       const created = await notesService.create(userId, {
         title: 'Original',

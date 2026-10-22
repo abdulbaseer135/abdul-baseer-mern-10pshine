@@ -2,9 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { uploadProfileImageService, removeProfileImageService } from '../services/profile.service';
 
 const VALID_IMAGE_TYPES = new Set([
-  'image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml',
-  'image/bmp', 'image/tiff', 'image/x-tiff', 'image/heic', 'image/heif',
-  'image/x-icon', 'image/vnd.microsoft.icon', 'image/avif', 'image/jp2',
+  'image/jpeg', 'image/png', 'image/webp',
 ]);
 
 const validateImageFile = (file) => {
@@ -13,7 +11,7 @@ const validateImageFile = (file) => {
     return `File size must not exceed 5MB. Your file is ${(file.size / 1024 / 1024).toFixed(2)}MB`;
   }
   if (!VALID_IMAGE_TYPES.has(file.type)) {
-    return 'Please upload a valid image file (JPEG, PNG, WebP, GIF, SVG, BMP, TIFF, HEIC, or ICO)';
+    return 'Please upload a valid image file (JPEG, PNG or WebP)';
   }
   return null;
 };

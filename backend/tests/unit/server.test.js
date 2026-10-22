@@ -1,116 +1,42 @@
-const { describe, it, beforeEach, afterEach } = require('mocha');
 const { expect } = require('chai');
 const sinon = require('sinon');
-const http = require('node:http');
-const mongoose = require('mongoose');
+const proxyquire = require('proxyquire').noCallThru();
 
-describe('Server - local-server.js', () => {
-  let httpCreateServerStub;
-  let consoleLogStub;
-  let consoleErrorStub;
-  let mongooseConnectStub;
-  let isoDummyDate = new Date().toISOString();
-
-  beforeEach(() => {
-    httpCreateServerStub = sinon.stub(http, 'createServer');
-    consoleLogStub = sinon.stub(console, 'log');
-    consoleErrorStub = sinon.stub(console, 'error');
-    mongooseConnectStub = sinon.stub(mongoose, 'connect');
+describe('Server startup', () => {
+  afterEach(() => sinon.restore());
+  const setup = () => {
+    const server = { listen: sinon.stub().callsFake((port, callback) => callback()) };
+    const createServer = sinon.stub().returns(server);
+    const connectDB = sinon.stub().resolves();
+    const assertRequiredEnv = sinon.stub();
+    const initSocket = sinon.stub();
+    const app = () => {};
+    const { startServer } = proxyquire('../../src/local-server', {
+      'node:http': { createServer }, './app': app,
+      './config/db': connectDB, './config/env': { PORT: 5001, assertRequiredEnv },
+      './config/logger': { info: sinon.stub() }, './config/socket': { initSocket },
+    });
+    return { startServer, server, createServer, connectDB, assertRequiredEnv, initSocket, app };
+  };
+  it('does not start a listener when imported', () => {
+    const deps = setup();
+    expect(deps.createServer.called).to.be.false;
   });
-
-  afterEach(() => {
-    sinon.restore();
+  it('validates configuration and connects before accepting requests', async () => {
+    const deps = setup();
+    await deps.startServer();
+    sinon.assert.callOrder(deps.assertRequiredEnv, deps.connectDB, deps.createServer, deps.initSocket, deps.server.listen);
+    sinon.assert.calledWith(deps.createServer, deps.app);
+    sinon.assert.calledWith(deps.initSocket, deps.server);
+    sinon.assert.calledWith(deps.server.listen, 5001);
   });
-
-  describe('Server Initialization', () => {
-    it('should be a module with exports', () => {
-      const server = require('../../../src/local-server');
-      expect(server).to.have.property('startServer');
-      expect(server.startServer).to.be.a('function');
-    });
-
-    it('should attempt to create HTTP server from Express app', () => {
-      // This test verifies the pattern - actual execution would start server
-      expect(http.createServer).to.be.a('function');
-    });
-
-    it('should use node:http module', () => {
-      expect(http).to.exist;
-      expect(http.createServer).to.be.a('function');
-    });
-
-    it('should have proper HTTP server lifecycle', () => {
-      // Verify http.Server has listen method
-      const server = http.createServer(() => {});
-      expect(server.listen).to.be.a('function');
-      expect(server.close).to.be.a('function');
-      server.close();
-    });
-  });
-
-  describe('Express App Integration', () => {
-    it('should pass Express app to HTTP createServer', () => {
-      const mockApp = sinon.stub();
-      const server = http.createServer(mockApp);
-      expect(server).to.exist;
-      server.close();
-    });
-
-    it('should create server before binding socket.io', () => {
-      // Verify the execution order pattern
-      const mockApp = sinon.stub();
-      const server = http.createServer(mockApp);
-      expect(server).to.exist;
-      server.close();
-    });
-  });
-
-  describe('Socket.IO Initialization', () => {
-    it('should initialize Socket.IO after creating HTTP server', () => {
-      // Pattern verification: HTTP server created first, then socket.io init
-      expect(http.createServer).to.be.a('function');
-    });
-  });
-
-  describe('Server Startup', () => {
-    it('should call listen on HTTP server', () => {
-      const mockApp = sinon.stub();
-      const server = http.createServer(mockApp);
-      const listenSpy = sinon.spy(server, 'listen');
-      
-      // Would be called during actual startup
-      expect(server.listen).to.be.a('function');
-      
-      server.close();
-    });
-
-    it('should use PORT from environment config', () => {
-      const { PORT } = require('../../../src/config/env');
-      expect(PORT).to.exist;
-      expect(PORT).to.be.a('number');
-    });
-
-    it('should log server startup info', () => {
-      // Verify logger is available
-      const logger = require('../../../src/config/logger');
-      expect(logger).to.exist;
-      expect(logger.info).to.be.a('function');
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('should handle connection errors gracefully', () => {
-      // Verify error handling pattern
-      const mockApp = sinon.stub();
-      const server = http.createServer(mockApp);
-      expect(server).to.exist;
-      server.close();
-    });
-
-    it('should attempt database connection', () => {
-      // Pattern verification
-      const connectDB = require('../../../src/config/db');
-      expect(connectDB).to.be.a('function');
-    });
+  it('exits without listening when the database connection fails', async () => {
+    const deps = setup();
+    deps.connectDB.rejects(new Error('DB unavailable'));
+    const exit = sinon.stub(process, 'exit');
+    sinon.stub(console, 'error');
+    await deps.startServer();
+    sinon.assert.calledWith(exit, 1);
+    expect(deps.server.listen.called).to.be.false;
   });
 });
