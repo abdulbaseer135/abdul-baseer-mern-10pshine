@@ -140,14 +140,8 @@ const ProfilePage = () => {
   const onDeleteAccount = async () => {
     const success = await handleDeleteAccount();
     if (success) {
-      navigate('/login', {
-        replace: true,
-        state: {
-          accountDeleted: true,
-          message:
-            'Your account has been deleted. Please create a new account before signing in.',
-        },
-      });
+      navigate('/', { replace: true });
+      globalThis.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }
   };
 
