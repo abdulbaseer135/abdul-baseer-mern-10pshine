@@ -44,7 +44,7 @@ const useAuth = () => {
       return true;
     } catch (err) {
       console.error(err); // Sonar: handle caught exception
-      toast.error('Something went wrong. Try again.');
+      toast.error(typeof err === 'string' ? err : 'Something went wrong. Try again.');
       return false;
     }
   };
