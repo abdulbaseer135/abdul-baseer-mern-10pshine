@@ -12,8 +12,18 @@ const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/env');
 const logger = require('../config/logger');
 const { validateEmailFormat, validateEmailDomain } = require('../utils/emailValidation');
 const { generateOTP, hashOTP, verifyOTP, getOTPExpiry } = require('../utils/otp');
-const { sendOTPEmailNonBlocking } = require('../utils/nodemailer');
+const { sendOTPEmail } = require('../utils/nodemailer');
 const { getIO } = require('../config/socket');
+
+// Wait for provider acceptance so failed delivery cannot look successful.
+const deliverOTP = async (email, otp, purpose) => {
+  try {
+    await sendOTPEmail(email, otp, purpose);
+  } catch (error) {
+    logger.error({ purpose, code: error.code }, 'OTP email delivery failed');
+    throw new ApiError(502, 'Unable to send the verification email. Please try resending the code shortly.');
+  }
+};
 
 const DELETED_ACCOUNT_LOGIN_MESSAGE =
   'This account has been deleted. Please create a new account before signing in.';
@@ -72,7 +82,7 @@ const register = async ({ name, email, password }) => {
         },
       });
 
-      await sendOTPEmailNonBlocking(email, otp, 'verify');
+      await deliverOTP(email, otp, 'verify');
       logger.info({ email, userId: existingUser._id }, 'Unverified user re-signup — OTP re-sent');
 
       // No access token until OTP is completed
@@ -99,7 +109,7 @@ const register = async ({ name, email, password }) => {
   // Allow previously deleted emails to register again
   await removeDeletedEmail(email);
 
-  // ✅ Persist OTP first, then send email without blocking the HTTP response
+  // Persist OTP first, then confirm the email provider accepted delivery.
   try {
     const otp = generateOTP();
     const otpHash = hashOTP(otp);
@@ -113,12 +123,13 @@ const register = async ({ name, email, password }) => {
       },
     });
 
-    // Gmail SMTP from Vercel is slow — don't make signup wait for full delivery
-    await sendOTPEmailNonBlocking(email, otp, 'verify');
-    logger.info({ email, userId: user._id }, 'User registered successfully, OTP dispatch started');
+    // Await delivery before reporting signup success.
+    await deliverOTP(email, otp, 'verify');
+    logger.info({ email, userId: user._id }, 'User registered successfully, OTP email accepted');
   } catch (emailError) {
     logger.error({ email, error: emailError.message }, 'OTP email failed during registration');
-    // Don't throw - user is already created, they can request OTP again
+    // Keep the unverified account so signup or resend can be retried.
+    throw emailError;
   }
 
   // No access token until email OTP is verified
@@ -218,9 +229,9 @@ const sendOTP = async (email, purpose) => {
     },
   });
 
-  // Respond quickly on serverless; email continues in background when possible
-  await sendOTPEmailNonBlocking(email, otp, purpose);
-  logger.info({ email, purpose }, 'OTP dispatch started');
+  // Keep the request alive until the email provider accepts or rejects delivery.
+  await deliverOTP(email, otp, purpose);
+  logger.info({ email, purpose }, 'OTP email accepted');
 };
 
 const verifyOTPCode = async (email, otp, purpose) => {
