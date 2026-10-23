@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children }) => {
     }
   }, [token, user, dispatch]); // Properly include all dependencies
 
-  if (!token) return <Navigate to="/login" replace />;
+  if (!token) return <Navigate to="/" replace />;
 
   // Incomplete account — force OTP before app access
   if (user && user.isEmailVerified === false) {
