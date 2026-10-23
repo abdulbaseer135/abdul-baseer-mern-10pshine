@@ -60,7 +60,7 @@ const Navbar = () => {
       console.error(err);
     }
     dispatch(logout());
-    navigate('/login');
+    navigate('/', { replace: true });
   };
 
   return (
