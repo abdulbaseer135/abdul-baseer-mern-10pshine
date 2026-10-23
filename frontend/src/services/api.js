@@ -37,7 +37,8 @@ export const requestInterceptor = (config) => {
   return config;
 };
 
-const SKIP_AUTO_LOGOUT = ['/auth/login', '/users/change-password'];
+// Explicit logout owns session cleanup and navigation, including expired sessions.
+const SKIP_AUTO_LOGOUT = ['/auth/login', '/auth/logout', '/users/change-password'];
 
 export const responseInterceptor = (error) => {
   const status = error.response?.status;

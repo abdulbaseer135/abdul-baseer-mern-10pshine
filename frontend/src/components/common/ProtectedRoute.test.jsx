@@ -8,10 +8,11 @@ const renderRoute = (auth) => {
   const store = configureStore({ reducer: { auth: (state = auth) => state } });
   return renderWithProviders(
     <Routes>
-      <Route path="/" element={<ProtectedRoute><div>Protected Content</div></ProtectedRoute>} />
+      <Route path="/dashboard" element={<ProtectedRoute><div>Protected Content</div></ProtectedRoute>} />
+      <Route path="/" element={<div>Landing Page</div>} />
       <Route path="/login" element={<div>Login Page</div>} />
       <Route path="/verify-otp" element={<div>Verify Email</div>} />
-    </Routes>, { store }
+    </Routes>, { store, initialEntries: ['/dashboard'] }
   );
 };
 describe('ProtectedRoute', () => {
@@ -21,7 +22,7 @@ describe('ProtectedRoute', () => {
   });
   it('redirects a logged-out visitor', () => {
     renderRoute({ token: null, user: null });
-    expect(screen.getByText('Login Page')).toBeInTheDocument();
+    expect(screen.getByText('Landing Page')).toBeInTheDocument();
     expect(screen.queryByText('Protected Content')).not.toBeInTheDocument();
   });
   it('requires verification for an incomplete account', () => {
