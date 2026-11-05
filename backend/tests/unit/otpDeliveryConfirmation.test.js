@@ -37,7 +37,7 @@ describe('OTP delivery confirmation', () => {
       expect.fail('Expected failed delivery to reject');
     } catch (error) {
       expect(error.statusCode).to.equal(502);
-      expect(error.message).to.include('Unable to send');
+      expect(error.message).to.equal('Unable to send verification email. Please try again later.');
       expect(error.message).not.to.include('provider failure');
     }
   });

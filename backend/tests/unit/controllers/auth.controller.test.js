@@ -1,7 +1,6 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
-const authService = require('../../../src/services/auth.service');
-const authController = require('../../../src/controllers/auth.controller');
+const proxyquire = require('proxyquire').noCallThru();
 
 const mockRes = () => {
   const res = {};
@@ -13,13 +12,30 @@ const mockRes = () => {
 const mockNext = () => sinon.stub();
 
 describe('Auth Controller', () => {
+  let authServiceMock;
+  let authController;
+
+  beforeEach(() => {
+    authServiceMock = {
+      register: sinon.stub(),
+      login: sinon.stub(),
+      sendOTP: sinon.stub(),
+      verifyOTPCode: sinon.stub(),
+      resetPassword: sinon.stub(),
+    };
+
+    authController = proxyquire('../../../src/controllers/auth.controller', {
+      '../services/auth.service': authServiceMock,
+    });
+  });
+
   afterEach(() => sinon.restore());
 
   // ─── signup ──────────────────────────────────────────────────────────
 
   describe('signup()', () => {
     it('should call next with error if service throws', async () => {
-      sinon.stub(authService, 'register').rejects(new Error('Registration failed'));
+      authServiceMock.register.rejects(new Error('Registration failed'));
 
       const req = { body: { name: 'Abdul', email: 'abdul@test.com', password: 'Password123!' } };
       const res = mockRes();
@@ -35,7 +51,7 @@ describe('Auth Controller', () => {
 
   describe('loginUser()', () => {
     it('should call next with error if service throws', async () => {
-      sinon.stub(authService, 'login').rejects(new Error('Invalid credentials'));
+      authServiceMock.login.rejects(new Error('Invalid credentials'));
 
       const req = { body: { email: 'abdul@test.com', password: 'wrong' } };
       const res = mockRes();

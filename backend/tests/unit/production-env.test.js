@@ -48,6 +48,15 @@ describe('Production environment validation', () => {
     delete process.env.EMAIL_FROM;
     expect(assertRequiredEnv).to.throw('EMAIL_FROM');
   });
+  it('validates EMAIL_PROVIDER specific requirements', () => {
+    process.env.EMAIL_PROVIDER = 'resend';
+    delete process.env.RESEND_API_KEY;
+    expect(assertRequiredEnv).to.throw('RESEND_API_KEY');
+
+    process.env.EMAIL_PROVIDER = 'smtp';
+    delete process.env.EMAIL_HOST;
+    expect(assertRequiredEnv).to.throw('EMAIL_HOST');
+  });
   it('allows development without production service credentials', () => {
     process.env.NODE_ENV = 'development';
     delete process.env.EMAIL_FROM;
