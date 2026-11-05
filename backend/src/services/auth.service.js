@@ -20,8 +20,16 @@ const deliverOTP = async (email, otp, purpose) => {
   try {
     await sendOTPEmail(email, otp, purpose);
   } catch (error) {
-    logger.error({ purpose, code: error.code }, 'OTP email delivery failed');
-    throw new ApiError(502, 'Unable to send the verification email. Please try resending the code shortly.');
+    logger.error(
+      {
+        purpose,
+        provider: error.provider || process.env.EMAIL_PROVIDER || 'unknown',
+        code: error.code,
+        message: error.message,
+      },
+      'OTP email delivery failed'
+    );
+    throw new ApiError(502, 'Unable to send verification email. Please try again later.');
   }
 };
 

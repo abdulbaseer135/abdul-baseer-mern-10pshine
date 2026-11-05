@@ -69,9 +69,24 @@ function assertRequiredEnv() {
     if (!['CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET'].every((key) => process.env[key])) {
       throw configurationError('Configure CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET for persistent production uploads', ['CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET'].filter((key) => !process.env[key]), 'missing');
     }
+    const emailProvider = (process.env.EMAIL_PROVIDER || (process.env.RESEND_API_KEY ? 'resend' : 'smtp')).toLowerCase();
+    const isResend = emailProvider === 'resend';
     const smtpConfigured = ['EMAIL_HOST', 'EMAIL_USER', 'EMAIL_PASS'].every((key) => process.env[key]);
-    if (!process.env.EMAIL_FROM || (!process.env.RESEND_API_KEY && !smtpConfigured)) {
-      throw configurationError('Configure EMAIL_FROM and either RESEND_API_KEY or complete SMTP credentials for production OTP delivery', ['EMAIL_FROM', ...(!process.env.RESEND_API_KEY && !smtpConfigured ? ['RESEND_API_KEY', 'EMAIL_HOST', 'EMAIL_USER', 'EMAIL_PASS'] : [])].filter((key) => !process.env[key]), 'missing');
+
+    if (!process.env.EMAIL_FROM) {
+      throw configurationError('Configure EMAIL_FROM for production OTP delivery', ['EMAIL_FROM'], 'missing');
+    }
+
+    if (isResend && !process.env.RESEND_API_KEY) {
+      throw configurationError('Configure RESEND_API_KEY when EMAIL_PROVIDER is resend', ['RESEND_API_KEY'], 'missing');
+    }
+
+    if (!isResend && !smtpConfigured) {
+      throw configurationError(
+        'Configure EMAIL_PROVIDER=resend and RESEND_API_KEY (recommended on Render) or complete SMTP credentials (EMAIL_HOST, EMAIL_USER, EMAIL_PASS)',
+        ['EMAIL_HOST', 'EMAIL_USER', 'EMAIL_PASS'].filter((key) => !process.env[key]),
+        'missing'
+      );
     }
   }
 }
@@ -94,6 +109,8 @@ module.exports = {
       ? path.join(os.tmpdir(), 'uploads')
       : path.join(__dirname, '../../uploads'),
   }),
+  EMAIL_PROVIDER: process.env.EMAIL_PROVIDER,
+  RESEND_API_KEY: process.env.RESEND_API_KEY,
   EMAIL_HOST: process.env.EMAIL_HOST,
   EMAIL_PORT: process.env.EMAIL_PORT,
   EMAIL_SECURE: process.env.EMAIL_SECURE,
